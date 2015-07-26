@@ -1,3 +1,4 @@
+/*Author :Chandra*/
 function reScheduleExam(rec){
 
     var win = Ext.getCmp('eleraningaddexam_win');
@@ -218,7 +219,7 @@ function showResult(rec){
     win.show();
 }
 
-
+/*Control Start here*/
 Ext.define('MyApp.view.elearning.ElearningScheduleExam' ,{
     extend: 'Ext.grid.Panel',
     closable:true,
