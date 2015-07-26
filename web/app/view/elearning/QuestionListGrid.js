@@ -1,4 +1,3 @@
-/*Test */
 Ext.define('MyApp.view.elearning.QuestionListGrid' ,{
     extend: 'Ext.grid.Panel',
     closable:true,
