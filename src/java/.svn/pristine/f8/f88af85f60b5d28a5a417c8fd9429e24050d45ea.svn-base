@@ -1,0 +1,75 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.dlabs.mis.controller;
+
+/**
+ *
+ * @author Kamlesh the admin
+ */
+import com.dlabs.constants.MISConstant;
+import com.dlabs.constants.URLMap;
+import com.dlabs.mis.dao.ClassDAO;
+import com.dlabs.mis.dao.MasterDAO;
+import com.dlabs.mis.dao.PaymentDAO;
+import com.dlabs.model.Classes;
+import com.dlabs.model.Master;
+import com.dlabs.model.Property;
+import com.kjava.base.db.DbPool;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+@Controller
+public class ClassController {
+    Connection conn = null;
+    
+    @Autowired
+    private ClassDAO classDAO;
+
+    public void setClassDAO(ClassDAO classDAO) {
+        this.classDAO = classDAO;
+        
+    }
+    @RequestMapping(value=URLMap.ADD_Class, method=RequestMethod.POST)
+    @ResponseBody
+    public Classes addClass(@RequestBody Classes clas){
+        try{
+            conn = DbPool.getConnection();
+           return classDAO.addOrEditClass(conn,clas);
+        }
+        catch(Exception ex){
+            
+        }finally{
+            DbPool.close(conn);
+        }
+        return clas;
+    }
+    @RequestMapping(value=URLMap.GET_Classes, method= RequestMethod.GET)
+    @ResponseBody
+    public String getClasses(){
+       try{
+            conn = DbPool.getConnection();
+           return classDAO.getAllClassesAsJson(conn,0,15).toString();
+        }
+       
+        catch(Exception ex){
+            
+        }finally{
+            DbPool.close(conn);
+        }
+        return ""; 
+     }
+    
+    
+}

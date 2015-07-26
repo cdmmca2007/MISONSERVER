@@ -1,0 +1,12 @@
+<ul class='nav-menu'>
+ <li class="quick-links" callback="recentUpdate"><a href="#">Recent Activity</a></li>
+<%
+this.each(function(row){%>
+    <li class="quick-links" callback="<%=row.callback%>"><a href="#"><%=row.attr('name')%></a></li>
+<%});
+%>
+    <li class="quick-links-selected" style="float: left;margin-top: -250px;">
+        <img src="resources/images/Quicklinks_selected.png" style="position: absolute;margin-left: -15px;width: 170px;">
+        <text>Recent Activity</text>
+    </li>
+</ul>

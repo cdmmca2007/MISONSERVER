@@ -1,0 +1,7 @@
+<ul class='nav-menu'>
+<%
+this.each(function(row){%>
+    <li><a href="#"><%=row.attr('name')%></a></li>
+<%});
+%>
+</ul>

@@ -1,0 +1,94 @@
+Ext.define('MyApp.view.payment.FeeDetails' ,{
+    extend: 'Ext.container.Container',
+    requires:['MyApp.view.payment.FeeStrucGrid','MyApp.view.payment.FeeTemplate'],
+    alias: 'widget.feedetailsgrid',
+    closable:true,
+    title: 'Fee Tempplates',
+    layout:{
+        type:'hbox',
+        align:'stretch'
+    },
+    constructor : function(){
+        this.callParent(arguments);
+    },
+    initComponent: function() {
+        this.items=[
+        {
+            xtype:'feetemplategrid',
+            width:300,
+            listeners:{
+                selectionChange : this.templateChange
+            }
+        },{
+            xtype:'feetemplate',
+            flex:.7
+        },{
+            xtype:'container',
+            layout:{
+                type:'vbox',
+                align:'stretch'
+            },
+            items:[
+              {
+                  xtype:'feestructure',
+                  flex:1,
+            listeners:{
+                addRecordsToTemplate : this.addRecorsToTemplate
+            }
+//              },{
+//                  height:100,
+//                  xtype:'grid',
+//                  store:Ext.create('Ext.data.Store',{
+//                        fields:['name','comment'],
+//                        data:[
+//                            {name:'DIS_1',comment:'TEST!@#'}
+//                        ]
+//                  }),
+//                  columns:[
+//                      {
+//                          text:'Discount Name',
+//                          dataIndex:'name',
+//                          flex:1
+//                      },{
+//                          text:'Comment',
+//                          dataIndex:'comment',
+//                          flex:1
+//                      }
+//                  ]
+              }  
+            ],
+            flex:1
+        }
+        ];
+        this.callParent(arguments);
+    },
+    onRender : function(){
+        //this.selModel.on('selectionchange', this.onSelectChange);
+        this.callParent(arguments);
+    },
+    selectionchange : function(sm, selected,eOpts){
+        if(sm.getCount()){
+              
+        }
+    },
+    templateChange : function(sm){
+        this.iconDelete.setDisabled(sm.getCount()==0); 
+        this.iconEdit.setDisabled(sm.getCount()==0);
+        var data = sm.getSelection()[0].data;
+        Ext.getCmp('comment_'+'feetemplate').setValue(data.comment);
+        
+    },
+    addRecorsToTemplate : function(records,type){
+        var store = Ext.StoreManager.lookup('TemplateDetails');
+        var c = store.getCount();
+        Ext.each(records, function(rec){
+            store.add({
+                referenceId:rec.data.id,
+                type:type,
+                name:rec.data.name,
+                order:c-1
+            });
+        })
+    }
+});
+

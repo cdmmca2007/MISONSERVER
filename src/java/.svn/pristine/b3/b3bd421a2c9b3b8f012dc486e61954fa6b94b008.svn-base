@@ -1,0 +1,5 @@
+# To change this template, choose Tools | Templates
+# and open the template in the editor.
+
+GET_ALL_DOCUMENTS=where (q.docName like {ss} or u.name like {ss})
+GET_COLIBRATION = where (item_code like {ss} or item_desc like {ss})

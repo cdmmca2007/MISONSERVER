@@ -1,0 +1,17 @@
+<div class="grid-view"  <%=(el)->el.data('data',this)%>>
+<table class="tablecss_trend_hourly">
+<thead>
+<tr class="can-grid-row-header">
+<% list(this.columns, function(column){%>
+	<th data-field="<%=column.field%>" style="<%=column.style%>" class="grid-header-cell <%=column.css%> <%=column.sortable?"can-grid-sortable":""%>">
+		<span><%=column["header"]%></span><span class="<%=column.sortable?'can-grid-sort-icon':''%>">&nbsp</span>
+	</th>
+<%})%>
+
+</tr>
+</thead><tbody>
+    <% var url = this.dataview%>
+	<%==can.view.render(url,this)%>
+</tbody>
+</table>
+</div>

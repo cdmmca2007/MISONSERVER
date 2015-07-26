@@ -1,0 +1,60 @@
+ Ext.define('MyApp.view.user.UserList' ,{
+    extend: 'Ext.grid.Panel',
+    alias: 'widget.userlist',
+    id:'userList',
+    closable:true,
+    title: 'User Administration',
+    store:'Users',
+    dockedItems :[{
+                xtype: 'toolbar',
+                items: [{
+                    iconCls: 'icon-add',
+                    text: 'Add'
+                },{
+                    iconCls: 'icon-edit',
+                    text: 'Edit',
+                    disabled: true
+                }, {
+                    iconCls: 'icon-delete',
+                    text: 'Delete',
+                    disabled: true,
+                    itemId: 'delete'
+            }]
+    }],
+
+    initComponent: function() {
+    	var me =this;
+        this.columns = [
+             Ext.create('Ext.grid.RowNumberer'),
+           // {header: 'User ID',  dataIndex: 'userid',  flex: 1,hidden : true},
+            {header: 'Name',  dataIndex: 'name',  flex: 1},
+            {header: 'Login Id',  dataIndex: 'userName',  flex: 1},
+            {header: 'Role', dataIndex: 'role', flex: 1},
+            {header: 'DOB',  dataIndex: 'dob',  flex: 1,
+            	renderer : function(value){
+            		return Ext.Date.format(new Date(value),DEFAULT_DATE_FORMAT);
+            }},
+            {header: 'Email',  dataIndex: 'emailId',  flex: 1},
+            {header: 'Contact No',  dataIndex: 'contactNo',  flex: 1},
+            {header: 'Adress',  dataIndex: 'address',  flex: 1},
+            {header: 'City',  dataIndex: 'city',  flex: 1},
+        ];
+        this.selModel = Ext.create('Ext.selection.CheckboxModel',{
+            singleSelect:true,
+            listeners:{
+                selectionchange : function(sm){
+                    app.getController('Users').userSelectionChange(me,sm);
+                } 
+            }
+        });
+        this.bbar = Ext.create('Ext.PagingToolbar', {
+            store: this.store,
+            displayInfo: true,
+            displayMsg: 'Displaying users {0} - {1} of {2}',
+            emptyMsg: "No user to display"
+        }),
+
+        this.callParent(arguments);
+        this.store.load();
+    }
+});

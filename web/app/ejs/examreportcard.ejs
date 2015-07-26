@@ -1,0 +1,55 @@
+<div id="tabs">
+    <ul>
+        <li><a href="#exam_div">View Exam Details</a></li>
+        <li><a href="#report_div">View Result Details</a></li>
+    </ul>
+<br>
+<div style="font-size:9px;font-weight:bold">
+    <a href="#">Previous Exam</a>
+    <a style="float:right" href="#">Future Exam</a>
+</div>
+<div id="exam_div">
+   <div style="font-size:12px">
+   <div width="50%" style="float:left"><label style="font-weight:bold;color:#FF6600">Exam Type :</label><span style="font-weight:bold;color:green"><%=this.data.examtype%></span></div>
+   <div width="40%" style="float:right"><label style="font-weight:bold;color:#FF6600">Exam Name:</label><span style="font-weight:bold;color:green"><%=this.data.examname%></span></div>
+   <div style="float:left"><label style="font-weight:bold;color:#FF6600">Exam Start Date : </label><span style="font-weight:bold;color:green"><%=this.data.rows[0].examdate%></span></div>
+   </div><br><hr style="height:1px;border-width:0;background-color:#db6800;background: #db6800;">
+<%
+     for(i=0;i<this.data.rows.length;i++){
+     
+%>
+   <div style="background:red;border: #ffffcc;font-size:11px;">
+        <div style="background-color:#F6A828">
+             <div width="50%" style="float:left">
+               <span style="color:#FF6600;font-weight:bold;margin:2px 25px 2px 2px;">Subject :</span><span><%=this.data.rows[i].subject%></span>
+             </div>   
+             <div width="50%" style="float:right">
+             <span style="font-weight:bold;margin:2px 5px 2px 2px">Exam Date</span><span><%=this.data.rows[i].examdate%></span>
+             </div>
+        </div>
+        <div>
+             <div width="50%" style="float:left">
+             <span style="font-weight:bold;margin:2px 25px 2px 2px">Start Time</span><span><%=this.data.rows[i].examstarttime%></span>
+             </div>
+             <div width="50%" style="float:right"> 
+             <span style="font-weight:bold;margin:2px 25px 2px 2px">End Time</span><span><%=this.data.rows[i].examendtime%></span>
+             </div>
+        </div>
+        <div>
+          <div width="50%" style="float:left">
+          <span style="font-weight:bold;margin:2px 25px 2px 2px">Max Mark </span><span><%=this.data.rows[i].maxmark%></span>
+          </div>
+          <div width="50%" style="float:right">
+          <span style="font-weight:bold;margin:2px 25px 2px 2px">Pass Mark</span><span><%=this.data.rows[i].passmark%></span>
+          </div>
+        </div>
+   </div>
+   <br><br><br>
+<%
+ }
+%>
+</div>
+<div id="report_div">
+<p></p>
+</div>
+</div>

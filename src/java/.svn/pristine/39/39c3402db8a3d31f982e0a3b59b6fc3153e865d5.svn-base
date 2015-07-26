@@ -1,0 +1,88 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package com.dlabs.mis.controller;
+import com.dlabs.constants.URLMap;
+import com.dlabs.mis.dao.paymentDetailDAO;
+import com.dlabs.model.GenerateFee;
+import com.kjava.base.db.DbPool;
+import java.sql.Connection;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+/**
+ *
+ * @author cd
+ */
+@Controller
+public class PaymentDetailController {
+
+    Connection conn = null;
+
+    @Autowired
+    private paymentDetailDAO paymentdetailDAO;
+
+    public void setClassDAO(paymentDetailDAO paymentdetailDAO) {
+        this.paymentdetailDAO = paymentdetailDAO;
+
+    }
+    
+    @RequestMapping(value=URLMap.GET_PAYMENTDETAILS, method= RequestMethod.GET)
+    @ResponseBody
+    public String getTimetable(){
+       try{
+            conn = DbPool.getConnection();
+           return paymentdetailDAO.getAllTimeTableAsJson(conn,0,15).toString();
+        }
+
+        catch(Exception ex){
+
+        }finally{
+            DbPool.close(conn);
+        }
+        return "";
+     }
+    
+    @RequestMapping(value=URLMap.GET_GENERATED_FEE, method= RequestMethod.GET)
+    @ResponseBody
+    public String getAdminStudentFeeList(){
+       try{
+            conn = DbPool.getConnection();
+           return paymentdetailDAO.getAllAsJson1(conn,0,15).toString();
+        }
+
+        catch(Exception ex){
+
+        }finally{
+            DbPool.close(conn);
+        }
+        return "";
+     }
+    @RequestMapping(value=URLMap.GENERATE_FEE, method=RequestMethod.POST)
+    @ResponseBody
+    /*public Object addGenerateFee(@RequestParam("sessionid") String sessionid,
+                                      @RequestParam("classid") String classid  ,
+                                      @RequestParam("month")   String month)*/
+    public Object addGenerateFee()
+    {
+        GenerateFee fee=new GenerateFee();
+        try{
+            conn = DbPool.getConnection();
+            
+          return paymentdetailDAO.generateFee(conn,"2013-2014" ,"",6);
+           
+        }
+        catch(Exception ex){
+            
+        }finally{
+            DbPool.close(conn);
+        }
+        return fee;
+    }
+ 
+}

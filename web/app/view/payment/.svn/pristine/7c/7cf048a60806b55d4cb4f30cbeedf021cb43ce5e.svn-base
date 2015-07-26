@@ -1,0 +1,93 @@
+Ext.define('MyApp.view.payment.FeeDetailsParent' ,{
+    extend: 'Ext.panel.Panel',
+    closable:true,
+    title: 'Current Month Fee Detail',
+    layout:'fit',
+    items:[
+        {
+            xtype:'panel',
+            title:'Current Month Fee Detail'
+        }
+    ],    
+    initComponent: function() {
+
+        Ext.Ajax.request({
+                url:'paymentDetail/get.do',
+                type:'json',
+                headers:{
+                    'Content-Type':'application/json'
+                },                
+                success: function(res){
+                    var rec = eval('('+res.responseText+')');                    
+                      //this.up('panel').update(rec);
+                      Ext.getCmp('panel11').overwrite(panel.body, rec);
+                }
+            })
+
+        this.items = [
+        {
+            title:this.userName,
+            style:'padding:10px',
+            layout:{
+                type:'vbox',
+                align:'stretch'
+            },
+            items:[
+            {
+                xtype:'panel',
+                id   :'panel1',
+                layout:{
+                    type:'hbox',
+                    border:false
+                },
+                items:[
+                {
+                    flex:1,
+                    layout:'hbox',
+                    id   :'panel11',
+                    height:380,
+                    items:[
+                    this.usersDetails = Ext.create('Ext.XTemplate',{
+                        style:'padding-top:10px;padding-left:10px;padding-right:10px;font-weight:bold;background-color: #DCEAFB',
+                        tpl: [
+                            '<p>Student Name: {studentname}</p>',
+                            '<p>Class       :  {classname}</p>',
+                            '<p>From Month  : {frommonth}</p>',
+                            '<p>To Month    : {tomonth}, {state}</p>',
+                            '<p>Due Date    : {duedate}</p>',
+                            '<p>Fee Details: ',
+                            '<tpl for="feestructure">',
+                                '<tpl><p>{feestructure.fee_name}</p><p>{feestructure.fee_amount}</p></tpl>',
+                            '</tpl></p>',
+                            '<p>Fine Amount : {fineamount}</p>',
+                            '<p>Total Amount : {totamount}</p>',
+                        ]
+                    }),
+                    ]
+                },
+                {
+                    flex:1,
+                    html:"<div> <span class='label-for'>Father's Name:</span><span class='label'> Kamlesh Kumar SAH</span></div>"+
+                "<div> <span class='label-for'>Mother's Name:</span><span class='label'> Male</span></div>"+
+                "<div> <span class='label-for'>Contact:</span><span class='label'>8987678765</span></div>"+
+                "<hr/>"+
+                "<div>Addres</div>"+
+                "<div> <span class='label-for'>Street:</span><span class='label'>Vishrantwadi</span></div>"+
+                "<div> <span class='label-for'>City:</span><span class='label'>Pune</span></div>"+
+                "<div> <span class='label-for'>District:</span><span class='label'>Pune</span></div>"+
+                "<div> <span class='label-for'>State:</span><span class='label'>Maharashtra</span></div>"+
+                "<div> <span class='label-for'>ZIP Code:</span><span class='label'>898765</span></div>"
+                }
+                ]
+
+            }
+            ]
+        }
+        ]
+        this.callParent(arguments);
+    },
+    onRender : function(){
+        //this.selModel.on('selectionchange', this.onSelectChange);
+        this.callParent(arguments);
+    }
+  });

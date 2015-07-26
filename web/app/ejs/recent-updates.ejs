@@ -1,0 +1,17 @@
+<div class="recent-activity">
+<h3>Recent Activity</h3>
+<%this.each(function(row){%>
+     <div class="comment-div-1"><span class="activity_type activity_type_<%=row.activityType%>">&nbsp;</span><span><%=row.attr('subject')%></span></div>
+     <div style="overflow:hidden;clear:both;">
+        <div class="left post-by-img"><img src="img/<%=row.userid%>.png"></div>
+        <div class="left">
+            <div class="comment-div-2"><span><a href="#" class="name"><%=row.userName%></a></span>
+            <span class="duration"><%=new Date(CURRENT_TIME-row.timestamp).getHours()%> hours ago</span><span>(<a href="#">Show more</a>)</span></div>
+            <div><%=row.comment%></div>
+            <div>
+                <span class="reply">reply</span><span>Like(0)</span>
+            </div>
+        </div>
+     </div>
+<%})%>
+</div>

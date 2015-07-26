@@ -1,0 +1,563 @@
+package com.dlabs.mis.dao;
+
+
+import com.dlabs.model.User;
+import com.kjava.util.DateHelper;
+
+/**
+ *
+ * @author Kamlesh Kumar Sah
+ */
+public class MySqlQuery {
+
+    
+   public static String getSearchStringQuery(String ss,Object[] obj){
+        StringBuilder s = new StringBuilder();
+        if(!ss.isEmpty()){
+            s.append(" (");
+            for(int i=0; i<obj.length; i++){
+                s.append(obj[i]+" like '%"+ss+"%'");
+                if(i<obj.length-1){
+                    s.append(" or ");
+                }
+            }
+            s.append(")");
+        }
+        return s.toString();
+    }
+    public static String[] getAllUserQuery(int page,int row, String orderBy,java.lang.String ss){
+        String s = getSearchStringQuery(ss, new Object[]{"name"});
+        String FROM_QUERY = " from users u inner join roles on u.roleid=roles.id "
+                + " inner join userlogin on u.userid = userlogin.userid";
+        if(!s.isEmpty()){
+            FROM_QUERY +=" where "+s;
+        }
+        String fields = "userlogin.username as userName, u.userid as userId,'' as  sal, u.name,"
+                + "u.emailid as emailId,u.contactno as contactNo,u.address ,roles.name as role, u.roleid as roleId,"
+                + " u.gender, u.city, u.dob  ";
+        return getQuery(fields,FROM_QUERY,page,row,orderBy);
+    }
+     public static String[] getAllDoctorQuery(int page,int row, String orderBy,java.lang.String ss){
+        String s = getSearchStringQuery(ss, new Object[]{"fname","lname"});
+        String FROM_QUERY = " from doctor d left join configmaster m1 on d.specialisation=m1.masterid " +
+                " left join configmaster m2 on d.category=m2.masterid left join configmaster m3 on d.type=m3.masterid ";
+        if(!s.isEmpty()){
+            FROM_QUERY +=" where "+s;
+        }
+        String fields = "d.id, sal, fname, lname, emailid,dob," +
+                "contactno , area , city, m1.value as speciality, m2.value as category,m3.value as type , doa ";
+        return getQuery(fields,FROM_QUERY,page,row,orderBy);
+    }
+    public static String getUserDetail(int userid)
+    {
+        
+        String query = "select users.userid as userid, username as loginid, sal, fname, lname, concat(fname,' ',lname) as name ,emailid," +
+                "contactno as contactno,address ,roletype as role, users.roleid, image, status, gender, city, dob from users inner join roles on users.roleid=roles.roleid " +
+                "inner join userlogin on users.userid = userlogin.userid and users.userid='"+userid+"'";
+        return query;
+    }
+    public static String getUserById() {
+        String FROM_QUERY = " from users inner join roles on users.roleid=roles.roleid " +
+                "inner join userlogin on users.userid = userlogin.userid where users.userid=?";
+        String fields = "users.userid, username as loginid, sal, fname, lname, concat(fname,' ',lname) as name ,emailid," +
+                "contactno as contactno ,roletype as userrole, users.roleid, image, status, gender, city, dob ";
+        return FROM_QUERY + fields;
+    }
+
+    public static String getDeleteQuery(String string, String string0) {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+    public static String[] getApplicantInsertQuery(String name , String email ,String add ,String city,String state,String contact,String edu,int ctc,String comments) {
+        String query[]=new String[2];
+        query[0] ="INSERT INTO jobapplicant(fname,emailid,address,city,state,contactno,education,currentctc,placed,migrationflag,createddate,comment,jobid) "
+                + "VALUES('"+name+"','"+email+"','"+add+"','"+city+"','"+state+"','"+contact+"','"+edu+"',"+ctc+",0,0,now(),'"+comments+"',101)";
+       // query[1] ="INSERT INTO RESUMES(applicantid , path , uploadedon) values(?,?,now())";
+        query[1] ="select max(applicantid) from jobapplicant";
+        return query;
+    }
+    public static String getResumeInsertQuery(int applicantid , String filename){
+      return "INSERT INTO RESUMES(applicantid , path , uploadedon) values("+applicantid+",'"+filename+"',now())";
+    }
+
+    public static String getApplicantInsertQueryFromCsv(){
+        return "insert into jobapplicant(fname,emailid,address,contactno,education,currentctc,placed,experiance,migrationflag,createddate,location,employer,skillset,resumetitle,roles,industry,dob,jobcategory)"
+                + "values(?,?,?,?,?,?,0,?,3,?,?,?,?,?,?,?,?,?)";
+    }
+
+     public static String[] getUserDeleteQuery() {
+       String query[]=new String[2];
+            query[0]="delete from users where userid=?";
+            query[1]="delete from userlogin where userid=?";
+       return query;
+    }
+
+    public static String[] getUserInsertQuery() {
+
+        String Query[]=new String[3];
+
+        Query[0]="Insert into Users(userid,name,dob,gender,address,city,emailid,contactno,roleid,createdon,modifiedon)"
+                + " values(?,?,?,?,?,?,?,?,?,now(),now()) ";
+        Query[1]="insert into userlogin(userid,username,password,sequerityques,ans,status) values(?,?,?,?,?,1)";
+        Query[2]="Select username from userlogin where username = ? ";
+        return Query;
+    }
+
+    public static String[] getUserUpdateQuery() {
+        String query[]=new String[2];
+               query[0]="update Users set name=?,dob=?,gender=?,address=?,city=?,emailid=?,contactno=?,roleid=?,modifiedon=now() where userid = ?";
+               query[1]="update userlogin set username=? where userid=?";
+        return query;
+    }
+   /* public static String verifyUser(){
+        String FROM_QUERY = " from users inner join roles on users.roleid=roles.roleid " +
+                "inner join userlogin on users.userid = userlogin.userid ";
+        String fields = "users.userid,username as loginid,sal,concat(fname,' ',lname) as name,emailid," +
+                "contactno as contact,users.ROLEID as userrole";
+        String where = " where username=? and PASSWORD=?";
+        return "SELECT "+fields+FROM_QUERY+where;
+    }*/
+     public static String verifyUser(){
+        String FROM_QUERY = " from users  inner join userlogin on users.userid = userlogin.userid inner join roles on users.roleid = roles.id ";
+        String fields = "users.name,users.emailid,users.contactno,users.address,users.city,users.gender,users.dob,users.userid,username,'' as sal,emailid," +
+                "users.roleid,roles.permValue ";
+        String where = " where username=? and PASSWORD=?";
+        return "SELECT "+fields+FROM_QUERY+where;
+    }
+   /*------------------audit trail query---------------------*/
+    public static String[] getAuditTrailQuery(String ss, String orderby) {
+        String q[]=new String[2];
+        String s = ss.isEmpty()?"":" where "+getSearchStringQuery(ss, new Object[]{"details"});
+        q[1] = "select att.actiontype,att.text,at.* from audittrailtype att inner join audittrail at on att.actionid = " +
+                "at.actionid "+s +" order by "+orderby;
+        q[0] = "select count(1) as count from audittrailtype att inner join audittrail at on att.actionid = " +
+                "at.actionid "+s;
+        return q;
+    }
+    public static String addAudtitTrail() {
+       return "insert into audittrail(actionid,params,ipaddr,userid,ts) values(?,?,?,?,?)";
+    }
+    private static String[] getQuery(String fields, String FROM_QUERY, int start,int limit,String orderBy) {
+        String q[]= new String[2];
+        q[0] = "SELECT count(1) as count "+FROM_QUERY;
+        q[1] = "SELECT "+fields+" "+FROM_QUERY+" "+(orderBy.isEmpty()?"":"order by "+orderBy);
+        q[1] = q[1]+" LIMIT "+limit+" OFFSET "+start;
+        return q;
+    }
+
+    public static String deleteQuery(String tablename ,String colname) {
+
+        return "Delete from " + tablename + " where " + colname + " =?";
+    }
+      /*------------------Resume : Start------------------*/
+
+    
+        public static String[] getResumeQueryAll(int page,int row,String orderBy) {
+        String FROM_QUERY = " From  jobapplicant A,jobcategory J,Resumes R where J.jobid=A.jobid and A.applicantid=R.applicantid and (A.migrationflag=0 or A.migrationflag=3)and A.placed=0 ";
+        String fields = " A.applicantid as appid,concat(concat(A.fname ,' ') ,A.lname) as name , A.emailid ,A.contactno ,A.companyname ,"
+                + "  A.city as location,A.education,R.path,R.uploadedon as uploadedon,A.createddate";
+        return getQuery(fields,FROM_QUERY,page,row,orderBy);
+    }
+    public static String getApplicantFullDetailQuery(int applicantid){
+        String query =null;
+        query ="Select * from jobapplicant where applicantid="+applicantid+"";
+        return query;
+    }
+    public static String[] getResumeQueryAllPlaced(int page,int row,String orderBy) {
+        String FROM_QUERY = " From  jobapplicant A,jobcategory J,Resumes R where J.jobid=A.jobid and A.applicantid=R.applicantid and placed=1 ";
+        String fields = " A.applicantid as appid, concat(concat(A.fname ,' ') ,A.lname) as name , A.emailid ,A.contactno ,A.companyname ,"
+                + " A.city,A.salaryoffered,R.path,R.uploadedon,A.modifieddate as modifydate";
+        return getQuery(fields,FROM_QUERY,page,row,orderBy);
+    }
+    public static String[] getResumeQueryAllResDev(int page,int row,String orderBy) {
+        String FROM_QUERY = "From  jobapplicant A where migrationflag=1 ";
+        String fields = "A.applicantid,concat(concat(A.fname ,' ') ,A.lname) as name , A.emailid ,A.contactno ,A.createddate,A.status,A.Comment comment ";
+        return getQuery(fields,FROM_QUERY,page,row,orderBy);
+    }
+    public static String getResumeDevelopmentRequest(){
+        return "select applicantid,concat(concat(fname ,' ') ,lname) , emailid ,contactno,createddate from jobapplicant where migrationflag=1 ORDER BY CREATEDDATE DESC LIMIT 0,5";
+    }
+    public static String getClientJob(){
+        return "Select companyname , jobtitle , poston from clientjob order by poston desc limit 5";
+    }
+
+    public static String getApplicantResumeDevInsertQuery(String name , String email ,String contact,String comments) {
+        String query=new String();
+        query ="INSERT INTO jobapplicant(fname,emailid,contactno,placed,migrationflag,createddate,comment) "
+                + "VALUES('"+name+"','"+email+"','"+contact+"',0,1,now(),'"+comments+"')";
+
+        return query;
+    }
+
+     public static String getResumeQueryById() {
+        String FROM_QUERY = "From  jobapplicant A , resumes R , jobcategory J where  A.applicantid = R.Applicantid"
+                + "  and migrationflag=1 and A.jobid = J.jobid  and A.applicantid=?";
+        String fields = "concat(concat(A.fname ,' ') ,A.lname) as name , A.emailid ,A.contactno ,A.companyname ,"
+                + " A.location , R.uploadedon ,R.modifiedon ,R.path , R.resumeid , J.jobname";
+        return "SELECT "+fields+" "+FROM_QUERY;
+    }
+   /*--------------------------------------end-----------------------------------------*/
+
+
+
+   /*--------------------------ExcelSheet File Management :Start------------------------------------------*/
+     public static String[] getExcelSheetUploadQuery(int page,int row,String orderBy){
+         String FROM_QUERY = "From ExcelSheetUpload " ;
+         String fields = "UploadId ,fileName,UploadOn,UploadedBy";
+
+        return getQuery(fields,FROM_QUERY,page,row,orderBy);
+     }
+     public static String getExcelSheetUploadQuery(){
+
+         String Query = "insert into ExcelSheetUpload(fileName,UploadOn,UploadedBy) values()";
+
+        return Query;
+     }
+   /*--------------------------ExcelSheet File Management :End------------------------------------------*/
+
+
+   /*--------------------------Adevertisment Entry Management :Start------------------------------------------*/
+
+     public static String getAllAdvertisementQuery(int x){
+         String Query = "Select title , image , content from advertisement where advtypeid="+x+"";
+
+        return Query;
+     }
+
+
+    public static String getMaxUserIdQuery() {
+        return "Select Max(userid) from users";
+    }
+
+     public static String[] getAllClientQuery(int page, int rows, String orderBy) {
+        String FROM_QUERY = " from Client ";
+        String fields = "clientid ,clientname,website,approvingmanager,contactperson,address,contactno,emailid,joining,aboutclient ";
+         return getQuery(fields,FROM_QUERY,page,rows,orderBy);
+
+    }
+     
+     public static String getClientInsertQuery() {
+       
+        String query = "insert into client(clientname,website,approvingmanager,contactperson,address,contactno,emailid,joining,aboutclient) values(?,?,?,?,?,?,?,?,?) ";
+         return query;
+
+    }
+
+    public static String getClientUpdateQuery() {
+        String query = "update client set clientname=?,website=?,approvingmanager=?,contactperson=?,address=?,contactno=?,emailid=?,joining=?,aboutclient=? where clientid=? ";
+         return query;
+
+    }
+
+    public static String[] getAllClintJobQuery(int page, int rows, String orderBy) {
+        String FROM_QUERY = " from clientjob where noofvacancies > postfilled";
+        String fields = "companyname,requirementid,jobtitle,jobtype,designation,noofvacancies,experience,startdate,enddate,qualification,description,salaryrange,postfilled";
+        return getQuery(fields,FROM_QUERY,page,rows,orderBy);
+
+    }
+
+    public static String getClientJobInsertQuery() {
+        String query=null;
+        query ="insert into clientjob(clientid,companyname,jobtitle,Jobtype,designation,noofvacancies,experience,startdate,enddate,qualification,description,salaryrange,poston)"
+                + " values(?,?,?,?,?,?,?,?,?,?,?,?,now())";
+        return query;
+    }
+
+    public static String getApplicantDetail(int id)
+    {
+        String Query ="select a.sal,a.fname,a.lname,a.emailid,a.address,a.city,a.state,a.contactno,"
+                    + "a.education,a.currentctc,j.jobname,a.experiance,a.companyname,a.createddate from "
+                    + "jobapplicant a, jobcategory j where a.applicantid='"+id+"' and a.jobid=j.jobid and placed=1";
+        return Query;
+    }
+
+  /*  public static String getScheduleInsertQuery(ApplicantSchedule u) {
+        String Query ="Insert into callschedule(applicantid,clinetid,requirementid,userid,interviewdate,timing,comment,status,result,intertviewer,venue,emailreminder) values(?,?,?,?,?,?,?,'Started',0,?,?,?)";
+        return Query;
+    }*/
+
+    public static String getClientDetail(){
+        String Query ="select clientid id , clientname name from client";
+        return Query;
+        
+    }
+
+    public static String getClientDeleteQuery() {
+        String Query=null;
+
+        Query="Delete from client where clientid=?";
+        return Query;
+    }
+
+    public static String[] getScheduleQueryAll(int page, int rows, String orderBy) {
+        String fields = " S.scheduleid,A.applicantid ,concat(concat(A.fname ,' ') ,A.lname) as applicantname,C.clientname as companyname,CJ.jobtitle as jobtitle,concat(concat(U.fname ,' ') ,U.lname) as username,"
+                + "S.interviewdate,S.timing,S.comment as Reason,case S.status when 1 then 'Placed' when 0 then 'Started' when 2 then 'Rejected' when 3 then 'Interview Canceled' end as result,S.intertviewer as interviewer,S.venue,S.interviewtype,S.modifyon,S.emailreminder,S.modifyby,S.createdon";
+        String FROM_QUERY = "from callschedule S,jobapplicant A,client C,clientjob CJ,Users U where S.applicantid=A.applicantid and S.clinetid=C.clientid and S.userid=U.userid and S.requirementid=CJ.requirementid and S.status!=1";
+        return getQuery(fields,FROM_QUERY,page,rows,orderBy);
+
+    }
+    public static String[] getFeedbackQueryAll(int page, int rows, String orderBy) {
+        String fields ="A.applicantid as feedbackid , concat(concat(A.fname ,' ') ,A.lname) as name , A.emailid as emailid ,A.contactno as contactno,A.education as qualification ,A.createddate as createddate,"
+                + " J.jobname jobcategory,F.nextdate nextdate,F.timing timing,F.calldate calldate, concat(concat(U.fname ,' ') ,U.lname) as username,F.comment as comment";
+        String FROM_QUERY = " from jobapplicant A , callfeedback F ,Users U , jobcategory J where A.applicantid=F.applicantid and F.userid=U.userid and A.jobid=J.jobid ";
+        return getQuery(fields,FROM_QUERY,page,rows,orderBy);
+
+    }
+
+    public static String getClientJobUpdateQuery() {
+
+        String query = "update clientjob set clientid=? , jobtitle=? , jobtype=? , designation=? , noofvacancies=? , experience=? , "
+                + " startdate=? , enddate=? , qualification=? , description=? , salaryrange=? where requirementid=? ";
+        return query;
+
+    }
+
+    public static String getClientJobDeleteQuery() {
+        String query = "delete from clientjob where requirementid=? ";
+        return query;
+
+
+    }
+
+    public static String[] getCsvInsertQuery(String name,String qulif,String ctc,String contact,String state,String city,String emailid){
+       String query[]=new String[2];
+        query[0]="Insert into jobapplicant(fname,emailid,city,state,contactno,education,currentctc,placed,migrationflag,createddate,jobid)"
+              + " values('"+name+"','"+emailid+"','"+city+"','"+state+"','"+contact+"','"+qulif+"',"+ctc+","+0+","+0+",now(),101)";
+        query[1]=query[1] ="select max(applicantid) from jobapplicant";
+        return query;
+    }
+
+     /*--------------------------Combo Box Entry Query :End------------------------------------------*/
+    public static String getComboBoxQuery(int x){
+
+        return "Select value from configmaster where configid="+x+"";
+    }
+    public static String getStateQuery(int x){
+
+        return "Select stateid,name from states where countryid="+x+"";
+    }
+    public static String[] getCityQuery(int x){
+
+        String query[]=new String[2];
+        query[0]="Select cityid,name from cities where stateid="+x+"";
+        query[1]="select count(*) as count from cities where stateid="+x+"";
+        return query;
+    }
+    public static String getCompanyListQuery(){
+        String query=null;
+        query ="select distinct clientid , clientname from client";
+        return query;
+    }
+    public static String getExperience(){
+        String query=null;
+        query ="select value from configmaster where configid=6 and value is not null order by value";
+        return query;
+
+    }
+    public static String getClientJobQuery(String name){
+        String query=null;
+        query ="select requirementid , jobtitle from clientjob where clientid="+name+"";
+        return query;
+
+    }
+
+    public static String getApplicantInterviewDetail(int applicantid){
+     String query=null;
+     query  ="select C.clientname , J.jobtitle , S.interviewdate , S.timing , S.status from callschedule S, client C, clientjob J "
+             + "where S.applicantid="+applicantid+" and C.clientid=S.clinetid and S.requirementid = J.requirementid;";
+     return query;
+    }
+
+    public static String getApplicantFeedbackDetail(int applicantid){
+     String query=null;
+     query  ="select * from callfeedback where applicantid="+applicantid+"";
+     return query;
+ }
+
+    public static String[] getAllSearch(int page, int rows, String searchField, String searchString,String orderBy) {
+
+        String fields = " S.scheduleid, concat(concat(A.fname ,' ') ,A.lname) as applicantname,C.clientname as companyname,CJ.jobtitle as requirementid,concat(concat(U.fname ,' ') ,U.lname) as username,"
+                + "S.interviewdate,S.timing,S.comment,S.status,case S.result when 1 then 'Placed' when 0 then 'Rejected' end as result,S.intertviewer as interviewer,S.venue,S.interviewtype,S.modifyon,S.emailreminder,S.modifyby";
+        String FROM_QUERY = "from callschedule S,jobapplicant A,client C,clientjob CJ,Users U where S.applicantid=A.applicantid and S.clinetid in (select clientid from client where clientname like '%"+searchString+"%') and S.userid=U.userid and S.requirementid=CJ.requirementid";
+        return getQuery(fields,FROM_QUERY,page,rows,orderBy);
+
+    }
+
+    public static String[] getUpdateClientJobVacancy() {
+        String query[]=new String[3];
+        query[0] ="select requirementid from callschedule where scheduleid=?";
+        query[1] ="update clientjob set postfilled=(postfilled + 1) where requirementid=?";
+        query[2] ="update jobapplicant set companyname=? , salaryoffered=? where applicantid=?";
+        return query;
+    }
+
+    public static String[] getAllClintJobComplQuery(int page, int rows, String orderBy) {
+        String FROM_QUERY = " from clientjob where noofvacancies = postfilled";
+        String fields = "companyname,requirementid,jobtitle,jobtype,designation,noofvacancies,experience,startdate,enddate,qualification,description,salaryrange,postfilled";
+        return getQuery(fields,FROM_QUERY,page,rows,orderBy);
+
+    }
+
+    public static String[] getPlacedApplicantDetailQuery(int page, int rows) {
+      /*  String FROM_QUERY = " from jobapplicant where companyname is not null";
+        String fields = "concat(concat(fname ,' ') ,lname) as name ,companyname , salaryoffered , now() as placedon ,emailid ";
+        return getQuery(fields,FROM_QUERY,page,rows);*/
+        String query[]=new String[2];
+        query[0]="select count(*) as count from jobapplicant where companyname is not null";
+        query[1]="select concat(concat(fname ,' ') ,lname) as Name ,companyname as Company, salaryoffered as Package, now() as Placedon ,Emailid from jobapplicant where companyname is not null";
+        return query;
+
+    }
+
+    public static String getDescriptionQuery(int reqid){
+        return "Select description from clientjob where requirementid="+reqid+"";
+    }
+    
+    public static String getApplicantTag(int applicantid){
+        return "select AT.tagid,tagname from applicanttag AT , Tagmaster TM where "
+                + "applicantid="+applicantid+" and AT.tagid=TM.tagid";
+    }
+    
+    public static String getUserCreatedTag(int userid , int applicantid){
+        return "Select TM.tagid ,TM.tagname from tagmaster TM where TM.userid="+userid+" and TM.tagid not in (select tagid from applicanttag where applicantid="+applicantid+")";
+    }
+
+    public static String getUserCreatedTagInsert(int userid , String tagname){
+        return "insert into tagmaster(userid , tagname) values("+userid+",'"+tagname+"')";
+    }
+
+    public static String[] getApplicantUpdateQueryFromSystem(String tagname) {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+    public static String getTagInsertQuery(int userid ,String tagname) {
+        return "insert into tagmaster(userid , tagname) values("+userid+",'"+tagname+"')";
+    }
+
+    public static String getApplicantTagInsertQuery(int applicantid,int tagid) {
+        return "insert into applicanttag (applicantid , tagid) values("+applicantid+","+tagid+")";
+    }
+
+    public static String getApplicantTagDeleteQuery(int applicantid, int tagid) {
+        return "Delete From applicanttag where applicantid="+applicantid+" and tagid="+tagid+"";
+    }
+
+    public static String getClientJobAssignmentInsert(int userid, int reqid) {
+        return "insert into RequirterClientMapping(requirementid,userid,startdate) values("+reqid+","+userid+",now())";
+    }
+
+    public static String getClientJobAssignmentUpdate(int userid, int reqid) {
+        return "update RequirterClientMapping set enddate=now() where requirementid="+reqid+" and userid="+userid+" ";
+    }
+
+     public static String[] getAllProductQuery(int page, int rows, String orderBy, String searchString) {
+        String FROM_QUERY = " from product";
+        String fields = "id as productcode , name as productname,category as type,companyname as company,description,remarks,price";
+        return getQuery(fields,FROM_QUERY,page,rows,orderBy);
+
+    }
+
+ 
+    public static String[] getAllCompaignQuery(int page, int rows, String orderBy, String searchString) {
+        String FROM_QUERY = " from Compaignmaster c ,users u ,configmaster cm , configmaster cm2 , users u1 where c.userid=u.userid and u.userid = u1.userid and c.specialisation=cm.masterid and c.headquater=cm2.masterid ";
+        String fields = " id as compaignid ,compaignname , cm.value as specialisation,description,cm2.value as headquarter,concat(concat(ifnull(u.fname,''),' '),ifnull(u.lname,'')) as manager,concat(concat(u.fname,' '),u.lname) as issuedby,createddate as issuedate ,"
+                + "noofdoctor,stauts,compaigndate as cdate,remarks,venue ";
+        return getQuery(fields,FROM_QUERY,page,rows,orderBy);
+
+    }
+
+     /*--------------------------------------------------------------------*/
+   /*--------------------------Chemist ------------------------------------------*/
+    public static String[] getAllChemistQuery(int page,int row, String orderBy,java.lang.String ss){
+        String s = getSearchStringQuery(ss, new Object[]{"name"});
+        String FROM_QUERY = " from chemist left join doctor on chemist.doctorid=doctor.id ";
+        if(!s.isEmpty()){
+            FROM_QUERY +=" where "+s;
+        }
+        String fields = " chemist.id, name ,chemist.emailid , chemist.contactno, clinicid as clinicname, chemist.area,chemist.address,doctor.fname as docname ";
+        return getQuery(fields,FROM_QUERY,page,row,orderBy);
+    }
+
+    public static String[] getAllMplQuery(int page, int rows, String orderBy, String searchString,boolean myMpl) {
+        String s = getSearchStringQuery(searchString, new Object[]{"u.fname","u.lname"});
+        String FROM_QUERY = " from mplmaster M inner join doctor D on M.doctorid = D.id inner join configmaster C on C.masterid =D.specialisation inner join users u on M.userid=u.userid " +
+                " left join stp on M.id=stp.id left join configmaster cm on cm.masterid = stp.transporttype ";
+       
+        if(myMpl){
+            FROM_QUERY+=" where M.userid =?";
+        } else{
+             FROM_QUERY+=" where M.userid in( select userid from users where managerid=?) and M.status!=0";
+        }
+         if(!s.isEmpty()){
+            FROM_QUERY +=" and "+s;
+        }
+        String fields = "concat(u.fname,' ',u.lname) as user, M.id mplid ,M.status, M.mplno mplno, M.doa doa ,concat(ifnull(D.fname,' '),' ') name , D.area ," +
+                " D.contactno , D.emailid , D.dob , D.area address , C.value specialisation, " +
+                "stp.transporttype, stp.area as areatype,stp.distance , cm.value as transport ";
+        return getQuery(fields,FROM_QUERY,page,rows,orderBy);
+
+    }
+
+    public static String[] getAllMplChemistQuery(int page, int rows, String orderBy, String searchString) {
+        String s = getSearchStringQuery(searchString, new Object[]{"name"});
+        String FROM_QUERY = " from mplmaster  MM ,  mplchemistmapping MC , chemist C where MM.id = MC.id and MC.chemistid = C.id ";
+        if(!s.isEmpty()){
+            FROM_QUERY +=" where "+s;
+        }
+        String fields = " MM.id mplid , MM.mplno mplno,C.name name , C.emailid emailid , C.contactno contacton , C.address , C.clinicid ";
+        return getQuery(fields,FROM_QUERY,page,rows,orderBy);
+
+    }
+
+    public static String getChemistUpdateQuery() {
+       return  "update chemist set name=? , emailid=? , contactno = ? , clinicid=? , area=? , address = ? , doctorid=? where id=?";
+    }
+
+ public static String getChemistDeleteQuery() {
+ return "delete from chemist where id=?";
+
+   }
+
+
+    public static String[] getAllDailyMplQuery(int page, int rows, String orderBy, String ss,boolean isJoint) {
+        String s = getSearchStringQuery(ss, new Object[]{"docname"});
+        String FROM_QUERY = " from mplmaster M left join  mpldailyreport report  on report.id = M.id " +
+                "inner join doctor D on M.doctorid = D.id left join configmaster C on C.masterid =D.specialisation " +
+                " left join configmaster C1 on C1.masterid =D.category where M.jointflag = ? and M.status=3";
+        if(!s.isEmpty()){
+            FROM_QUERY +=" and "+s;
+        }
+        String fields = " M.id as mplid ,report.status, M.mplno mplno, M.doa doa ,concat(ifnull(D.fname,' '),' ') docname ,C1.value as category,compaignname ,unitsreq,bussinessuptodate,brandprescribe,giftgiven,activitydone,remarks , C.value specialisation ";
+        if(isJoint){
+            fields+=", M.jointwith as manager ";
+        }
+        return getQuery(fields,FROM_QUERY,page,rows,orderBy);
+    }
+
+       public static String[] getAllDocToCompaignQuery(int page, int rows, String orderBy, String searchString) {
+        String s = getSearchStringQuery(searchString, new Object[]{"name"});
+        String FROM_QUERY = " from compaigndoctormapping c , doctor d , configmaster cm where cm.masterid = d.specialisation and c.doctorid=d.id and c.cid=?";
+        if(!s.isEmpty()){
+            FROM_QUERY +=" where "+s;
+        }
+        String fields = " c.id as pid, concat(concat(ifnull(d.fname,''),' ') ,ifnull(d.lname,'')) as name ,cm.value as specialisation , c.invitationdate as date ";
+        return getQuery(fields,FROM_QUERY,page,rows,orderBy);
+    }
+
+    public static String getRemDocFromCompaignInsertQuery(int x) {
+       return "Delete from compaigndoctormapping where id="+x+"";
+    }
+
+    public static String[] getAllChemistByMPL(int page, int rows, String orderBy, String searchString) {
+        String s = getSearchStringQuery(searchString, new Object[]{"name"});
+        String FROM_QUERY = " from mplchemistmapping m inner join chemist c on m.chemistid=c.id where m.id=?";
+        if(!s.isEmpty()){
+            FROM_QUERY +=" where "+s;
+        }
+        String fields = " c.id chemistid ,ifnull(c.name,' ') name ,c.emailid as emailid , c.contactno as contactno ,c.clinicid as clinicno , c.area as area, c.address as address  ";
+        return getQuery(fields,FROM_QUERY,page,rows,orderBy);
+    }
+    
+}
+
+ 

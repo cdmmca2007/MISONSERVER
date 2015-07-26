@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans>
+<bean id="queryProvider" class="com.dlabs.mis.dao.QueryProvideImpl"/>
+          
+</beans>
+
+
+
+

@@ -1,0 +1,68 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.dlabs.model;
+
+/**
+ *
+ * @author Kamlesh the admin
+ */
+public class Classes {
+    private String schoolid;
+    private String classid;
+    private String name;
+    private String classteacher;
+    private String feetemplate;
+    private String comment;
+
+    public String getSchoolid() {
+        return schoolid;
+    }
+
+    public void setSchoolid(String schoolid) {
+        this.schoolid = schoolid;
+    }
+
+    public String getClassid() {
+        return classid;
+    }
+
+    public void setClassid(String classid) {
+        this.classid = classid;
+    }
+
+    public String getClassteacher() {
+        return classteacher;
+    }
+
+    public void setClassteacher(String classteacher) {
+        this.classteacher = classteacher;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public String getFeetemplate() {
+        return feetemplate;
+    }
+
+    public void setFeeteamplate(String feetemplate) {
+        this.feetemplate = feetemplate;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    
+}

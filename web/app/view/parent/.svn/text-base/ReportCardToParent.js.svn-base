@@ -1,0 +1,304 @@
+Ext.define('MyApp.view.parent.ReportCardToParent' ,{
+    extend: 'Ext.grid.Panel',
+    alias: 'widget.reportcardtoparent',
+    closable:true,
+    title: 'Student Report Card',
+    id:'reportcardtoparent',
+    layout:'fit',
+    store:'StudentMarkEntry',    
+    selModel: {
+        selType: 'cellmodel'
+    },
+    tbar :[{
+       xtype: 'combo',
+       emptyText: 'Select Session',
+       text   : 'Session',
+       id:'sessioncombo',
+       store:Ext.create('MyApp.store.Combo').load({
+                                      params:{propertyId:-1}}),//For Session
+       typeAhead: true,
+       queryMode: 'local',
+       Autoload:true,
+       valueField :'id',
+       displayField :'value',  
+       listeners:{
+            select: function(component){
+                var sessionid=Ext.getCmp('sessioncombo').getValue();
+
+
+               Ext.getCmp('classcombo').getStore().load({
+                     params:{
+                             propertyId:2,///Class List
+                             classid   :sessionid
+                     }
+               });
+            }
+       }
+    },{
+       xtype: 'combo',
+       emptyText: 'Select Class',
+       text   : 'Class',
+       id:'classcombo',
+       store:'ClassCombo1',
+       typeAhead: true,
+       queryMode: 'local',
+       Autoload:true,
+       valueField :'id',
+       displayField :'value',  
+       listeners:{
+            select: function(component){
+                var id=Ext.getCmp('classcombo').getValue();
+                var sessionid=Ext.getCmp('sessioncombo').getValue();
+                
+                Ext.getCmp('studentcombo').getStore().load({
+                     params:{
+                             propertyId:7,///Student List
+                             classid   :id+'&'+sessionid 
+                     }
+               });
+            }
+       }
+    },{
+       xtype: 'combo',
+       emptyText: 'Select Exam Type',
+       text   : 'Exam Type',
+       id:'examtypecombo',
+       store:Ext.create('MyApp.store.Master').load({
+                                      params:{propertyId:5}}),//For Teacher
+       typeAhead: true,
+       queryMode: 'local',
+       Autoload:true,
+       valueField :'id',
+       displayField :'value',  
+       listeners:{
+            select: function(component){
+            }
+       }
+    },
+    {
+       xtype: 'combobox',
+       emptyText: 'Select Student',
+       text   : 'Student',
+       id:'studentcombo',
+       store:'ClassCombo',
+       typeAhead: true,
+       queryMode: 'local',
+       Autoload:true,
+       valueField :'id',
+       displayField :'value',  
+       listeners:{
+            select: function(component){
+                
+            }
+       }
+    },{
+        iconCls: 'icon-add',
+        text: 'View Report Card',      
+          handler: function(component){
+                component.getEl().on('click', function(){
+                    
+                var classid     =Ext.getCmp('classcombo').getValue();                
+                var sessionid   =Ext.getCmp('sessioncombo').getValue();                
+                var examtypeidid=Ext.getCmp('examtypecombo').getValue();                
+                var studentid   =Ext.getCmp('studentcombo').getValue();    
+                var subjectid =null;
+                
+                Ext.getCmp('studentmarkentry').getStore().reload({
+                            params:{'classid':classid,
+                                    'sessionid':sessionid,
+                                    'examtypeidid':examtypeidid,
+                                    'studentid':studentid,
+                                    'subjectid':subjectid
+                }});                
+              });
+
+            }
+     
+    },{
+        xtype:'splitbutton',
+        text:'Export Data',
+        arrowAlign:'right',
+        menu: [{text: 'PDF'},{text: 'Excelsheet'}],
+        listeners:{
+            render: function(component){
+                component.getEl().on('click', function(){
+                    //addFeeTemplate();
+                    })
+
+            }
+        }
+    },{
+        xtype:'button',
+        text:'<b>Previous Result Comparison</b>',
+        iconCls: 'icon-add',
+        listeners:{
+            render: function(component){
+                component.getEl().on('click', function(){
+                    //addFeeTemplate();
+                });
+
+            }
+        }
+    }    
+    ],
+     bbar : Ext.create('Ext.PagingToolbar', {
+        store: this.store,
+        displayInfo: true,
+        displayMsg: 'Displaying users {0} - {1} of {2}',
+        emptyMsg: "No user to display",
+        items:[{
+        xtype:'button',
+        text:'Print',
+        listeners:{
+            render: function(component){
+                component.getEl().on('click', function(){
+                    //addFeeTemplate();
+                    });
+
+            }
+        }
+    }]
+    }),
+    initComponent: function() {
+        
+        var me=this;
+        
+        this.teacherStore=Ext.create('MyApp.store.Combo');
+        this.teacherStore.load({
+            params:{propertyId:1}
+        });
+
+        this.examtypeStore=Ext.create('MyApp.store.Master');
+        this.examtypeStore.load({
+               params:{propertyId:5}
+        }),//For Exam Type
+                  
+        this.SessionStore=Ext.create('MyApp.store.Master');
+        this.SessionStore.load({
+               params:{propertyId:6}
+        });
+      /*  this.appearedStore=Ext.create('MyApp.store.Master');
+        this.appearedStore.load({
+               params:{propertyId:7},callback :function(){
+                   Ext.getCmp('studentmarkentry').getStore().reload();
+               } 
+        });*/
+        this.columns=[
+        Ext.create('Ext.grid.RowNumberer'),
+        {
+          
+            header    : 'Current Session',
+            dataIndex :'sessionname',
+            style :'color:#17385B;font-weight:bold'
+        },
+         {
+          
+            header    : 'Exam Type',
+            dataIndex :'examtype' ,
+            style :'color:#17385B;font-weight:bold'
+        },{
+            header: 'Exam Name',
+            dataIndex:'examname',
+            style :'color:#17385B;font-weight:bold'
+        },
+        {
+            header: 'Class Name',
+            dataIndex:'classname',
+            style :'color:#17385B;font-weight:bold'
+        },
+        {
+          
+            header    : 'Subject',
+            dataIndex :'subjectname',
+            style :'color:#17385B;font-weight:bold'
+        },{
+            header:'Max Mark',
+            dataIndex:'maxmark',
+            style :'color:#17385B;font-weight:bold'
+        },
+        {
+            header:'Pass Mark',
+            dataIndex:'passmark',
+            style :'color:#17385B;font-weight:bold'
+        },{
+          
+            header    : 'Appeared',
+            dataIndex :'appeared',
+            style :'color:#17385B;font-weight:bold',
+            
+            editor: {
+                
+                xtype : 'combo',
+                allowBlank : false,                    //xtype: 'numberfield'
+                triggerAction : 'all',
+                store:
+                Ext.create('Ext.data.Store', {
+                fields: ['id', 'value'],
+                data : [
+                           {"id":"Present", "value":"Present"},
+                           {"id":"Absent", "value":"Absent"}
+                          ]
+                }),
+                Autoload:true,
+                queryMode: 'local',
+                displayField: 'value',
+                valueField: 'id',
+                typeAhead: true
+            },
+            renderer : function(value){
+                var record=me.examtypeStore.findRecord('id',value);
+                return record?record.data.value:'';
+            }
+        },
+        {
+            header:'Mark Obtained',
+            dataIndex:'markobtained',
+            style :'color:#17385B;font-weight:bold',
+            editor :{
+                    xtype: 'numberfield',
+                    anchor: '100%',
+                    maxValue: 100,
+                    minValue: 0
+            }
+        }    
+        
+        ];
+        this.selModel = Ext.create('Ext.selection.CheckboxModel',{
+            singleSelect:true
+        });
+        this.bbar = Ext.create('Ext.PagingToolbar', {
+            store: this.store,
+            displayInfo: true,
+            displayMsg: 'Displaying users {0} - {1} of {2}',
+            emptyMsg: "No user to display"
+        }),
+
+        this.callParent(arguments);
+       // this.store.load();
+    },
+
+    onRender : function(){
+        //this.selModel.on('selectionchange', this.onSelectChange);
+        
+        
+        this.callParent(arguments);
+
+    },
+    selectionChange : function(sm, selected,eOpts){
+        alert('fff');
+        if(sm.getCount()){
+            alert('fff');
+        }
+    }
+});
+
+
+
+
+
+
+
+
+
+
+

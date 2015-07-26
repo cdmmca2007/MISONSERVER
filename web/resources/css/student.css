@@ -1,0 +1,776 @@
+/* 
+    Document   : student
+    Created on : 12 Jan, 2014, 9:32:27 PM
+    Author     : Kamlesh
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+root { 
+    display: block;
+}
+html,body{
+    margin: 0;
+}
+#body{
+    margin: 0 0px;
+/*    background: #dedede;*/
+}
+.modal-mask{
+    background: none repeat scroll 0 0 #EEEEEE;
+    height: 100%;
+    opacity: 0.2;
+    position: absolute;
+    width: 100%;
+    z-index: 5;
+}
+/* over ride jquery css*/
+.ui-dialog .ui-dialog-title {
+    color: #04408C;
+}
+.x-border-layout-ct {
+    background-color: #DFE8F6;
+    padding: 0 5px 5px;
+}
+/* content style*/
+.content-header {
+    background: -moz-linear-gradient(center top , #FFFFFF 0%, #E4E8F1 100%) repeat scroll 0 0 transparent;
+    border: 1px solid #ACB4BF;
+    border-radius: 0 3px 0 0;
+    box-shadow: 0 -1px 1px #FFFFFF inset, 0 1px 1px rgba(0, 0, 0, 0.1);
+/*    margin: -21px -1px 1px;*/
+    padding: 10px 14px 10px 18px;
+}
+.content-header .content-title{
+    color: #000000;
+    font-size: 18px;
+    font-weight: bold;
+    text-shadow: 0 1px #FFFFFF;
+    line-height: 18px;
+    margin:0;
+}
+#content-body {
+    border: 2px solid #FFAC02;
+    background: #FEF9F1;
+    padding: 10px;
+}
+/****************/
+/* grid css*/
+.grid-view {
+	border: solid !important;
+	border-color: #B2B2B2 !important;
+	border-width: 1px !important;
+	overflow-y: auto;
+}
+.tablecss_css {
+/* border: solid !important; */
+text-align: center !important;
+/* border-width: 1px !important;
+border-color:#B2B2B2 !important; */
+border-collapse: none !important;
+border-spacing: 0px !important;
+font-family:Lucida grande !important;
+width:100% !important;
+/* height:40% !important; */
+/*border-radius:10px 10px 0 0;*/
+}
+
+/**************************/
+#student-content-body .folder-portlet{
+    overflow: hidden;
+}
+#tab-student-profile{
+    padding: 10px;
+    background: #fff;
+    position: relative;
+    border: 1px solid #DDDDDD;
+}
+.student-name{
+    font-weight: bold;
+    padding-left: 5px;
+    font-family: "lucida grande";
+    font-size: 18px;
+}
+#timetable{
+    background: none repeat scroll 0 0 #C05D8E;
+    box-shadow: 0 12px 20px -10px rgba(81,64,49,0.6);
+}
+
+.fc-calendar-container {
+    height: 500px;
+    position: relative;
+    width: 100%;
+}
+.fc-calendar {
+    height: 100%;
+    width: 100%;
+}
+.fc-calendar .fc-head {
+    background: none repeat scroll 0 0 #883B61;
+    color: #FFFFFF;
+    font-size: 10px;
+    font-weight: 700;
+    height: 30px;
+    letter-spacing: 1px;
+    line-height: 30px;
+    text-transform: uppercase;
+}
+.fc-calendar .fc-head > div {
+    text-align: center;
+}
+.fc-calendar .fc-row > div, .fc-calendar .fc-head > div {
+    float: left;
+    height: 100%;
+    position: relative;
+    width: -moz-calc(100% / 7);
+}
+.fc-calendar .fc-body {
+    background: #ffffff;
+    height: -moz-calc(100% - 30px);
+    padding: 15px;
+    position: relative;
+    width: 100%;
+}
+.fc-five-rows .fc-row {
+    height: 50px;
+}
+.fc-calendar .fc-row {
+    border-bottom: 1px solid #DDDDDD;
+    width: 100%;
+}
+.fc-calendar .fc-row > div {
+    border-right: 1px solid #DDDDDD;
+    overflow: hidden;
+    padding: 4px;
+    position: relative;
+}
+.fc-calendar .fc-row > div, .fc-calendar .fc-head > div {
+    float: left;
+    height: 100%;
+    position: relative;
+    width: -moz-calc(100% / 7);
+}
+.fc-calendar .fc-row > div > span.fc-date {
+    bottom: 5px;
+    color: #CEB1BF;
+    font-size: 12px;
+    font-weight: 700;
+    height: 20px;
+    line-height: 20px;
+    position: absolute;
+    right: 5px;
+    text-align: right;
+}
+.fc-calendar .fc-row > div > span.fc-weekday {
+    display: none;
+    padding-left: 5px;
+}
+.fc-calendar .fc-row > div > span.fc-weekday {
+    display: none;
+    padding-left: 5px;
+}
+
+.fc-calendar .fc-row > div {
+    border-right: 1px solid #DDDDDD;
+    overflow: hidden;
+    padding: 4px;
+    position: relative;
+}
+.fc-calendar .fc-row > div, .fc-calendar .fc-head > div {
+    float: left;
+    height: 100%;
+    position: relative;
+    width: -moz-calc(100% / 7);
+}
+.fc-calendar .fc-row > div > span.fc-date {
+    bottom: 5px;
+    color: #CEB1BF;
+    font-size: 12px;
+    font-weight: 700;
+    height: 20px;
+    line-height: 20px;
+    position: absolute;
+    right: 5px;
+    text-align: right;
+}
+.fc-calendar .fc-row > div > span.fc-weekday {
+    display: block;
+    padding-left: 5px;
+}
+.fc-calendar .fc-row > div:last-child, .fc-calendar .fc-head > div:last-child {
+    border-right: medium none;
+}
+.fc-weekday {
+}
+
+#timetable *, #timetable *:after, #timetable *:before {
+    -moz-box-sizing: border-box;
+}
+/************digital diary***********/
+body{
+	background:#ccc;
+}
+#book{
+	
+	height:500px;
+}
+
+#book .turn-page{
+	background-color:white;
+}
+
+#book .cover{
+	background:#333;
+}
+
+#book .cover h1{
+	color:white;
+	text-align:center;
+	font-size:20px;
+	line-height:500px;
+	margin:0px;
+}
+#book .cover h3{
+	color:white;
+	text-align:center;
+	font-size:15px;
+	line-height:500px;
+	margin:0px;
+}
+
+#book .loader{
+	background-image:url(loader.gif);
+	width:24px;
+	height:24px;
+	display:block;
+	position:absolute;
+	top:238px;
+	left:188px;
+}
+
+#book .data{
+	text-align:center;
+	font-size:40px;
+	color:#999;
+	line-height:500px;
+}
+
+#controls{
+	
+	text-align:center;
+	margin:20px 0px;
+	
+}
+
+#controls input, #controls label{
+/*	font:30px arial;*/
+}
+
+#book .odd{
+	background-image:-webkit-linear-gradient(left, #FFF 95%, #ddd 100%);
+	background-image:-moz-linear-gradient(left, #FFF 95%, #ddd 100%);
+	background-image:-o-linear-gradient(left, #FFF 95%, #ddd 100%);
+	background-image:-ms-lin
+            ear-gradient(left, #FFF 95%, #ddd 100%);
+}
+
+#book .even{
+	background-image:-webkit-linear-gradient(right, #FFF 95%, #ddd 100%);
+	background-image:-moz-linear-gradient(right, #FFF 95%, #ddd 100%);
+	background-image:-o-linear-gradient(right, #FFF 95%, #ddd 100%);
+	background-image:-ms-linear-gradient(right, #FFF 95%, #ddd 100%);
+}
+.as-on-date{
+    color: #444444;
+    font-family: Arial;
+    font-size: 12px;
+    line-height: 18px;
+    margin: 0 5px 0 0;
+}
+.content-header .toolbar{
+    margin: -5px 0 0 0;
+}
+.toolbar .date-picker {
+    background: -moz-linear-gradient(center top , #FFFFFF 0%, #E4E8F1 100%) repeat scroll 0 0 transparent;
+    border: 1px solid #ACB4BF;
+    border-radius: 3px 3px 3px 3px;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);
+    display: inline-block;
+    height: 24px;
+    overflow: hidden;
+    position: relative;
+    width: 150px;
+}
+.empty-result{
+    padding:20px 10px 20px 10px;
+    font-size: 16px;
+    color:#ddd;
+}
+
+/**info***/
+.modal-win{
+    
+}
+.usermenu-div {
+	position: absolute;
+	top: 57px;
+	right: 300px;
+	z-index: 1000;
+}
+
+.usermenu-div .info-inner {
+	position: relative;
+	margin: 10px 0 0;
+	padding: 2px;
+	display: block;
+	background: #f2f3f4;
+	border: 0;
+	-webkit-box-shadow: 0 0 10px 0 rgba(111, 111, 111, 0.7);
+	box-shadow: 0 0 10px 0 rgba(111, 111, 111, 0.7);
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+	margin-top: -3px;
+	/*width: 733px;*/
+}
+.menu-options{
+    width:130px;
+}
+.menu-options li{
+    list-style: none;
+    text-align: center;
+    line-height: 28px;
+    border-bottom: 1px solid #DCDCDC;
+}
+.menu-options li:hover {
+background: #F0F0F0;
+cursor:pointer;
+}
+.menu-options a{
+    text-decoration: none;
+    font-size: 13px;
+}
+.dowload-option .info-inner .holder{
+		height: auto;
+		
+}
+.dowload-option1 div{
+	display:block;
+}
+.dowload-option1{
+		top: 76px;
+	right: 230px;
+	/* height: 100px !important; */
+	z-index: 10;
+	/* border: 2px solid #dcdcdc; */
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+/* 	background-color: white; */
+	font-size: 10px;
+	color: #666;
+	 height: auto;
+	width: 93px;
+}
+.info-help .info-inner .holder{
+		height: 500px;
+		overflow-y: auto;
+		overflow-x: hidden;
+}
+
+.info-selected::after {
+	left: 10px;
+	content: "";
+	background: url(../images/arrow.png) no-repeat;
+	background-size: 20px 12px;
+	height: 11px;
+	width: 21px;
+	position: absolute;
+	top: 28px;
+	display: block;
+}
+.all-selected::after {
+	right: 270px;
+	content: "";
+	background: url(../images/arrow.png) no-repeat;
+	background-size: 20px 12px;
+	height: 11px;
+	width: 21px;
+	position: absolute;
+	top: 58px;
+	display: block;
+}
+
+.info-content {
+	border: 2px solid #dcdcdc;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+	background-color: white;
+	font-size: 10px;
+	color: #666;
+	 height: auto;
+	/* width: 140px; */
+}
+.info-help .info-content{
+	padding: 10px 13px;
+	text-align: center;
+}
+.dowload-option .info-content{
+	display: block;
+}
+
+/*  end menu*/
+
+#student-body{
+/*-webkit-box-shadow: 0px 0px 2px 2px rgba(30, 50, 50, 0.75);
+-moz-box-shadow:    0px 0px 2px 2px rgba(30, 50, 50, 0.75);
+box-shadow:         0px 0px 2px 2px rgba(30, 50, 50, 0.75);*/
+margin-left: auto;
+margin-right: auto;
+overflow: hidden;
+background: linear-gradient(to bottom, #C3D9FF 0%, #B1C8EF 41%, #98B0D9 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+  background: -moz-linear-gradient(to bottom, #C3D9FF 0%, #B1C8EF 41%, #98B0D9 100%) repeat scroll 0 0 transparent;
+}
+.link-icons span{
+    margin-left: 5px;
+    margin-right: 5px;
+    
+}
+.link-icons .home{
+    background: url(../images/icons/home16px.png) no-repeat;
+    padding-left: 15px;
+    cursor: pointer;
+}
+.link-icons .edit-profile{
+    background: url(../images/icons/home16px.png) no-repeat;
+    padding-left: 15px;
+    cursor: pointer;
+}
+.link-icons .notification{
+    background: url(../images/icons/home16px.png) no-repeat;
+    padding-left: 15px;
+    cursor: pointer;
+}
+.link-icons .alerts{
+    background: url(../images/icons/home16px.png) no-repeat;
+    padding-left: 15px;
+    cursor: pointer;
+}
+.link-icons .calendar{
+    background: url(../images/icons/home16px.png) no-repeat;
+    padding-left: 15px;
+    cursor: pointer;
+}
+.profile_name_style{
+font-family: tahoma, arial, verdana, sans-serif;
+font-size: 12px !important;
+font-style: normal;
+font-variant: normal;
+color: #FFFFFF;
+}
+.profile-name-section{
+    background: #fff;
+    height: 24px;
+    padding-top: 6px;
+}
+ul{
+    margin: 0px;
+    padding: 0px;
+}
+.left{
+    float: left;
+}
+.right{
+    float: right;
+}
+.portlet { 
+   
+    width: auto;
+}
+	.portlet-header {padding-bottom: 4px; padding-left: 0.2em; }
+	.portlet-header .ui-icon { float: right; }
+	.portlet-content { padding: 0.1em; }
+	.ui-sortable-placeholder { border: 1px dotted black; visibility: visible !important; height: 50px !important; }
+	.ui-sortable-placeholder * { visibility: hidden; }
+/* attendance widget CSS*/
+#widget-attendance { 
+   
+    width: auto !important;
+}
+.portlet-header {padding-bottom: 4px; padding-left: 0.2em; }
+.portlet-header .ui-icon { float: right; }
+/*#widget-attendance .ui-datepicker td span, .ui-datepicker td a {
+     padding: 0 !important;       
+}*/   
+#widget-attendance .ui-datepicker th{
+    padding: 5px 0 0 0 !important;
+}
+#widget-attendance .attendance-summary{
+    /*width: 290px;*/
+    margin-left: auto;
+    margin-right: auto
+}
+#widget-attendance .attendance-summary li{
+    list-style: none;
+}        
+.attendance_width{
+    width:27%;
+}        
+        /* 
+    Document   : style
+    Created on : 16 Dec, 2013, 1:22:48 PM
+    Author     : Kamlesh
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+root { 
+    display: block;
+}
+body,html{
+    padding: 0;
+    margin: 0;
+}
+
+ul{
+    margin: 0px;
+    padding: 0px;
+}
+.left{
+    float: left;
+}
+.right{
+    float: right;
+}
+.top-panel{
+   
+    background: -moz-linear-gradient(center top , #074E7C, #095F93) repeat scroll 0 0 rgba(0, 0, 0, 0);
+}
+
+.profile_name_style{
+font-family: tahoma, arial, verdana, sans-serif;
+font-size: 12px !important;
+font-style: normal;
+font-variant: normal;
+color: #FFFFFF;
+}
+.top-menu{
+    display: inline-block;
+    font-size: 12px;
+    line-height: 40px;
+    padding: 0 8px;
+}
+.top-menu a{
+    text-decoration: none;
+    color: #FFFFFF;
+}
+.top-menu-sep:hover{
+    background:#101132;
+    cursor: pointer;
+}
+.top-menu-sep:hover a{
+    color: #FFFFFF !important;
+}
+
+.logo-div{
+    //background: red;
+    width: 80%;
+    font-family: tahoma,arial,verdana,sans-serif;
+}
+.updates-menu{
+    background: skyblue;
+    border: 1px solid;
+    text-align: center;
+    font-family: tahoma,arial,verdana,sans-serif;
+    font-size: 14px;
+    padding: 5px;
+}
+.label-for {
+    color: #3B1190;
+    font-family: tahoma, arial, verdana, sans-serif;
+    font-size: 12px;
+}
+.font-family-name{
+    font-family: tahoma, arial, verdana, sans-serif;   
+    font-size: 12px;
+}
+.table-CSS{
+border-collapse: none !important;
+border-spacing: 0px !important;
+width:100%;
+}
+.choice_div_css{
+    height: 34px;
+    width:100%;
+    background: #4CA1FF;
+    font-family: tahoma,arial,verdana,sans-serif;
+    font-size: 14px;
+    color: #FFFFFF;
+}
+.choice_div_css:hover{
+    background:   linear-gradient(to bottom, #37AAEA 0px, #117ED2 100%) repeat scroll 0 0 ;
+    cursor: pointer;
+    color: gainsboro;
+}
+.border_css{
+     border-bottom:  1px solid #3D4FEE; 
+     border-top:  1px solid #3D4FEE;   
+}
+.arrow-right {
+    border-bottom: 17px solid #FFFFFF;
+    border-left: 17px solid #4CA1FF;
+   
+    border-top: 17px solid #FFFFFF;
+    float: right;
+}
+.fwb {
+font-weight: bold;
+font-size: 11px;
+font-family: 'lucida grande', tahoma, verdana, arial, sans-serif;
+color: #333;
+}
+.tickerFeedMessage{
+display: inline;
+font-size: 11px;
+font-weight: normal;
+font-family: 'lucida grande', tahoma, verdana, arial, sans-serif;
+}
+/*
+.warn {
+  position: relative;
+  margin: 0 auto;
+  //border: solid 1px darkred;
+  height: 34px;
+  width: 100%;
+  border-radius: .2em;
+  background:   linear-gradient(to bottom, #37AAEA 0px, #117ED2 100%) repeat scroll 0 0 ;
+}
+.warn:before {
+    background: linear-gradient(-45deg, #37AAEA 0px, #117ED2 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+    border-bottom: inherit;
+    border-left: inherit;
+    border-radius: 0 0 0 0.2em;
+    content: "";
+    height: 1.6em;
+    left: 0;
+    margin: -0.8em 90%;
+    position: absolute;
+    top: 50%;
+    transform: rotate(45deg);
+    width: 1.5em;
+}*/
+
+.nav-menu{
+    list-style:none;
+    padding:0;
+    margin:0;
+    border-right: 1px solid #E0E0E0;
+    
+}
+.nav-menu li{
+   
+    border-top: 0;
+    display: block;
+    padding: 0 10px;
+}
+.nav-menu li a{
+    text-decoration: none;
+    padding-top:7px;
+    font-size: 14px;
+    height: 23px;
+    color: #3982CB;
+    display: block;
+    font-family: 'Myriad Set', Myriad, 'Helvetica Neue', Helvetica, Arial, Verdana, sans-serif;
+    border-top: 1px solid #EAEAEA;
+}
+.nav-menu li:hover  {
+    text-decoration: underline;
+    color: #3982CB;
+    //font-weight: bold;
+    //background: -moz-linear-gradient(center top , #4AA6D6, #207DAA) repeat scroll 0 0 rgba(0, 0, 0, 0);
+}
+.nav-menu text {
+    position: absolute;
+    font-family: 'Myriad Set',Myriad,'Helvetica Neue',Helvetica,Arial,Verdana,sans-serif;
+    font-size: 14px;
+    height: 23px;
+    padding-top: 7px;
+    color:black;
+    font-weight: bold;
+    text-decoration: none;
+}
+/* recent updates*/
+.activity_type{
+    padding-left: 15px;
+    margin-right: 10px;
+}
+.post-by-img{
+    width: 60px;
+}
+.post-by-img img{
+    width: 50px;
+    height:50px;
+}
+.activity_type_1{
+    background: url('../images/report.gif')
+}
+.comment-div-1{
+  color: #0464BB;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 35px;
+}
+.comment-div-2{
+/*    line-height: 35px;*/
+}
+.comment-div-2 span{
+    margin-right: 10px;
+}
+.comment-div-2 .name{
+    color: #0464BB;
+    text-decoration: none;
+    font-size:11px;
+}
+.comment-div-2 .duration{
+    color: #BBBBBB;
+    font-size: 11px;
+}
+/*.linearBg1 { 
+    background: linear-gradient(to bottom, #C3D9FF 0%, #B1C8EF 41%, #98B0D9 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);    
+    width: 88%;
+}*/
+.recent-activity{
+    padding-left: 15px;
+}
+/*#ui-datepicker-div{
+    margin-top: -50px;
+    display:none !important;
+}*/
+/*.ui-widget {
+    font-size: 1em !important;
+    width:98%;
+}*/
+#datepicker .ui-widget-content{
+border:0px !important;
+}
+
+.attendence_percenrage{
+    //border: 1px solid #000000;
+    //float: right;
+    height: 20px;
+    width: 170px;
+}
+.attendence_count_font{
+font-size: 12px;
+//padding-left: 35px;
+//float: left;
+}
+#teacher_profile_pic > img {
+    height: 76px;
+}
+#teacher_name{
+font-size: 12px;
+text-align: center;
+}
+.quick-links {
+    width: 90%;
+    padding-left: 5px !important;
+}

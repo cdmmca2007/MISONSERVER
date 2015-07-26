@@ -1,0 +1,8 @@
+<div class="portlet ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
+	<div class="portlet-header ui-widget-header ui-corner-all">
+                <span class='ui-icon ui-icon-minusthick'></span><%=this.title%>
+        </div>
+	<div class="portlet-content">
+           <p style="//display:none">Date: <input type="text" id="datepicker"></p>
+        </div>
+</div>

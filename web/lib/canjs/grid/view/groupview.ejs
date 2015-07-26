@@ -1,0 +1,48 @@
+<%
+var groups = this.data.groups;
+var s = this.summary?this.data.summary:null;
+for(var g=0;g<groups.length;g++){
+   		var group = groups[g];%>
+   		<tr class="can-grid-group-row">
+   		   <td style="<%=this.columns[0].style%>" class="can-grid-cell <%=this.columns[0].css%>">
+   			<span style="display:inline-block;width:0px;"></span>
+   			<span class="toggle expand" data-group="<%=this.data.groupArray[g]%>"></span> <%=this.data.groupArray[g]%>
+   		</td>
+   		 <% 
+   		 var gs = this.data.groupSummary;
+   		 list(this.columns, function(c,j){ 
+   		        if(j!=0){%>
+   		             <td style="<%=c.style%>" class="can-grid-cell <%=c.css%>"><%=gs[g][c.field]%></td>
+   		  <%    }
+   		  })%>
+   		</tr>
+	   <%for(var i=0;i<group.length;i++){ 
+	     var row = group[i];%>
+		 <tr class="can-grid-row <%=i%2==0?'can-grid-row-even':'can-grid-row-odd'%> group_<%=row.attr("group_id")%>" style="display:none;">
+		 <% list(this.columns, function(c,j){ 
+ 		     if(s){
+ 		     	if(c.summuryType){
+ 		     	   s[j] = s[j]+row.attr(c.field);	
+ 		     	}
+ 		     }
+ 		     if(j==0){%>
+ 		     	<td style="<%=c.style%>" class="can-grid-cell <%=c.css%>">
+ 		     	   <span style="display:inline-block;width:20px;"></span>
+ 		     	   <%=row.attr(c.field)%>
+ 		     	</td>
+ 		     <%}else{%>
+ 		     	<td style="<%=c.style%>" class="can-grid-cell <%=c.css%>"><%=row.attr(c.field)%></td>
+ 		     <%}%>
+		<%})%>	
+		</tr>
+	   <%}
+}
+this.data.summary = s;
+if(s){%>
+	<tr class="can-grid-row-summary">
+		<% list(this.columns, function(c,j){ %>
+	 	    	<td class="can-grid-cell-summary"><%=c.summuryText?c.summuryText.call(c,s):s[j]%></td>	
+		<%}) %>
+    </tr>
+<%}
+%>

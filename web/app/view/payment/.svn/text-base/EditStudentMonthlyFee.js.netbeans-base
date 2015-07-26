@@ -1,0 +1,280 @@
+function addMoreFee(){
+    
+    
+    var store=  Ext.getStore('StudentMonthlyFee');
+    var rec=store.getAt(0).data;    
+    var id=rec.monthly_fee_id;
+    var stud_id=rec.student_id;
+    var month =rec.for_month;
+    var win;
+    if(!win){
+        win = Ext.create('Ext.app.view.component.AppWindow', {
+            title:'<font color=#17385B><b>Additional Fee Details</b></font>',
+            id: 'addfee_win',
+            width:400,
+            closeAction:'destroy',
+            top:{
+                image:BASE_URL+'resources/images/createuser.png',
+                formTitle:'Add Addiotnal Fee for :'+'<font color=red><b>'+rec.studentname+' </b></font><font color=green>Class :<b>' +rec.classname+'</b></font>'
+            },
+            defaults:{
+                xtype:'textfield',
+                value:'',
+                width:300
+            },
+            url:'ppppp',
+            formItems :[
+            {
+                xtype:'combobox',
+                fieldLabel :'Select Fee',
+                id:'select',
+                emptyText: 'Select',       
+                store:Ext.create('MyApp.store.Combo').load({
+                                      params:{propertyId:8}}),
+                Autoload:true,
+                queryMode: 'local',
+                displayField: 'value',
+                valueField: 'id',
+                name:'feetype'
+           },
+           {
+                name : 'feename',
+                fieldLabel: 'Fee Name',
+                id:'feename',
+                emptyText: 'In Case Fee not Present'       
+            },
+           {
+                name : 'feeamount',
+                fieldLabel: 'Fee Amount',
+                id:'feeamount'
+            },
+           {
+                name : 'comment',
+                fieldLabel: 'Comment',
+                id:'comment'
+            },{
+                xtype: 'hiddenfield',
+                name : 'monhtly_fee_id',
+                value: id
+            },{
+                xtype: 'hiddenfield',
+                name : 'student_id',
+                value: stud_id
+            },{
+                xtype: 'hiddenfield',
+                name : 'month',
+                value: month
+            }
+            ],
+            buttons :[
+            {
+                text: 'Add',
+                action: 'save',
+                scope:this,
+                handler:saveData
+            },
+            {xtype:'btncancel'}
+            ]
+        });
+    }
+    win.show();
+}
+
+function saveData(btn){
+
+    var form = btn.up('window').down('form').getForm();
+      if(form.isValid()){
+            var obj = form.getValues();
+            Ext.Ajax.request({
+                url:'addextrafee/add.do',
+                type:'json',
+                headers:{
+                    'Content-Type':'application/json'
+                },
+                params:Ext.JSON.encode(obj),
+                success: function(res){
+                      var rec = eval('('+res.responseText+')');
+                    if(rec.monhtly_fee_id!=null && rec.feename!=null){
+                    
+                        Ext.Msg.alert('Success','Fee added successfully');
+                      /*  rec.studentname=
+                        rec.classname=
+                        rec.template=
+                        rec.for_month=*/
+                        Ext.getCmp('StudentMonthlyFeegrid').getStore().add(rec);
+                    }
+                    else
+                    Ext.Msg.alert('Failure','Unexpected Error occured ,please contact admin');    
+                 //   var rec = eval('('+res.responseText+')');
+                 //   app.getController('Class').getClassStore().add(rec);
+                }
+            });
+        }
+}
+
+Ext.define('MyApp.view.payment.EditStudentMonthlyFee' ,{
+    extend: 'Ext.grid.Panel',
+    closable:true,
+    title: 'Student Monthly Fee Modification',
+    id:'StudentMonthlyFeegrid',
+    layout:'fit',
+    height :300,
+    alias: 'widget.StudentMonthlyFeegrid',
+    viewConfig:{
+        forceFit:true,
+        emptyText:'<div class="no-results">No Results To display</div>'
+    },    
+    store:'StudentMonthlyFee',    
+    initComponent: function() {
+
+    
+    this.columns=[
+    Ext.create('Ext.grid.RowNumberer'),
+
+    {
+        header: 'Class Name',
+        dataIndex:'classname',
+        style :'color:#17385B;font-weight:bold'
+    },
+
+    {
+        header:'Student Name',
+        dataIndex:'studentname',
+        style :'color:#17385B;font-weight:bold'
+    },
+
+    {
+        header:'Fee Teamplate',
+        dataIndex:'template',
+        style :'color:#17385B;font-weight:bold'
+    },{
+        header:'Month',
+        dataIndex:'for_month',
+        style :'color:#17385B;font-weight:bold'
+    },
+    {
+        header:'Fee Structure',
+        dataIndex:'feename',
+        style :'color:#17385B;font-weight:bold'
+    },
+    {
+        header:'Fee Amount',
+        dataIndex:'amount',
+        style :'color:#17385B;font-weight:bold'
+    }
+    ];
+    this.selModel=Ext.create('Ext.selection.CheckboxModel',{
+        singleSelect:true
+    });
+    this.tbar =[{
+        xtype: 'searchfield',
+        store: Ext.create('Ext.data.Store', {
+            autoLoad: false,
+            fields:['id','name'],
+            proxy: {
+                type: 'ajax',
+                url: 'users.json',
+                reader: {
+                    type: 'json',
+                    root: 'users'
+                }
+            }
+        })
+    },
+    {
+        xtype:'button',
+        text:'Add More Fee',
+        iconCls: 'icon-add',
+        listeners:{
+            render: function(component){
+                component.getEl().on('click', function(){                    
+                    
+                  //  var rec1=Ext.getCmp('StudentMonthlyFeegrid').getSelectionModel().getSelection()[0];
+                  //  alert(rec1.data.fee_structure_id);
+                    addMoreFee();                    
+                });
+
+            }
+        }
+    },
+    {
+        xtype:'button',
+        text:'Edit Fee',
+        iconCls: 'icon-edit',
+        listeners:{
+            render: function(component){
+                component.getEl().on('click', function(){
+                       var rec=Ext.getCmp('StudentMonthlyFeegrid').getSelectionModel().getSelection()[0];
+                       alert(rec.data.studentname);
+                       
+                    });
+
+            }
+        }
+    },
+    {
+        xtype:'button',
+        text:'Delete Fee',
+        iconCls: 'icon-delete',
+        listeners:{
+            render: function(component){
+                component.getEl().on('click', function(){
+                var obj=Ext.getCmp('StudentMonthlyFeegrid').getSelectionModel().getSelection()[0];                
+                Ext.Ajax.request({
+                url:'deletemonthlyfee/del.do',
+                type:'json',
+                headers:{
+                    'Content-Type':'application/json'
+                },
+                params:Ext.JSON.encode(obj.data),
+                success: function(res){
+                     var rec = eval('('+res.responseText+')');
+                    if(rec.amount==0) {
+                    Ext.Msg.alert('Success','Fee Deleted successfully');
+                    Ext.getCmp('StudentMonthlyFeegrid').getStore().remove(obj);
+                    
+                    }
+                    else
+                    Ext.Msg.alert('Failer','Error in Fee Deletetion');    
+                    //   var rec = eval('('+res.responseText+')');
+                    //   app.getController('Class').getClassStore().add(rec);
+                    }
+                       });
+                       
+                    });
+
+            }
+        }
+    }        
+    ];
+    this.bbar = Ext.create('Ext.PagingToolbar', {
+        store: this.store,
+        displayInfo: true,
+        displayMsg: 'Displaying users {0} - {1} of {2}',
+        emptyMsg: "No user to display",
+        items:[{
+        xtype:'button',
+        text:'Print',
+        listeners:{
+            render: function(component){
+                component.getEl().on('click', function(){
+                    //addFeeTemplate();
+                    });
+
+            }
+        }
+    }]
+    });
+    this.callParent(arguments);
+
+    },
+    onRender : function(){
+        //this.selModel.on('selectionchange', this.onSelectChange);
+        this.callParent(arguments);
+    },
+    selectionchange : function(sm, selected,eOpts){
+        if(sm.getCount()){
+              
+    }
+    }
+});

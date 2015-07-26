@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : dlabs-properties.xml
+    Created on : 25 September, 2011, 11:35 AM
+    Author     : Kamlesh Kumar Sah
+    Description:
+        Purpose of the document follows.
+-->
+
+<root>
+   <property>
+        <name>db</name>
+        <value>mysql</value>
+    </property>
+    <property>
+        <name>db_driver</name>
+        <value>com.mysql.jdbc.Driver</value>
+    </property>
+    <property>
+        <name>db_host</name>
+        <value>192.69.210.154</value>
+    </property>
+    <property>
+        <name>db_port</name>
+        <value>3306</value>
+    </property>
+    <property>
+        <name>db_name</name>
+       <value>school_mis1</value>
+    </property>
+    <property>
+        <name>db_user</name>
+        <value>school_root1</value>
+    </property>
+    <property>
+        <name>db_passwd</name>
+        <value>root123</value>
+    </property>
+    <property>
+        <name>maxActive</name>
+        <value>100</value>
+    </property>
+     <property>
+        <name>smtppath</name>
+        <value>mail.schoolomanager.com</value>
+    </property>
+     <property>
+        <name>smtpport</name>
+        <value>465</value>
+    </property>
+    <property>
+        <name>context_url</name>
+        <value>http://schoolomanager.in/MIS/</value>
+    </property>
+        <property>
+        <name>contact_admin_mailid</name>
+        <value>admin@schoolomanager.com</value>
+    </property>
+
+    <property>
+        <name>prof_pic_store</name>
+        <value>/home/school/profile</value>
+    </property>
+        <property>
+        <name>homework_store</name>
+        <value>/home/school/homework</value>
+    </property>
+    <property>
+        <name>tutotial_store</name>
+        <value>/home/school/tutotial</value>
+    </property>
+    <property>
+        <name>library_store</name>
+        <value>/home/school/library</value>
+    </property>
+    <property>
+        <name>extra_store</name>
+        <value>/home/school/extra</value>
+    </property>
+</root>

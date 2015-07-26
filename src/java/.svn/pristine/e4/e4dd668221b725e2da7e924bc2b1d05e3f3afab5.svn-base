@@ -1,0 +1,108 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.dlabs.mis.dao;
+
+import com.dlabs.model.Student;
+import com.dlabs.model.User;
+import com.dlabs.model.UserLogin;
+import com.kjava.base.ReadableException;
+import com.kjava.base.db.DaoUtil;
+import com.kjava.base.util.ExtJsonUtil;
+import com.kjava.base.util.JSONUtil;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+
+/**
+ *
+ * @author Kamlesh the admin
+ */
+public class StudentDAO {
+
+    JSONUtil jsonUtil = new ExtJsonUtil();
+    public Student addOrEditStudent(Connection conn, Student student) throws ReadableException{
+        int flag=0;
+        String studentid="";
+        String userid="";
+        try {
+            String query = "INSERT INTO student (studentid,name,dob,address,fathername"
+                    + ",mothername,caretakername,parentemailid,parentmobile,"
+                    + "alternateemailid,alternatemobile,classid,schoolid, createdby,"
+                    + " createdon, religion, cityid, stateid, countryid, userid,admissiondate)"
+                    + " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,current_date,?,?,?,?,?,?);";
+            String classid = "";
+            student.setSchoolid("1000");
+            if (student.getClassid()!=null && student.getStudentid()!=null && student.getSchoolid()!=null) {
+                query = "UPDATE schoolpayment.student SET name = ? ,dob = ? , address =? , fathername = ? , mothername = ? , 	caretakername = ? , parentemailid = ? , parentmobile = ?, alternateemailid = ? , 	alternatemobile = ? , modifiedby = ? , modifiedon = CURRENT_DATE , religion = ?, 	cityid = ? , stateid = ? , countryid =? WHERE	schoolid= ? AND classid=?  and studentid = ? ;";
+                classid =student.getClassid();
+
+            }else{
+               studentid = java.util.UUID.randomUUID().toString();
+               //student.setClassid(classid);
+               userid=student.getName()+student.getFathername();
+               student.setStudentid(studentid);
+               student.setUserid(userid);
+               student.setCreatedby("1111111");
+            }
+           if( DaoUtil.executeUpdate(conn, query, 
+                                           new Object[]{student.getStudentid(),student.getName(),
+                                                        student.getDob(),student.getAddress(),
+                                                        student.getFathername(),student.getMothername(),
+                                                        student.getCaretakername(),student.getParentemailid(),
+                                                        student.getParentmobile(),student.getAlternateemailid(),
+                                                        student.getAlternatemobile(),student.getClassid(),
+                                                        student.getSchoolid(),student.getCreatedby(),
+                                                        student.getReligion(),student.getCityid(),
+                                                        student.getStateid(),student.getCountryid(),
+                                                        student.getUserid(),student.getAdmissiondate()})==1)
+           {
+               flag=1;
+               User userobj=new User();
+               UserDAO obj =new UserDAO();
+               UserLogin loginobj=new UserLogin();
+               userobj.setAddress(student.getAddress());
+               userobj.setCity(student.getCityid());
+               userobj.setContactNo(student.getParentmobile());
+               userobj.setEmailId(student.getParentemailid());
+               userobj.setName(student.getFathername());
+               userobj.setRoleId(4);
+               loginobj.setUserName(student.getUserid());
+               loginobj.setPassword("1234");// Need to Change
+               userobj.setUserLogin(loginobj);               
+               obj.addOrEditUser(conn, userobj);
+               conn.commit();
+           }
+        } catch (SQLException ex) {
+            throw new ReadableException(ex, ex.getMessage(),"StudentDAO", "addoredit");
+        }
+        return student;
+    }
+
+    public Object getAllStudentsAsJson(Connection conn, int page, int rows) throws ReadableException {
+        JSONObject job = null;
+        ResultSet rs = null;
+        int count =0;
+        String schoolid="1000";
+        try{
+            rs = DaoUtil.executeQuery(conn, "SELECT count(1) as count from Student where schoolid="+schoolid);
+            if(rs.next()) {
+                count = rs.getInt("count");
+
+            }
+            rs = DaoUtil.executeQuery(conn,"SELECT studentid,name,dob,address,fathername,mothername,caretakername,parentemailid,parentmobile,alternateemailid,alternatemobile,classid,schoolid,createdby,admissiondate,modifiedby/*,createdon,modifiedon*/,religion,cityid,stateid,countryid,userid FROM student where schoolid=? limit ? offset ?",new Object[]{schoolid,15,0});
+            job = jsonUtil.getJsonObject(rs, count, page,rows, false);
+        }
+        catch (SQLException ex) {
+            Logger.getLogger(StudentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return job;
+    }    
+    }
+    

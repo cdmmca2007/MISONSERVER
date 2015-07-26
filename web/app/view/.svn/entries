@@ -1,0 +1,219 @@
+10
+
+dir
+8
+file:///E:/svn_repo/MIS/web/app/view
+file:///E:/svn_repo
+
+
+
+2013-06-22T08:13:38.657000Z
+8
+Kamlesh the admin
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+6a3a3ddd-e2ab-9743-a4fb-5773980f4574
+
+
+
+
+
+
+0
+
+AuditTrail.js
+file
+77
+
+
+
+2014-02-02T10:03:35.327000Z
+e0bd8e3cb3c733d64ce1d0393c190b65
+2014-02-02T15:52:36.722000Z
+77
+Kamlesh
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2900
+
+Calendar.js
+file
+35
+
+
+
+2013-07-21T11:17:34.026000Z
+73c0ad2447d42eae672c28847eef093f
+2013-07-22T18:28:00.367000Z
+35
+Kamlesh the admin
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+12538
+
+Viewport.js
+file
+77
+
+
+
+2014-01-05T13:43:57.261000Z
+0c57644d10e81c238ad22d3e898a9574
+2014-02-02T15:52:36.722000Z
+77
+Kamlesh
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+5383
+
+addmission
+dir
+
+alert
+dir
+
+class
+dir
+
+component
+dir
+
+dairy
+dir
+
+document
+dir
+
+emailsms
+dir
+
+
+
+add
+
+exam
+dir
+
+homework
+dir
+
+leave
+dir
+
+mail
+dir
+
+master
+dir
+
+misreport
+dir
+
+notice
+dir
+
+parent
+dir
+
+payment
+dir
+
+permission
+dir
+
+portlet
+dir
+
+promotestudent
+dir
+
+school
+dir
+
+session
+dir
+
+student
+dir
+
+teacher
+dir
+
+timetable
+dir
+
+transport
+dir
+
+user
+dir
+

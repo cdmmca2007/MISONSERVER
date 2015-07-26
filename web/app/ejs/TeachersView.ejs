@@ -1,0 +1,41 @@
+
+<div class="portlet ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
+	<div class="portlet-header ui-widget-header ui-corner-all">
+                <span class='ui-icon ui-icon-minusthick'></span><%=this.title%>
+        </div>
+	<div class="portlet-content">
+           <table>
+             <tr>
+           <%
+              for(i=0;i<this.data.rows.length;i++)
+              {
+                 if(i%3==0){
+           %> 
+               </tr><tr>
+           <%  
+              }
+          %> 
+                 <td class="teacher_profile_hover">
+                 <div id='teacher_profile_pic'>
+                            <a href="#" onClick="javascript:showTeacherProfile('<%=this.data.rows[i].teacherid%>','<%=this.data.rows[i].subject%>')">
+                                   <%
+                                     if(this.data.rows[i].profilepic!=null && this.data.rows[i].profilepic!=""){
+                                   %> 
+                                   <img height="70px" width="60px" src="img/<%=this.data.rows[i].profilepic%>">
+                                   <%}
+                                     else{
+                                   %> 
+                                   <img height="70px" width="60px" src="img/19e2e30f-9ada-41fa-95bd-c9d499b88fe2.png">
+                                   <%}%>
+                            </a>
+                 </div> 
+                 <div id='teacher_name' style="font-size:10px;font-weight:bold"> <%=this.data.rows[i].name%></div>
+                 <div id='teacher_name' style="font-size:9px;font-weight:bold"><i>Subject :</i><%=this.data.rows[i].subject%></div> 
+                 </td> 
+           <%
+              }
+           %>  
+            </tr>
+          </table>
+        </div>
+</div>

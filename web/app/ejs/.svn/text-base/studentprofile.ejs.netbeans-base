@@ -1,0 +1,38 @@
+<div class="left">
+<div class="left" style="border: 1px solid rgb(221, 221, 221); margin: 10px 5px 10px 10px; background: none repeat scroll 0% 0% rgb(255, 255, 255); padding: 5px;">
+<img src="resources/images/kamlesh.jpg" style="width: 100px; height: 100px;margin:1px;">
+</div>
+</div>
+
+<div class="profile-name-section">
+<text style="text-decoration: underline;font-size: 13px; cursor:pointer;">Suman Nag</text> <text style="font-size: 12px;"> ( Roll: 25 )</text> 
+<img style="/*height:80px;*/ width:20px; padding: 2px;cursor: pointer;" src="resources/images/home.gif">
+</div>
+<div style="overflow: hidden;">
+
+    <div class="left" style="width:33%">
+        <table>
+            <tr> <td width=90 class='label-for'>Gender:</td><td class='label'> Male</td></tr>
+            <tr><td class='label-for'>Date Of Birth:</td><td class='label'>14 Nov 1984</td></tr>
+            <tr> <td class='label-for'>Nationality:</td><td class='label'>Indian</td></tr>
+            <tr> <td class='label-for'>Religion:</span><td class='label'>Hindu</td></tr>
+            <tr> <td class='label-for'>Age:</td><td class='label'>28</td></tr></table>
+    </div>
+    <div class="left" style="width:33%">
+
+        <table><tr>
+        <td style='width: 100px;'><span class='label-for label-detail2'>Street:</span></td><td><span class='label'>Vishrantwadi</span></td></tr>
+        <tr><td> <span class='label-for label-detail2'>City:</span></td><td><span class='label'>Pune</span></td></tr>
+        <tr><td> <span class='label-for label-detail2'>District:</span></td><td><span class='label'>Pune</span></td></tr>
+        <tr><td> <span class='label-for label-detail2'>State:</span></td><td><span class='label'>Maharashtra</span></td></tr>
+            <tr><td> <span class='label-for label-detail2'>ZIP Code:</span></td><td><span class='label'>898765</span></td></tr>
+        </table>
+
+    </div>
+    <div class="left" style="width:33%">
+        <table><tr>
+        <td style='width: 100px;'><span class='label-for label-detail2'>Father's Name:</span></td><td><span class='label'> Kamlesh Kumar SAH</span></td></tr>
+        <tr><td> <span class='label-for label-detail2'>Mother's Name:</span></td><td><span class='label'> Male</span></td></tr>
+        <tr><td> <span class='label-for label-detail2'>Contact:</span></td><td><span class='label'>8987678765</span></td></tr></table>
+    </div>
+</div>

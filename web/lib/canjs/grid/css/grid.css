@@ -1,0 +1,51 @@
+.can-grid-row,.can-grid-group-row { -moz-user-select: -moz-none;cursor: default;line-height: 16px; padding: 0 1px;vertical-align: top;cursor:default;text-align:center;color:black;font-size:10px;white-space:nowrap;}
+.can-grid-row:hover{background: rgb(100,162,242);}
+.can-grid-row-even{background-color:white}
+.can-grid-row-odd{background-color:#F3F3F4;}
+.can-grid-row-header{ -moz-user-select: -moz-none;   cursor: default;  line-height: 13px;   padding: 0 1px;  vertical-align: top;  padding-bottom:5px;text-align:center;
+	background:#CBCCCD;
+	border-style: none none none none;
+	font-weight:bold;
+	width:550px;
+	font-size:12px !important;
+	font-family:Lucida grande;
+    
+}
+.can-grid-row td{  padding: 4px 6px;}
+.can-grid-row-header .grid-header-cell{ padding: 4px 6px;border-right-style:solid;border-width:1px;border-color:#F1F1F1;font-size:11px;}
+.can-grid-cell {border-bottom-style:solid;border-right-style:solid;border-width:1px;border-color:#F1F1F1;}
+.can-grid-sort-active{
+	border-left-color:#aaccf6 !important;
+	border-right-color:#aaccf6 !important;
+	/* background-image:none; */
+	background-color:#aaccf6;
+	background-image:-webkit-linear-gradient(top, #ebf3fd,#ebf3fd 39%,#d9e8fb 40%,#d9e8fb);
+	
+}
+.can-grid-sort-desc .can-grid-sort-icon{ background: url("../images/datagrid_icons.png") no-repeat scroll -16px center transparent;}
+.can-grid-sort-asc .can-grid-sort-icon{background: url("../images/datagrid_icons.png") no-repeat scroll 0 center transparent;}
+.can-grid-sort-icon{ padding: 0 13px 0 0;}
+.can-grid-row-summary{cursor: default;text-align: center;background-color: rgb(237, 237, 237) !important;
+color: rgb(23, 184, 227);font-size: 12px;white-space: nowrap;font-weight: bold;border-bottom-style: solid;
+border-top-style: solid;border-width: 1px;
+border-color:rgb(189, 189, 190) rgb(241, 241, 241) rgb(189, 189, 190) rgb(189, 189, 190);
+display: table-row;
+}
+.can-grid-cell-summary{
+font-size: 12px;
+font-weight: bold;
+color: #17B8E3;
+background-color: #EDEDED !important;
+border-bottom-style: solid;
+border-top-style: solid;
+border-width: 1px;
+border-color: #BDBDBE #F1F1F1 #BDBDBE #BDBDBE;
+padding: 4px 6px;
+}
+.can-grid-row-header .grid-header-cell:hover{
+	border-left-color:#aaccf6 !important;
+	border-right-color:#aaccf6 !important;
+	/* background-image:none; */
+	background-color:#aaccf6;
+	background-image:-webkit-linear-gradient(top, #ebf3fd,#ebf3fd 39%,#d9e8fb 40%,#d9e8fb);
+}

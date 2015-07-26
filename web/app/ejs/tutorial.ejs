@@ -1,0 +1,10 @@
+<div class="folder-portlet">
+<% for(var i=0;i<this.length;i++){
+   var row = this[i];%>
+    <div id="<%=row.name%>" class="thumb-wrap">
+    <div class="f-thumb">
+        <img title="<%=row.tooltip%>" src="resources/images/portal-icon/<%=row.image%>">
+    </div>
+    <span class="x-editable"><%=row.name%></span></div>
+<%}%>
+</div>

@@ -1,0 +1,282 @@
+
+function addClasses(rec){
+
+    var win = Ext.getCmp('class_win');
+    if(!win){
+        win=Ext.create('Ext.app.view.component.AppWindow', {
+            title:rec?'Edit Class Form':'Add New Class Form',
+            id:rec?'editfeestructure_win':'addfeestructure_win',
+            width:400,
+            closeAction:'hide',
+            top:{
+                image:BASE_URL+'resources/images/createuser.png',
+                formTitle:'Create Class Data'
+            },
+            defaults:{
+                xtype:'textfield',
+                value:'',
+                width:300
+            },
+            url:'ppppp',
+            formItems :[
+            {
+                name : 'name',
+                fieldLabel: 'Class Name',
+                id:'name'
+            },{
+                xtype:'combobox',
+                fieldLabel :'Class Teacher',
+                id:'classteacher',
+                name:'classteacher',                
+                store:Ext.create('MyApp.store.Combo').load({
+                                      params:{propertyId:5}}),//For Teacher
+                typeAhead: true,
+                queryMode: 'local',
+                emptyText: 'Select a Class Teacher...',
+                Autoload:true,
+                valueField :'id',
+                displayField :'value'
+            },
+            {
+                xtype:'combobox',
+                fieldLabel :'Fee Template',
+                id:'feetemplate',
+                name:'feetemplate',
+                store:Ext.create('MyApp.store.Combo').load({
+                                      params:{propertyId:6}}),//For FeeTemplates
+                typeAhead: true,
+                queryMode: 'local',
+                emptyText: 'Select a Fee Templates...',
+                Autoload:true,
+                valueField :'id',
+                displayField :'value'
+            },{
+                name : 'comment',
+                fieldLabel: 'Comment',
+                id:'comment'
+            }
+            ],
+            buttons :[
+            {
+                text: rec?'Edit':'Add',
+                action: 'save',
+                scope:this,
+                handler:saveMaster/*function (){
+                
+                var r = Ext.create('MyApp.model.ClassMod', {
+                    name:Ext.getCmp('name').getValue(),
+                    classteacher:Ext.getCmp('classteacher').getValue(),
+                    feetemplate:Ext.getCmp('feetemplate').getValue(),
+                    comment:Ext.getCmp('comment').getValue()                    
+                });
+             
+                    classdata.insert(0,r);
+                }*/
+            },
+            Ext.cancelButton
+            ]
+        })
+    }
+    if(rec){
+        
+        Ext.getCmp('name').setValue(rec.data.name);
+        Ext.getCmp('classteacher').setValue(rec.data.classteacher);
+        Ext.getCmp('comment').setValue(rec.data.comment);
+        Ext.getCmp('feetemplate').setValue(rec.data.feetemplate);
+      
+    }
+    win.show();
+}
+
+function saveMaster(btn){
+
+
+      var form = btn.up('window').down('form').getForm();
+      var grid =  Ext.getCmp('classgrid');
+      //var recs =grid.getSelectionModel().getSelection();
+        if(form.isValid()){
+            var obj = form.getValues();
+           
+            
+            Ext.Ajax.request({
+                url:'classes/add.do',
+                type:'json',
+                headers:{
+                    'Content-Type':'application/json'
+                },
+                params:Ext.JSON.encode(obj),
+                success: function(res){
+                    Ext.Msg.alert('Success','Class added successfully');
+                 //   var rec = eval('('+res.responseText+')');
+                 //   app.getController('Class').getClassStore().add(rec);
+                }
+            })
+        }
+}
+
+
+Ext.define('MyApp.view.class.Class' ,{
+    extend: 'Ext.grid.Panel',
+    closable:true,
+    title: 'Class Management',
+    id:'classgrid',
+    layout:'fit',
+    alias: 'widget.class',
+    viewConfig:{
+        forceFit:true,
+        emptyText:'<div class="no-results">No Results To display</div>'
+    },    
+    store:'Class',
+    selModel:Ext.create('Ext.selection.CheckboxModel',{
+        singleSelect:true,
+        listeners:{
+                selectionchange:function(){
+
+                   var  button = Ext.getCmp('classEdit');
+                   button.setDisabled(false);
+                   var  delbutton = Ext.getCmp('classDelete');
+                   delbutton.setDisabled(false);
+                }
+            }
+    }),
+    tbar :[{
+        xtype: 'searchfield',
+        store: Ext.create('Ext.data.Store', {
+            autoLoad: false,
+            fields:['id','name'],
+            proxy: {
+                type: 'ajax',
+                url: 'users.json',
+                reader: {
+                    type: 'json',
+                    root: 'users'
+                }
+            }
+        })
+    },{
+        iconCls: 'icon-add',
+        text: 'Add Class',
+        listeners:{
+            render: function(component){
+                component.getEl().on('click', function(){                    
+                    addClasses(null);
+                })
+
+            }
+        }
+    },{
+        iconCls: 'icon-edit',
+        text: 'Edit',
+        disabled: true,
+        id:'classEdit',
+        scope:this,
+        handler: function(component){
+                    var rec=Ext.getCmp('classgrid').getSelectionModel().getSelection()[0];
+                    addClasses(rec);
+        }
+    }, {
+        iconCls: 'icon-delete',
+        text: 'Delete',
+        disabled: true,        
+        id:'classDelete',
+        handler: function(component){
+            Ext.Msg.confirm("Alert","Are you sure want to delete records", function(btn){
+            if(btn=='yes'){
+                var grid = Ext.getCmp('classgrid');
+                grid.getStore().remove(grid.getSelectionModel().getSelection());
+            }
+        });
+        }
+    },{
+        xtype:'button',
+        text:'Add To Template',
+        iconCls: 'icon-add',
+        listeners:{
+            render: function(component){
+                component.getEl().on('click', function(){
+                    //addFeeTemplate();
+                })
+
+            }
+        }
+    }
+    ],
+    bbar : Ext.create('Ext.PagingToolbar', {
+        store: this.store,
+        displayInfo: true,
+        displayMsg: 'Displaying users {0} - {1} of {2}',
+        emptyMsg: "No user to display",
+        items:[{
+        xtype:'button',
+        text:'Print',
+        listeners:{
+            render: function(component){
+                component.getEl().on('click', function(){
+                    //addFeeTemplate();
+                    })
+
+            }
+        }
+    },{
+        xtype:'splitbutton',
+        text:'Export Data',
+        arrowAlign:'right',
+        menu: [{text: 'PDF'},{text: 'Excelsheet'}],
+        listeners:{
+            render: function(component){
+                component.getEl().on('click', function(){
+                    //addFeeTemplate();
+                    })
+
+            }
+        }
+    }]
+    }),
+    initComponent: function() {
+
+        this.columns=[
+    Ext.create('Ext.grid.RowNumberer'),
+
+    {
+        header: 'Class Name',
+        dataIndex:'name'
+    },
+
+    {
+        header:'Class Teacher',
+        dataIndex:'classteacher'
+    },
+
+    {
+        header:'Fee Teamplate',
+        dataIndex:'feetemplate'
+    },{
+        header:'Comment',
+        dataIndex:'comment'
+    }
+
+    ];
+            this.selModel = Ext.create('Ext.selection.CheckboxModel',{
+                    singleSelect:true
+                });
+                this.bbar = Ext.create('Ext.PagingToolbar', {
+                    store: this.store,
+                    displayInfo: true,
+                    displayMsg: 'Displaying users {0} - {1} of {2}',
+                    emptyMsg: "No user to display"
+                }),
+        
+        this.callParent(arguments);
+    },
+    onRender : function(){
+        //this.selModel.on('selectionchange', this.onSelectChange);
+        this.callParent(arguments);
+    },
+    selectionchange : function(sm, selected,eOpts){
+        if(sm.getCount()){
+    }
+    }
+});
+
+
+

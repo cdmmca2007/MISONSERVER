@@ -1,0 +1,42 @@
+Ext.define('Ext.app.view.component.AppWindow', {
+    extend: 'Ext.window.Window',
+    alias: 'widget.appwindow',
+    modal:true,
+    layout: {
+        type:'vbox',
+        align:'stretch'
+    },
+    initComponent: function() {
+        this.items = 
+            [{
+             xtype:'container',
+             style:'border-bottom:1px solid #000',      
+             items:[{
+                     xtype:'container',
+                     height:60,
+                     style:'background:#fff;padding:5px;',
+                     layout:'hbox',
+                     items:[
+                 {
+                     xtype:'image',
+                     src:this.top.image,
+                     height:50,
+                     width:50
+                 },{
+                     xtype:'container',
+                     html:'<div><p>'+this.top.formTitle+'</p></div>'
+                 }]
+             }]
+        }, {
+                xtype: 'form',
+                padding:'10 10 10 20',
+                defaults:this.defaults,
+                url:this.url,
+                items: this.formItems,
+                border:false,
+                style:'background:#ddd',
+                bodyStyle:'background:#ddd'
+            }]
+        this.callParent(arguments);
+    }
+});

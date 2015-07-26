@@ -1,0 +1,26 @@
+<div class="grid-view"  <%=(el)->el.data('data',this)%>>
+<table class="tablecss_css">
+<thead>
+<tr class="can-grid-row-header">
+<% list(this.columns, function(column){%>
+	<th data-field="<%=column.field%>" style="<%=column.style%>" class="grid-header-cell <%=column.css%> <%=column.sortable?"can-grid-sortable":""%>">
+		<span><%=column["header"]%></span><span class="<%=column.sortable?'can-grid-sort-icon':''%>">&nbsp</span>
+	</th>
+<%})%>
+
+</tr>
+</thead><tbody>
+    <%
+for(var i=0;i<this.data.length;i++){ 
+     var row = this.data[i];%>
+ 	<tr class="can-grid-row <%=i%2==0?"can-grid-row-even":"can-grid-row-odd"%>">
+ 		<% list(this.columns, function(c,j){ 
+ 		     
+ 		     %>
+				<td style="<%=c.style%>" class="can-grid-cell <%=c.css%>"><%=row.attr(c.field)%></td>
+		<%})%>
+</tr>
+<%}%>
+</tbody>
+</table>
+</div>

@@ -1,0 +1,47 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.dlabs.constants;
+
+/**
+ *
+ * @author Kamlesh the admin
+ */
+public interface URLMap {
+    String ADD_MASTER = "/master/add.do";
+    String GET_MASTER = "/master/get.do";
+    String GET_PROPRTIES = "/master/properties.do";
+    
+    String GET_TEMPLATES ="/payment/getTemplates.do";
+    String GET_TEMPLATE ="/payment/getTemplate.do";
+    String ADD_TEMPLATES = "/payment/addTemplates.do";
+    String DEL_TEMPLATE = "/payment/delTemplates.do";
+    String ADD_TEMPLATE_DETAILS = "/payment/templateDetails.do";
+    String ADD_FEE_STRUCTURE = "/payment/addFee.do";
+    String DEL_FEE_STRUCTURE = "/payment/delFee.do";
+    String GET_ALL_FEESTRUCTURE = "/payment/getAllFees.do";
+    
+    String ADD_Class = "/classes/add.do";
+    String GET_Classes ="/classes/get.do";
+    String ADD_STUDENT ="/student/add.do"; 
+    String GET_STUDENTS ="/student/get.do";
+    String ADD_USER = "/user/addUser.do";
+    String DELETE_USER = "/user/deleteUser.do";
+    String GET_USERS = "/user/getUsers.do";
+     String GET_USER = "/user/getUser.do";
+    String GET_ROLES = "/user/getRoles.do";
+    String GET_ROLES_GROUP = "/permission/getRolesGroup.do";
+    String GET_GROUP_PERMISSION="/permission/getPermissions.do";
+    String UPDATE_PERMISSION ="/permission/updatePermission.do";
+String GET_EMAIL ="/mail/get.do";
+    String ADD_EMAIL ="/mail/add.do";
+    String ADD_PERIOD="/period/add.do";
+    String GET_PERIOD="/period/get.do";
+    String ADD_PERIOD_DATA="period/addTT.do";
+    String GET_TIMETABLE="/timetable/get.do";
+    String ADD_TIMETABLE="/timetable/add.do";
+    String GET_COMBO="/combo/get.do";
+   String GET_PAYMENTDETAILS="paymentDetail/get.do";  
+    String GET_DASHBOARD_LINK = "/dashboard/get.do";
+}

@@ -1,0 +1,19 @@
+Ext.define('MyApp.view.component.Settings' ,{
+    extend: 'Ext.tab.Panel',
+    alias: 'widget.settings',
+    requires:['MyApp.view.master.List','MyApp.view.permission.PermissionPanel','MyApp.view.timetable.Period','MyApp.view.mail.Email'],
+    closable:true,
+    title: 'Settings',
+    items:[{
+          xtype:'maserlist'  
+    },{
+        xtype:'permissionpanel'
+    },{
+        xtype:'periodlist' 
+    },{
+        xtype:'maillist' 
+    }],
+    show: function(){
+        this.callParent(arguments);
+    }
+})

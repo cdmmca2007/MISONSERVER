@@ -1,0 +1,438 @@
+function addTimetableData(btn){
+
+    var grid =  Ext.getCmp('timetablegrid');
+    var store=  Ext.getStore('Timetable');
+    var rec=[];
+    for (x=0;x<store.getCount();x++){
+        rec[x]=store.getAt(x).data;
+    }
+    Ext.Ajax.request({
+        url:'timetable/add.do',
+        type:'json',
+        headers:{
+            'Content-Type':'application/json'
+        },
+        params:Ext.JSON.encode(rec),
+        success: function(res){
+            Ext.Msg.alert('Success','Timetable updated successfully');
+        //   var rec = eval('('+res.responseText+')');
+        //   app.getController('Class').getClassStore().add(rec);
+        }
+    })
+}
+
+
+var cellEditing = Ext.create('Ext.grid.plugin.CellEditing', {
+    clicksToEdit: 1
+});
+
+Ext.define('MyApp.view.timetable.Timetable' ,{
+    extend: 'Ext.grid.Panel',
+    alias: 'widget.timetablelist',
+    closable:true,
+    title: 'Time Table',
+    id:'timetablegrid',
+    layout:'fit',
+    store:'Timetable',    
+    selModel: {
+        selType: 'cellmodel'
+    },
+    plugins: [cellEditing],
+    tbar :[{
+        xtype: 'searchfield',
+        store: Ext.create('Ext.data.Store', {
+            autoLoad: false,
+            fields:['id','name'],
+            proxy: {
+                type: 'ajax',
+                url: 'users.json',
+                reader: {
+                    type: 'json',
+                    root: 'users'
+                }
+            }
+        })
+    },{
+        xtype:'combobox',
+        id:'timesheetsession',
+        emptyText: 'Select Session',   
+        store:Ext.create('MyApp.store.Combo').load({
+                                      params:{propertyId:-1}}),//For Session
+        Autoload:true,
+        queryMode: 'local',
+        displayField: 'value',
+        valueField: 'id',
+        value:SETTING.Users.properties.session_id,        
+        name:'type',
+        listeners:{
+            select: function(component){
+                var sessionid=Ext.getCmp('timesheetsession').getValue();
+                Ext.getCmp('timesheetclasscombo').getStore().load({
+                     params:{
+                             propertyId:2,///Class List
+                             classid   :sessionid///Provide Batch_id
+                     }
+               });
+            }
+       }
+    },{
+       xtype: 'combo',
+       emptyText: 'Select Class',
+       text   : 'Class',
+       id:'timesheetclasscombo',
+       store:Ext.create('MyApp.store.ClassCombo1').load({
+                                      params:{propertyId:2,
+                                              classid:SETTING.Users.properties.session_id
+                                    }}),
+       typeAhead: true,
+       queryMode: 'local',
+       Autoload:true,
+       valueField :'id',
+       displayField :'value',  
+       listeners:{
+            select: function(component){
+                var sessionid=Ext.getCmp('timesheetsession').getValue();
+                var classid  =Ext.getCmp('timesheetclasscombo').getValue();                                
+            }
+       }
+    },
+    {
+        iconCls: 'icon-add',
+        text: 'View Timetable',
+       // listeners:{
+          handler: function(component){
+               // component.getEl().on('click', function(){
+                    addTimetableData(null);
+                    
+               // })
+
+            }
+       // }
+    },
+    {
+        iconCls: 'icon-add',
+        text: 'Save Timetable',
+       // listeners:{
+          handler: function(component){
+               // component.getEl().on('click', function(){
+                    addTimetableData(null);
+                    
+               // })
+
+            }
+       // }
+    },
+    {
+        iconCls: 'icon-add',
+        text: 'My Timetable',
+       // listeners:{
+          handler: function(component){
+               // component.getEl().on('click', function(){
+                    //addTimetableData(null);                    
+               // })
+
+            }
+       // }
+    },
+    
+
+    
+    ],
+    /* bbar : Ext.create('Ext.PagingToolbar', {
+        store: this.store,
+        displayInfo: true,
+        displayMsg: 'Displaying users {0} - {1} of {2}',
+        emptyMsg: "No user to display",
+        items:[{
+        xtype:'button',
+        text:'Print',
+        listeners:{
+            render: function(component){
+                component.getEl().on('click', function(){
+                    //addFeeTemplate();
+                    })
+
+            }
+        }
+    }]
+    }),*/
+    initComponent: function() {
+        var me=this;
+        this.subjectStore=Ext.create('MyApp.store.Master');
+        this.subjectStore.load({
+            params:{propertyId:2}
+        });
+
+       
+        this.teacherStore=Ext.create('MyApp.store.Combo');
+        this.teacherStore.load({
+            params:{propertyId:1}
+        });
+
+
+        this.columns=[
+        Ext.create('Ext.grid.RowNumberer'),
+        {
+            header: 'Periods',
+            dataIndex:'periodnumber'
+        },
+        {
+          
+            header    : 'Mon-Subject',
+            dataIndex :'mon_subject',
+           
+            editor: {
+                store :this.subjectStore,
+                xtype : 'combo',
+                allowBlank : false,                    //xtype: 'numberfield'
+                triggerAction : 'all',
+                queryMode :'local',
+                valueField :'id',
+                displayField :'value'
+                
+            },
+            renderer : function(value){
+                var record=me.subjectStore.findRecord('id',value);
+                return record?record.data.value:'';
+            }
+        },
+        {
+            header     : 'Mon-Teacher',
+            dataIndex  : 'mon_teacher',
+            editor: {
+                store  :this.teacherStore,
+                xtype  : 'combo',
+                allowBlank : false,
+                triggerAction : 'all',
+                queryMode :'local',
+                valueField :'id',
+                displayField :'value'
+
+           },
+            renderer : function(value){
+                var record=me.teacherStore.findRecord('id',value);
+                return record?record.data.value:'';
+            }
+        }
+        ,    
+        {
+            header     : 'Tues-Subject',
+            dataIndex: 'tues_subject',
+            editor: {
+                store :this.subjectStore,
+                xtype : 'combo',
+                allowBlank : false,                    //xtype: 'numberfield'
+                triggerAction : 'all',
+                queryMode :'local',
+                valueField :'id',
+                displayField :'value'
+
+            },
+            renderer : function(value){
+                var record=me.subjectStore.findRecord('id',value);
+                return record?record.data.value:'';
+            }
+          
+        }, {
+            header     : 'Tues-Teacher',
+            dataIndex: 'tues_teacher',
+            editor: {
+                store  :this.teacherStore,
+                xtype  : 'combo',
+                allowBlank : false,
+                triggerAction : 'all',
+                queryMode :'local',
+                valueField :'id',
+                displayField :'value'
+
+           },
+            renderer : function(value){
+                var record=me.teacherStore.findRecord('id',value);
+                return record?record.data.value:'';
+            }
+        },
+
+        {
+            header     : 'Wed-Subject',
+            dataIndex: 'wed_subject',
+            editor: {
+                store :this.subjectStore,
+                xtype : 'combo',
+                allowBlank : false,                    //xtype: 'numberfield'
+                triggerAction : 'all',
+                queryMode :'local',
+                valueField :'id',
+                displayField :'value'
+
+            },
+            renderer : function(value){
+                var record=me.subjectStore.findRecord('id',value);
+                return record?record.data.value:'';
+            }
+
+        }, {
+            header     : 'Wed-Teacher',
+            dataIndex: 'wed_teacher',
+            editor: {
+                store  :this.teacherStore,
+                xtype  : 'combo',
+                allowBlank : false,
+                triggerAction : 'all',
+                queryMode :'local',
+                valueField :'id',
+                displayField :'value'
+
+           },
+            renderer : function(value){
+                var record=me.teacherStore.findRecord('id',value);
+                return record?record.data.value:'';
+            }
+        },
+
+        {
+            header   : 'Thurs-Subject',
+            dataIndex: 'thurs_subject',
+            editor: {
+                store :this.subjectStore,
+                xtype : 'combo',
+                allowBlank : false,                    //xtype: 'numberfield'
+                triggerAction : 'all',
+                queryMode :'local',
+                valueField :'id',
+                displayField :'value'
+
+            },
+            renderer : function(value){
+                var record=me.subjectStore.findRecord('id',value);
+                return record?record.data.value:'';
+            }
+        },
+        {
+            header     : 'Thurs-Teacher',
+            dataIndex: 'thurs_teacher',
+            editor: {
+                store  :this.teacherStore,
+                xtype  : 'combo',
+                allowBlank : false,
+                triggerAction : 'all',
+                queryMode :'local',
+                valueField :'id',
+                displayField :'value'
+
+           },
+            renderer : function(value){
+                var record=me.teacherStore.findRecord('id',value);
+                return record?record.data.value:'';
+            }
+        }
+        ,
+        {
+       
+            header     : 'Fri-Subject',
+            dataIndex: 'fri_subject',
+            editor: {
+                store :this.subjectStore,
+                xtype : 'combo',
+                allowBlank : false,                    //xtype: 'numberfield'
+                triggerAction : 'all',
+                queryMode :'local',
+                valueField :'id',
+                displayField :'value'
+
+            },
+            renderer : function(value){
+                var record=me.subjectStore.findRecord('id',value);
+                return record?record.data.value:'';
+            }
+
+        },
+        {
+            header     : 'Fri-Teacher',
+            dataIndex: 'fri_teacher',
+            editor: {
+                store  :this.teacherStore,
+                xtype  : 'combo',
+                allowBlank : false,
+                triggerAction : 'all',
+                queryMode :'local',
+                valueField :'id',
+                displayField :'value'
+
+           },
+            renderer : function(value){
+                var record=me.teacherStore.findRecord('id',value);
+                return record?record.data.value:'';
+            }
+        }
+        ,
+        {
+       
+            header     : 'Sat-Subject',
+            dataIndex: 'sat_subject',
+            editor: {
+                store :this.subjectStore,
+                xtype : 'combo',
+                allowBlank : false,                    //xtype: 'numberfield'
+                triggerAction : 'all',
+                queryMode :'local',
+                valueField :'id',
+                displayField :'value'
+
+            },
+            renderer : function(value){
+                var record=me.subjectStore.findRecord('id',value);
+                return record?record.data.value:'';
+            }
+        }, {
+            header     : 'Sat-Teacher',
+            dataIndex: 'sat_teacher',
+            editor: {
+                store  :this.teacherStore,
+                xtype  : 'combo',
+                allowBlank : false,
+                triggerAction : 'all',
+                queryMode :'local',
+                valueField :'id',
+                displayField :'value'
+
+           },
+            renderer : function(value){
+                var record=me.teacherStore.findRecord('id',value);
+                return record?record.data.value:'';
+            }
+        }
+    
+        ];
+        this.selModel = Ext.create('Ext.selection.CheckboxModel',{
+            singleSelect:true
+        });
+        this.bbar = Ext.create('Ext.PagingToolbar', {
+            store: this.store,
+            displayInfo: true,
+            displayMsg: 'Displaying users {0} - {1} of {2}',
+            emptyMsg: "No user to display"
+        }),
+
+        this.callParent(arguments);
+       // this.store.load();
+    },
+
+    onRender : function(){
+        //this.selModel.on('selectionchange', this.onSelectChange);
+        
+        
+        this.callParent(arguments);
+
+    },
+    selectionChange : function(sm, selected,eOpts){
+        alert('fff');
+        if(sm.getCount()){
+            alert('fff');
+        }
+    }
+});
+
+
+
+
+

@@ -1,0 +1,136 @@
+
+Ext.define('MyApp.view.user.UserProfile', {
+    extend:'Ext.panel.Panel',
+    items:[
+        {
+            xtype:'panel',
+            title:this.userName
+        }
+    ],
+    initComponent : function(){
+
+        this.items = [
+            {
+                title:this.userName,
+                style:'padding:10px',
+                layout:{
+                    type:'vbox',
+                    align:'stretch'
+                },
+                items:[
+                    {
+                        xtype:'panel',
+                        layout:{
+                            type:'hbox'
+                        },
+                        items:[
+                            {
+                                flex:1,
+                                layout:'hbox',
+                                height:130,
+                                items:[
+                                    {
+                                        xtype:'image',
+                                        height:100,
+                                        width:80,
+                                        margin:10,
+                                        border:1,
+                                        style: {
+                                            borderColor: 'black',
+                                            borderStyle: 'solid'
+                                        },
+                                        src:BASE_URL+'/resources/images/kamlesh.jpg'
+                                    },this.usersDetails = Ext.create('Ext.container.Container',{
+                                       style:'padding-top:10px',
+                                       html:"<table><tr> <td class='label-for'>Name:</td><td class='label'> Kamlesh Kumar SAH</td></tr>"+
+                                            "<tr> <td class='label-for'>Gender:</td><td class='label'> Male</td></tr>"+
+                                            "<tr><td class='label-for'>Date Of Birth:</td><td class='label'>14 Nov 1984</td></tr>"+
+                                            "<tr> <td class='label-for'>Class:</td><td class='label'>8th</td></tr>"+
+                                            "<tr> <td class='label-for'>Nationality:</td><td class='label'>Indian</td></tr>"+
+                                            "<tr> <td class='label-for'>Religion:</span><td class='label'>Hindu</td></tr>"+
+                                            "<tr> <td class='label-for'>Age:</td><td class='label'>28</td></tr></table>"
+                                    })
+                                ]
+                            },{
+                                flex:1,
+                                html:"<div> <span class='label-for'>Father's Name:</span><span class='label'> Kamlesh Kumar SAH</span></div>"+
+                                    "<div> <span class='label-for'>Mother's Name:</span><span class='label'> Male</span></div>"+
+                                    "<div> <span class='label-for'>Contact:</span><span class='label'>8987678765</span></div>"+
+                                    "<hr/>"+
+                                    "<div>Addres</div>"+
+                                    "<div> <span class='label-for'>Street:</span><span class='label'>Vishrantwadi</span></div>"+
+                                    "<div> <span class='label-for'>City:</span><span class='label'>Pune</span></div>"+
+                                    "<div> <span class='label-for'>District:</span><span class='label'>Pune</span></div>"+
+                                    "<div> <span class='label-for'>State:</span><span class='label'>Maharashtra</span></div>"+
+                                    "<div> <span class='label-for'>ZIP Code:</span><span class='label'>898765</span></div>"
+                            }
+                        ]
+
+                    },{
+                        xtype:'container',
+                        layout:'column',
+                        defaults:{
+                            columnWidth:.33
+                        },
+                        items:[
+                            {
+                                xtype:'portlet',
+                                style:'margin:5px',
+                                html:'<table><tr>'+
+//    '<td>{title}</td>'+
+//    '<td class="attendance-{mon}">&nbsp</td>'+
+//    '<td class="attendance-{tue}">&nbsp</td>'+
+//    '<td class="attendance-{wed}">&nbsp</td>'+
+//    '<td class="attendance-{thu}">&nbsp</td>'+
+//    '<td class="attendance-{fri}">&nbsp</td>'+
+//    '<td class="attendance-{sat}">&nbsp</td>'+
+//    '<td class="attendance-{sun}">&nbsp</td>'+
+//    '</tr></table>',
+
+    '<td>&nbsp;</td>'+
+    '<td>Mon</td><td>Tue</td><td>Wed</td>'+
+    '<td>Thu</td><td>Fri</td><td>Sat</td><td>Sun</td>'+
+    '</tr>'+
+    '<tr>'+
+    '<td>Current Week</td>'+
+    '<td class="attendance-Y">&nbsp</td>'+
+    '<td class="attendance-Y">&nbsp</td>'+
+    '<td class="attendance-Y">&nbsp</td>'+
+    '<td class="attendance-N">&nbsp</td>'+
+    '<td class="attendance-Y">&nbsp</td>'+
+    '<td class="attendance-H">&nbsp</td>'+
+    '<td class="attendance-H">&nbsp</td>'+
+    '</tr></table>'
+                            },{
+                                xtype:'portlet',
+                                html:'test',
+                                style:'margin:5px'
+                            },{
+                                xtype:'portlet',
+                                html:'test',
+                                 style:'margin:5px'
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+        this.callParent(arguments);
+    },
+    listeners: {
+        render : function(){
+
+            //this.callParent(arguments);
+            this.userRecords = {
+                name:'kamlesh'
+            };
+            var tpl=new Ext.Template("<div> Name:{name}</div>",
+            "<div>Age:</div>",
+            "<div>Date Of Birth</div>"
+        );
+            console.log(this.usersDetails);
+            //tpl.overwrite(this.usersDetails.body,this.userRecords)
+
+        }
+    }
+});

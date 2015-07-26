@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : dlabs-properties.xml
+    Created on : 25 September, 2011, 11:35 AM
+    Author     : Kamlesh Kumar Sah
+    Description:
+        Purpose of the document follows.
+-->
+
+<root>
+   <property>
+        <name>db</name>
+        <value>mysql</value>
+    </property>
+    <property>
+        <name>db_driver</name>
+        <value>com.mysql.jdbc.Driver</value>
+    </property>
+    <property>
+        <name>db_host</name>
+        <value>localhost</value>
+    </property>
+    <property>
+        <name>db_port</name>
+        <value>3306</value>
+    </property>
+    <property>
+        <name>db_name</name>
+       <value>mis</value>
+        <!-- <value>dlab2009_poisehr</value>-->
+    </property>
+    <property>
+        <name>db_user</name>
+        <!--<value>dlab2009_dlab</value>-->
+        <value>root</value>
+    </property>
+    <property>
+        <name>db_passwd</name>
+        <value>root</value>
+         <!--<value>dl@b2009</value>-->
+    </property>
+    <property>
+        <name>maxActive</name>
+        <value>100</value>
+    </property>
+     <property>
+        <name>smtppath</name>
+        <value>localhost</value>
+    </property>
+     <property>
+        <name>smtpport</name>
+        <value>25</value>
+    </property>
+    <property>
+        <name>context_url</name>
+        <value>http://localhost:8084/MIS/</value>
+    </property>
+        <property>
+        <name>contact_admin_mailid</name>
+        <value>cdmse2012@gmail.com</value>
+    </property>
+
+    <property>
+        <name>prof_pic_store</name>
+        <value>d:\\store\\profile</value>
+    </property>
+        <property>
+        <name>homework_store</name>
+        <value>d:\\store\\homework</value>
+    </property>
+    <property>
+        <name>tutotial_store</name>
+        <value>d:\\store\\tutotial</value>
+    </property>
+    <property>
+        <name>library_store</name>
+        <value>d:\\store\\library</value>
+    </property>
+    <property>
+        <name>extra_store</name>
+        <value>d:\\store\\extra</value>
+    </property>
+</root>

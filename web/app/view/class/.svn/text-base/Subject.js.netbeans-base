@@ -1,0 +1,75 @@
+Ext.define('MyApp.view.class.Subject' ,{
+    extend: 'Ext.grid.Panel',
+    closable:false,
+    title: 'Class Subject Mapping',
+    id:'classsubjectgrid',
+    layout:'fit',
+    width :580,
+    height:280,
+    alias: 'widget.classsubjectgrid',
+    scrollable:true,
+    viewConfig:{
+        forceFit:true,
+        emptyText:'<div class="no-results">No Results To display</div>'
+    },    
+    store:'ClassSubject',
+   
+    initComponent: function() {
+
+    this.columns=[
+    Ext.create('Ext.grid.RowNumberer'),
+
+    {
+        header: 'Subject Id',
+        dataIndex:'id',
+        width :150,
+        style :'color:#17385B;font-weight:bold'
+    },
+
+    {
+        header:'Subject Name',
+        dataIndex:'value',
+        width :150,
+        style :'color:#17385B;font-weight:bold'
+    },
+    {
+        header:'Comment',
+        dataIndex:'comment',
+        width :150,
+        style :'color:#17385B;font-weight:bold'
+    },
+    { 
+        header:'Select Subject',
+        dataIndex:'added',
+        xtype:'checkcolumn',
+        style :'color:#17385B;font-weight:bold',
+        stopSelection: false,
+        listeners :{
+            checkchange: function(box, rowIndex,checked,eOpts ){
+            }
+        }    
+    }
+    ];
+
+    this.tbar =[{
+    }
+    ];
+    this.bbar = Ext.create('Ext.PagingToolbar', {
+        store: this.store,
+        displayInfo: true,
+        displayMsg: 'Displaying users {0} - {1} of {2}',
+        emptyMsg: "No user to display",
+        items:[]
+    });
+    this.callParent(arguments);
+    },
+    onRender : function(){
+        //this.selModel.on('selectionchange', this.onSelectChange);
+        this.callParent(arguments);
+    },
+    selectionchange : function(sm, selected,eOpts){
+        if(sm.getCount()){
+              
+    }
+    }
+});

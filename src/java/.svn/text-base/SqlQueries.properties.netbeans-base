@@ -1,0 +1,27 @@
+# To change this template, choose Tools | Templates
+# and open the template in the editor.
+
+test=test
+DASHBOARD_LINKS = SELECT readonly,editable FROM rolesgroupspermission WHERE roleid = ? AND groupid = ?
+GET_CLASS_COMBO = select classid as id,name as value from class
+
+INSERT_TEMPLATE = insert into templates(name,comment,id) values(?,?,?)
+UPDATE_TEMPLATE = UPDATE templates set name = ?, comment=? where id = ?
+UPDATE_CLASSES_TPL = UPDATE class SET feetemplate =? WHERE classid = ?
+UPDATE_FEE_STRUC = UPDATE feestructure SET header=?,fee_type=?,fee_amount=?,fee_frequency=?,COMMENT=? WHERE fee_structure_id=?
+
+ADD_CALENDAR = INSERT INTO calendar(title,description,color,hidden) VALUES(?,?,?,?)
+NEW_CALENDAR = SELECT MAX(calendar_id) AS id  FROM calendar
+UPDATE_CALENDAR = UPDATE calendar SET title=?,description=?,color=? WHERE calendar_id = ? 
+DEL_CALENDAR = DELETE FROM calendar WHERE calendar_id = ?
+ADD_EVENT = INSERT INTO EVENTS(calendar_id,title,start_date,end_date,location,notes,url,reminder,isAllDay,isNew) VALUES(?,?,?,?,?,?,?,?,?,?)
+NEW_EVENT = SELECT MAX(event_id) AS id FROM events
+GET_CALENDARS = SELECT * FROM calendar
+GET_EVENTS = SELECT * FROM events where start_date>?  and end_date < ?
+DEL_EVENT= DELETE FROM EVENTS WHERE event_id = ?
+UPDATE_EVENT = UPDATE EVENTS SET calendar_id=?,title=?,start_date=?,end_date=?,location=?,notes=?,url=?,reminder=?,isAllDay=?,isNew=? WHERE event_id = ?
+ADD_SHEET =INSERT INTO attendance_sheet(month,batch_id) VALUES(?,?)
+DEL_SHEET = DELETE FROM attendance_sheet WHERE sheet_id =?
+GET_SHEET = SELECT attendance_sheet.sheet_id id ,attendance_sheet.batch_id batchId,month,classteacher classTeaher,name class FROM attendance_sheet  INNER JOIN sessions ON attendance_sheet.batch_id= sessions.batch_id INNER JOIN class cl ON sessions.class_id = cl.classid  ORDER BY id desc
+NEW_SHEET = SELECT MAX(sheet_id) AS sheetId FROM attendance_sheet
+ADD_ATTENDANCE = INSERT INTO monthly_attendance(sheet_id,student_id) values(?,?)

@@ -1,0 +1,52 @@
+<div id="timetable">
+<div class="fc-calendar-container">
+    <div class="fc-calendar fc-five-rows">
+        <div class="fc-head">
+            <div>Period</div>
+            <div>Monday</div>
+            <div>Tuesday</div>
+            <div>Wednesday</div>
+            <div>Thursday</div>
+            <div>Friday</div>
+            <div>Saturday</div>
+            
+        </div>
+       <div class="fc-body">
+                <% for(var i=0; i<this.length; i++){
+                    var row = this[i]; %>
+                <div class="fc-row">
+                        <div>
+                            <span class="fc-date">(<%=row.starttime%>-<%=row.endtime%>)</span>
+                            <span class="fc-weekday"><%=row.periodnumber%></span>
+                        </div>
+                        <div>
+                            <span class="fc-date"><%=row.mon_tch_text%></span>
+                            <span class="fc-weekday"><%=row.mon_sub_text%></span>
+                        </div>
+                        <div>
+                            <span class="fc-date"><%=row.tues_tch_text%></span>
+                            <span class="fc-weekday"><%=row.tues_sub_text%></span>
+                        </div>
+                        <div>
+                            <span class="fc-date"><%=row.wednes_tch_text%></span>
+                            <span class="fc-weekday"><%=row.wednes_sub_text%></span>
+                        </div>
+                        <div>
+                            <span class="fc-date"><%=row.thurs_tch_text%></span>
+                            <span class="fc-weekday"><%=row.thurs_sub_text%></span>
+                        </div>
+                        <div>
+                            <span class="fc-date"><%=row.fri_tch_text%></span>
+                            <span class="fc-weekday"><%=row.fri_tch_text%></span>
+                        </div>
+                        <div>
+                            <span class="fc-date"><%=row.satur_tch_text%></span>
+                            <span class="fc-weekday"><%=row.satur_tch_text%></span>
+                        </div>
+                 </div>
+                 <%}%>
+        </div>
+<div>
+</div>
+
+</div>

@@ -1,0 +1,94 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package com.dlabs.mis.dao;
+
+
+import com.dlabs.model.PaymentFeeStructure;
+import com.dlabs.model.Timetable;
+import com.kjava.base.ReadableException;
+import com.kjava.base.db.DaoUtil;
+import com.kjava.base.util.JSONUtil;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
+
+
+public class paymentDetailDAO {
+
+        public Object getAllTimeTableAsJson(Connection conn, int page, int rows) throws ReadableException {
+
+        JSONObject job = new JSONObject();        
+        Collection<JSONObject> items = new ArrayList<JSONObject>();
+        ResultSet rs = null;
+        int count =0;
+        int x=0,i=0;
+        String schoolid="1000";
+        String studentname= null;;
+        String classname= null;;
+        String duedate= null;;
+        int amount=0;
+        int totamount=0;
+        String fineamount= null;;
+        String frommonth= null;;
+        String tomonth= null;;
+        
+
+        try{
+            //rs = DaoUtil.executeQuery(conn, "SELECT count(1) as count from timetable where schoolid=? and classid=?");
+            rs = DaoUtil.executeQuery(conn, "SELECT count(1) as count from timetable");
+            if(rs.next()) {
+                count = rs.getInt("count");
+
+            }
+            rs = DaoUtil.executeQuery(conn,"SELECT S.name NAME, C.name ClASS, T.name Template ,"
+                                           +"FS.fee_structure_id id , FS.fee_name feename, FS.fee_amount amount "
+                                           + "FROM student S ,class C , "
+                                           + "     templates T ,feestructure FS , "
+                                           + "     template_structure_mapping M "
+                                           + "WHERE S.classid=C.classid AND C.feetemplate=T.id "
+                                           + "AND T.id=M.template_id AND FS.fee_structure_id=M.fee_structure_id "
+                                           + "AND S.studentid ='208aac44-92cb-4296-b61e-cbd09d27e4fb'");
+
+            while(rs.next()){
+
+               studentname=rs.getString("NAME");
+               classname  =rs.getString("CLASS");               
+               JSONObject obj =new JSONObject();
+               obj.put("fee_structure_id",rs.getString("id"));
+               obj.put("fee_name",rs.getString("feename"));
+               amount=rs.getInt("amount");
+               obj.put("fee_amount",amount);
+               totamount=totamount+amount;
+               items.add(obj);
+               x++;
+            }
+
+            job.put("studentname",studentname);
+            job.put("classname",classname);
+            job.put("duedate","2013-05-31");
+            job.put("totamount",totamount);
+            job.put("fineamount",0);
+            job.put("frommonth","May");
+            job.put("tomonth","May");
+            job.put("feestructure",items);
+        }
+        catch (SQLException ex) {
+            Logger.getLogger(MasterDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return job;
+    }
+
+
+
+}

@@ -1,0 +1,25 @@
+<%
+var s = this.summary?this.data.summary:null;
+for(var i=0;i<this.data.length;i++){ 
+     var row = this.data[i];%>
+ 	<tr class="can-grid-row <%=i%2==0?"can-grid-row-even":"can-grid-row-odd"%>">
+ 		<% list(this.columns, function(c,j){ 
+ 		     if(s){
+ 		     	if(c.summuryType){
+ 		     	   s[j] = s[j]+row.attr(c.field);	
+ 		     	}
+ 		     }
+ 		     %>
+				<td style="<%=c.style%>" class="can-grid-cell <%=c.css%>"><%=row.attr(c.field)%></td>
+		<%})%>
+</tr>
+<%}
+this.data.summary = s;
+if(s){%>
+	<tr class="can-grid-row-summary">
+		<% list(this.columns, function(c,j){ %>
+	 	    	<td class="can-grid-cell-summary"><%=c.summuryText?c.summuryText.call(c,s):s[j]%></td>	
+		<%}) %>
+    </tr>
+<%}
+%>

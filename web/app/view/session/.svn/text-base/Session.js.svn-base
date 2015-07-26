@@ -1,0 +1,27 @@
+/* 
+ * Session Managmenet
+ * Add New Session
+ * Copy From Last Session
+ * Class Detail
+ *         related  SubjectDetails
+ *         related passed Student Details 
+ *         related  Fee Template
+ *           
+ */
+
+/*
+session ---> 1-a class --> 5 subject --->
+session ---> 1-a class --> 6 subject --->  
+  
+
+
+class---1
+classsubject  1--1
+              1--2
+              1--3
+              1--4
+              1--5
+Exam , Markentry              
+
+               
+*/               

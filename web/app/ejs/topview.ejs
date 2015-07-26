@@ -1,0 +1,18 @@
+<div class="left">
+    <img style="height: 40px;padding: 4px 2px; width: 100px;float:left;" src="resources/images/DL2.png">
+    <span class="top-menu profile_name_style">Hello <b><%=user.attr('name')%></b>, Welcome to <a href="#"><b style="text-decoration: underline;"><%=user.attr('schoolname')%></b></a></span>
+</div>
+    <input type="text" style="float:right; -moz-user-select: text;border-radius: 10px;margin-top: 7px; margin-right: 10px;float: right;
+            background: url('resources/images/search.png') no-repeat scroll 5px 1px #FFFFFF !important;padding-left: 25px;" placeholder="Search">      
+
+<div class="right">
+    <ul>
+        <li class="top-menu top-menu-profile right"><a href="#">My Profile</a></li>
+        <li class="top-menu right"><a href="#">|</a></li>
+        <li class="top-menu top-menu-help right"><a href="#">Help</a></li>
+            <li class="top-menu right"><a href="#">|</a></li>
+        <li class="top-menu top-menu-sep right usermenu"><a href="#"><%=user.attr('name')%></a></li>
+        
+    </ul>
+
+</div>

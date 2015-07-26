@@ -1,0 +1,98 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package com.dlabs.mis.dao;
+
+import com.dlabs.model.Timetable;
+import com.kjava.base.ReadableException;
+import com.kjava.base.db.DaoUtil;
+import com.kjava.base.util.ExtJsonUtil;
+import com.kjava.base.util.JSONUtil;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+
+/**
+ *
+ * @author cd
+ */
+public class TimeTableDAO {
+
+    JSONUtil jsonUtil = new ExtJsonUtil();
+    public Timetable[] addOrEditTimeTable(Connection conn, Timetable[] tt) throws ReadableException {
+        
+        int flag=0,x=0;
+        String periodid;
+        ResultSet rs = null;
+       
+        String query="UPDATE timetable SET mon_subject = ? ,mon_teacher = ? , tues_subject = ?, tues_teacher = ? , wed_subject = ? , "+
+	             "wed_teacher = ? , thurs_subject =?  , thurs_teacher = ? , fri_subject = ? , fri_teacher = ? , sat_subject = ? , "+
+	             "sat_teacher = ? , modifiedby = ? WHERE schoolid = ? AND	classid =?  AND timetableid =? ";
+        try {
+        for(x=0;x<tt.length;x++){
+             flag=0;
+             if(DaoUtil.executeUpdate(conn,query ,new Object[]{
+                                                                tt[x].getMon_subject(),
+                                                                tt[x].getMon_teacher(),
+                                                                tt[x].getTues_subject(),
+                                                                tt[x].getTues_teacher(),
+                                                                tt[x].getWed_subject(),
+                                                                tt[x].getWed_teacher(),
+                                                                tt[x].getThurs_subject(),
+                                                                tt[x].getThurs_teacher(),
+                                                                tt[x].getFri_subject(),
+                                                                tt[x].getFri_teacher(),
+                                                                tt[x].getSat_subject(),
+                                                                tt[x].getSat_teacher(),
+                                                                tt[x].getModifiedby(),
+                                                                tt[x].getSchoolid(),
+                                                                tt[x].getClassid(),
+                                                                tt[x].getTimetableid()
+                                                              })==1)
+                      {
+                         flag=1;
+                      }
+        }
+        if(flag==1)
+            conn.commit();
+        }
+        catch (SQLException ex) {
+            throw new ReadableException(ex,ex.getMessage(),"TimetableDAO", "addoredit");
+        }
+
+        return tt;
+
+    }
+
+    public Object getAllTimeTableAsJson(Connection conn, int page, int rows) throws ReadableException {
+        JSONObject job = null;
+        ResultSet rs = null;
+        int count =0;
+        String schoolid="1000";
+        try{
+            //rs = DaoUtil.executeQuery(conn, "SELECT count(1) as count from timetable where schoolid=? and classid=?");
+            rs = DaoUtil.executeQuery(conn, "SELECT count(1) as count from timetable");
+            if(rs.next()) {
+                count = rs.getInt("count");
+
+            }
+            rs = DaoUtil.executeQuery(conn,"SELECT "
+                    + "timetableid,classid,periodnumber,mon_subject,mon_teacher,tues_subject,tues_teacher,"
+	            + "wed_subject,wed_teacher,thurs_subject,thurs_teacher,fri_subject,fri_teacher,sat_subject,"
+	            + "sat_teacher,createdby,modifiedby,schoolid from timetable where schoolid=? limit ? offset ?",new Object[]{schoolid,15,0});
+            job = jsonUtil.getJsonObject(rs, count, page,rows, false);
+        }
+        catch (SQLException ex) {
+            Logger.getLogger(MasterDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return job;
+    }
+
+}

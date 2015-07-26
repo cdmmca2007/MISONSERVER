@@ -1,0 +1,91 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.dlabs.mis.model;
+
+import java.util.Date;
+
+/**
+ *
+ * @author Kamlesh the admin
+ */
+public class Permission {
+    private int id;
+    private String groupid;
+    private String name;
+    private Date timeStamps;
+    private String image;
+    private String tooltip;
+    private String callback;
+    public Permission() {
+    }
+
+    public Permission(int id, String groupid, String name, Date timeStamps, String image, String tooltip,String callback) {
+        this.id = id;
+        this.groupid = groupid;
+        this.name = name;
+        this.timeStamps = timeStamps;
+        this.image = image;
+        this.tooltip = tooltip;
+        this.callback = callback;
+    }
+
+    public String getGroupid() {
+        return groupid;
+    }
+
+    public void setGroupid(String groupid) {
+        this.groupid = groupid;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Date getTimeStamps() {
+        return timeStamps;
+    }
+
+    public void setTimeStamps(Date timeStamps) {
+        this.timeStamps = timeStamps;
+    }
+
+    public String getTooltip() {
+        return tooltip;
+    }
+
+    public void setTooltip(String tooltip) {
+        this.tooltip = tooltip;
+    }
+
+    public String getCallback() {
+        return callback;
+    }
+
+    public void setCallback(String callback) {
+        this.callback = callback;
+    }
+    
+    
+}

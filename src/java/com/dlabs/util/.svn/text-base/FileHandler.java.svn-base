@@ -1,0 +1,48 @@
+package com.dlabs.util;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import org.apache.commons.fileupload.DiskFileUpload;
+import org.apache.commons.fileupload.FileItem;
+
+/**
+ *
+ * @author Kamlesh Kumar Sah
+ */
+public class FileHandler {
+    public static Map uploadFile(String path, HttpServletRequest request) {
+        String filename = "";
+        DiskFileUpload fu = new DiskFileUpload();
+        List fileItems = null;
+        boolean found=false;
+        HashMap arrParam = new HashMap();
+        FileUploader uploader = new FileUploader();
+        try {
+            fileItems = fu.parseRequest(request);
+            for (Iterator k = fileItems.iterator(); k.hasNext();) {
+                FileItem fi1 = (FileItem) k.next();
+                if (fi1.isFormField()) {
+                    arrParam.put(fi1.getFieldName(), fi1.getString());
+                } else {
+                        filename = new String(fi1.getName().getBytes(), "UTF8");
+                        found = true;
+                        arrParam.put("filename", filename);
+                }
+            }
+            
+            if(found) {
+                uploader.uploadFile(fileItems, filename, path);
+                if (!uploader.isUploaded()) {
+                    return arrParam;
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Filehandler.uploadFile:" + e.getMessage());
+               
+        }
+        return arrParam;
+    }
+}

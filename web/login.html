@@ -1,0 +1,166 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title>SchoolOManager.Com</title>
+        <link rel="shortcut icon" href="resources/images/DL2.png" />
+        <link rel="stylesheet" type="text/css" href="resources/css/style.css?v=5"/>
+        <!--[if lte IE 6]>
+        <style type="text/css">
+            /*<![CDATA[*/
+            #pby {
+                behavior: url(style/iepngfix.htc)
+            }
+            /*]]>*/
+        </style>
+    <![endif]-->
+        <link rel="shortcut icon" href="images/logo_changethis.gif"/>
+        <link rel="stylesheet" type="text/css" href="resources/css/login.css" />
+        <link rel="stylesheet" type="text/css" href="resources/css/style_1.css" />
+        <link rel="stylesheet" type="text/css" href="resources/css/acustom.css" />
+        
+        <script type="text/javascript" src="login.js"></script>
+    </head>
+    <body onload="checkCookie(); formFocus();">
+         <div id="loading-mask-div" style="width:100%;height:100%;background:#444444;opacity:.6;position:absolute;z-index:20000;left:0;top:0;visibility:hidden;">
+            <div id="loading-div" style="position:absolute;top:100px;left:250px;">
+                <img src="images/load.gif" style="vertical-align:middle" alt="Loading" />
+            </div>
+        </div>
+        <div class="container">
+            <div class="codrops-top">
+                <img src="resources/images/DL2.jpg" style="height: 15px;width: 15px;margin: 5px 0px 0px 5px;float: left;"/>
+                <a href="">
+                    <strong>Developers-Lab.Com</strong>
+                </a>
+                <span class="right">
+                    <a href="www.SchooloManager.com">
+                        <strong>Click Here for SchooloManager.com</strong>
+                    </a>
+                </span>
+                <div class="clr"></div>
+            </div>
+            <header>
+                <h2 style="height: 14px;">Complete Solution for <span>School Management System</span></h3>
+				<nav class="codrops-demos">
+					<span>Solution for : </span>
+					<a href="#">Administrator</a>
+					<a href="#">Teacher</a>
+					<a href="#">Parent</a>
+                                        <a href="#">Student</a>
+				</nav>
+            </header>
+            <section>				
+                <div id="container_demo" >
+                    <div id="wrapper">
+                        <div id="login" class="animate form">
+                            <form action="javascript:validatelogin();" name="loginForm" id="loginForm" autocomplete="on"> 
+                                <h1>SchoolOManager Login Console</h1> 
+                                <p> 
+                                    <label for="username" class="uname" data-icon="u">Enter Your username </label>
+                                    <input id="UserName" name="UserName" required="required" type="text" placeholder="admin"/>
+                                </p>
+                                <p> 
+                                    <label for="password" class="youpasswd" data-icon="p"> Your password </label>
+                                    <input id="Password" name="Password" required="required" type="password" placeholder="admin1" /> 
+                                </p>
+                                <span id="validateMsg" class="errorprompt"></span>                                
+                                <p class="keeplogin"> 
+                                    <input type="checkbox" name="loginkeeping" id="loginkeeping" value="loginkeeping" /> 
+                                    <label for="loginkeeping">Keep me logged in</label>
+                                </p>
+                                
+                                <p class="keeplogin"> 
+                                    <label for="forgotuser_1" id="forgotuser_1">
+                                        <a href="forgetUser.jsp">Forgot Your Username</a>
+                                    </label>
+                                </p>
+                                
+                                <p class="keeplogin"> 
+                                    <label for="forgotpassward_1" id="forgotpassward_1">
+                                        <a href="forgetPassword.jsp">Forgot Password</a>
+                                    </label>
+                                </p>
+                                
+                                <p class="login button"> 
+                                    <input type="submit" value="Login" /> 
+				</p>
+                                <p class="change_link">
+				Contact Us
+				<a href="#" class="to_register">Click me</a>
+				</p>
+                            </form>
+                        </div>
+						
+                    </div>
+                </div>  
+            </section>
+            <div class="codrops-bottom">
+            </div>
+        </div>
+    </body>
+</html>
+    <!--body onload="checkCookie(); formFocus();"  style="background-color:#4A5C69;">
+         <div id="loading-mask-div" style="width:100%;height:100%;background:#444444;opacity:.6;position:absolute;z-index:20000;left:0;top:0;visibility:hidden;">
+            <div id="loading-div" style="position:absolute;top:100px;left:250px;">
+                <img src="images/load.gif" style="vertical-align:middle" alt="Loading" />
+            </div>
+        </div>
+        <div style="background-color:#4A5C69;overflow:auto;height:100%">
+            <div style="margin-top:30px;height:370px;background-color:#D4DCE1;">
+
+                <div style="float:left;width:25%;height:370px;"></div>
+                <div style="float:left;width:50%;background:url('resources/images/login-backimage.jpg') ;height:370px;">
+                    <div style="padding-left:270px;padding-top:120px;">
+                        <form action="javascript:validatelogin();" name="loginForm" id="loginForm">
+                            <div id="login-message">
+                               <span class="msg1">Developers lab Pvt Ltd</span>
+                               <span class="msg2">Login Console</span>
+                            </div>
+                            <div style="padding-left:20px;">
+                                <div class="inputcontainer">
+                                    <label for="UserName" id="UserNameLabel" class="labels">
+                                        Login ID:
+                                    </label>
+                                    <input name="UserName" type="text" id="UserName" class="inputbox"/><span id="errmsg" class="errorprompt" title="User Name is required.">*</span>
+                                </div>
+                                <div class="inputcontainer">
+                                    <label for="Password" id="PasswordLabel" class="labels">
+                                        Password:
+                                    </label>
+                                    <input name="Password" type="password" id="Password" class="inputbox"/><span id="errmsg1" class="errorprompt" title="Password is required.">*</span>
+                                </div>
+                                <div class="clr">
+                                </div>
+                                <div class="inputcontainer">
+                                    <input type="submit" name="LoginButton" value="Login" id="LoginButton"/><span id="validateMsg" class="errorprompt"></span>
+                                </div>
+                                <a href="forgetPassword.jsp">Forgot Password</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div style="float:left;width:25%;height:370px;"></div>
+            </div>
+            <div>
+                <div style="margin: 20px 300px 20px 260px">
+                    <div><font color="white"><b>School Resource Management</b></font></div>
+                </div>
+               <div style="margin: 20px 300px 20px 260px">
+                    <div><font color="white"><b>Finance Solution</b></font></div>
+               </div>
+               <div style="margin: 20px 300px 20px 260px">
+                    <div><font color="white"><b>School Online Administration </b></font></div>
+               </div>
+               <div style="margin: 20px 300px 20px 260px">
+                    <div><font color="white"><b>Parent-Teacher Direct Interaction</b></font></div>
+               </div>
+               <div style="margin: 20px 300px 20px 260px">
+                    <div><font color="white"><b>Online Payment System</b></font></div>
+               </div>
+               
+            </div>
+        </div>
+    <--!/body>
+

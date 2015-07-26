@@ -1,0 +1,209 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package com.dlabs.model;
+
+/**
+ *
+ * @author cd
+ */
+public class Timetable {
+
+        private String id;
+        private String timetableid;
+        private String classid ;
+	private String periodnumber ;
+	private String mon_subject ;
+	private String mon_teacher ;
+	private String tues_subject ;
+	private String tues_teacher ;
+	private String wed_subject;
+	private String wed_teacher ;
+	private String thurs_subject;
+	private String thurs_teacher ;
+	private String fri_subject;
+	private String fri_teacher ;
+	private String sat_subject ;
+	private String sat_teacher;
+	private String createdby ;
+	private long   createdon ;
+	private String modifiedby ;
+	private long   modifiedon ;
+	private String schoolid;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+        
+
+    public String getClassid() {
+        return classid;
+    }
+
+    public void setClassid(String classid) {
+        this.classid = classid;
+    }
+
+    public String getCreatedby() {
+        return createdby;
+    }
+
+    public void setCreatedby(String createdby) {
+        this.createdby = createdby;
+    }
+
+    public long getCreatedon() {
+        return createdon;
+    }
+
+    public void setCreatedon(long createdon) {
+        this.createdon = createdon;
+    }
+
+    public String getFri_subject() {
+        return fri_subject;
+    }
+
+    public void setFri_subject(String fri_subject) {
+        this.fri_subject = fri_subject;
+    }
+
+    public String getFri_teacher() {
+        return fri_teacher;
+    }
+
+    public void setFri_teacher(String fri_teacher) {
+        this.fri_teacher = fri_teacher;
+    }
+
+    public String getModifiedby() {
+        return modifiedby;
+    }
+
+    public void setModifiedby(String modifiedby) {
+        this.modifiedby = modifiedby;
+    }
+
+    public long getModifiedon() {
+        return modifiedon;
+    }
+
+    public void setModifiedon(long modifiedon) {
+        this.modifiedon = modifiedon;
+    }
+
+    public String getMon_subject() {
+        return mon_subject;
+    }
+
+    public void setMon_subject(String mon_subject) {
+        this.mon_subject = mon_subject;
+    }
+
+    public String getMon_teacher() {
+        return mon_teacher;
+    }
+
+    public void setMon_teacher(String mon_teacher) {
+        this.mon_teacher = mon_teacher;
+    }
+
+    public String getPeriodnumber() {
+        return periodnumber;
+    }
+
+    public void setPeriod(String periodnumber) {
+        this.periodnumber = periodnumber;
+    }
+
+    public String getSat_subject() {
+        return sat_subject;
+    }
+
+    public void setSat_subject(String sat_subject) {
+        this.sat_subject = sat_subject;
+    }
+
+    public String getSat_teacher() {
+        return sat_teacher;
+    }
+
+    public void setSat_teacher(String sat_teacher) {
+        this.sat_teacher = sat_teacher;
+    }
+
+    public String getSchoolid() {
+        return schoolid;
+    }
+
+    public void setSchoolid(String schoolid) {
+        this.schoolid = schoolid;
+    }
+
+    public String getThurs_subject() {
+        return thurs_subject;
+    }
+
+    public void setThurs_subject(String thurs_subject) {
+        this.thurs_subject = thurs_subject;
+    }
+
+    public String getThurs_teacher() {
+        return thurs_teacher;
+    }
+
+    public void setThurs_teacher(String thurs_teacher) {
+        this.thurs_teacher = thurs_teacher;
+    }
+
+    public String getTimetableid() {
+        return timetableid;
+    }
+
+    public void setTimetableid(String timetableid) {
+        this.timetableid = timetableid;
+    }
+
+    public String getTues_subject() {
+        return tues_subject;
+    }
+
+    public void setTues_subject(String tues_subject) {
+        this.tues_subject = tues_subject;
+    }
+
+    public String getTues_teacher() {
+        return tues_teacher;
+    }
+
+    public void setTues_teacher(String tues_teacher) {
+        this.tues_teacher = tues_teacher;
+    }
+
+    public String getWed_subject() {
+        return wed_subject;
+    }
+
+    public void setWed_subject(String wed_subject) {
+        this.wed_subject = wed_subject;
+    }
+
+    public String getWed_teacher() {
+        return wed_teacher;
+    }
+
+    public void setWed_teacher(String wed_teacher) {
+        this.wed_teacher = wed_teacher;
+    }
+
+
+        
+
+}

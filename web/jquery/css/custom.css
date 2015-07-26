@@ -1,0 +1,173 @@
+/*
+Document   : custom
+Created on : 2 Oct, 2011, 7:19:06 PM
+Author     : Kamlesh Kumar Sah
+Description:
+Purpose of the stylesheet follows.
+*/
+
+/* change in jquery library */
+.hidden{
+    display:none !important;
+}
+.rfloat{float:right}
+/*email css*/
+.email-container{
+    background: none repeat scroll 0 0 #F9F9F9;
+    border: 1px solid #D5D5D5;
+    padding: 10px;
+    font: 12px tahoma,arial,helvetica,sans-serif;
+}
+.email-buttons-container{
+    padding:2px 0 12px 45px;
+}
+.email-buttons-container button{
+    margin-left: 5px;
+    margin-right: 5px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+.email-cc-link{
+    margin-left:70px;
+}
+.email-cc-link span{
+    margin-left:5px;
+    margin-right:5px;
+}
+.email-cc-link a{
+    text-decoration:none;
+    font: 12px tahoma,arial,helvetica,sans-serif;
+}
+/*-----end of email css------*/
+.form-label{
+    font: 12px tahoma,arial,helvetica,sans-serif;
+    float:left;
+}
+.form-input{
+    padding-bottom: 0;
+    padding-top: 2px;
+    height: 18px;
+    font: 12px tahoma,arial,helvetica,sans-serif;
+    line-height: 18px;
+    vertical-align: middle;
+    border: 1px solid #B5B8C8;
+    padding: 1px 3px;
+    margin-left:15px;
+    background: #FFFFFF url("../images/text-bg.gif") repeat-x scroll 0 0;
+    margin-bottom: 4px;
+    width: 180px;
+}
+.form_iframe{
+    border:0 none;
+}
+#t_list1{
+    padding-bottom: 0.2em !important;
+    padding-top: 0.2em !important;
+}
+.search{
+    float:left;
+    width:20em;
+}
+.search label{margin-left: 1em; margin-right: 5px;}
+.search span{
+    padding-left: 25px;
+    background: url("base/images/btnSearch.jpg") no-repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #AAAAAA;
+    padding-left: 25px;
+    font-size:12px;
+
+}
+.search input{
+    border: medium none;
+    font-size: 11px;
+    margin: 0;
+    padding: 0;
+    width: 120px;
+    margin-top:.3em;
+}
+/*----------global search*****/
+.g-search{
+    background:none repeat scroll 0 0 #FFFFFF;
+float:left;
+margin-right:10px;
+}
+.g-search-type{
+    -moz-border-radius:2px 2px 2px 2px;
+    background:none repeat scroll 0 0 transparent;
+    border-color:#C3DAF9;
+    border-style:solid;
+    border-width:1px;
+}
+.g-search-input{
+    -moz-border-radius:1px 1px 1px 1px;
+    background:none repeat scroll 0 0 #FFFFFF;
+    border-top:1px solid #C3DAF9;
+    height:20px;
+    padding:0 0 1px;
+}
+.g-search-text-input{
+    background-color:transparent;
+    border:0 none;
+    outline:0 none;
+    width:100%;
+}
+.g-search-input span{
+    border:medium none;
+    border:1px solid #666666;
+    display:inline-block;
+    padding:1px 0 2px;
+    position:relative;
+}
+.g-search-input input{
+    width:300px;
+    padding-top:2px;
+    border:0 none;
+    margin:0 22px 0 5px;
+    outline:medium none;
+    padding:1px 5px 2px 0;
+}
+.g-search-wrapper{
+    border-color:#C3DAF9;
+    height:22px;
+    border-style:solid;
+    border-width:0 1px;
+}
+.g-search-input button{
+    background-color:#FFFFFF;
+    background-image:url("images/btn_search.gif");
+    background-repeat:no-repeat;
+    border:0 none;
+    cursor:pointer;
+    display:block;
+    height:19px;
+    padding:0;
+    position:absolute;
+    right:0;
+    top:0;
+    width:20px;
+}
+.search_result_link{
+    display:inline !important;
+}
+.search_result_cat{
+    float:right;
+    border:none;
+}
+/* classes for msg box **/
+.msg-box-icon{
+    padding-bottom:20px;
+    padding-left:30px;
+    margin-right:10px;
+}
+.msg-info{
+    background:url(images/icon-info.gif) no-repeat;
+}
+.msg-question{
+     background:url(images/icon-question.gif) no-repeat;
+}
+.msg-warning{
+     background:url(images/icon-warning.gif) no-repeat;
+}
+.msg-error{
+     background:url(images/icon-error.gif) no-repeat;
+}

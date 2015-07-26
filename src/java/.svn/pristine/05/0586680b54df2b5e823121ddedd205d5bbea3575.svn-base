@@ -1,0 +1,52 @@
+package com.dlabs.session;
+
+//import com.dlabs.permission.RolePermission;
+import com.dlabs.model.User;
+import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+
+/**
+ *
+ * @author Kamlesh Kumar Sah
+ */
+public class AuthHandler {
+
+    public static void createSession(HttpServletRequest request,User u) {
+        request.getSession().setAttribute("user", u);
+    }
+
+   public static String getUserEmailID(HttpServletRequest request) {
+        User user = (User)request.getSession().getAttribute("user");
+        return user.getEmailId();
+    }
+    public static boolean isValidSession(HttpServletRequest request){
+        return request.getSession(true).getAttribute("user")!=null;
+    }
+    public static void destroySession(HttpServletRequest request){
+        request.getSession(true).setAttribute("user", null);
+        request.getSession(true).invalidate();
+    }
+    public static String getUserId(HttpServletRequest request) {
+        User user = (User)request.getSession().getAttribute("user");
+        return user.getUserId();
+    }
+    public static String getUserName(HttpServletRequest request) {
+        User user = (User)request.getSession().getAttribute("user");
+        return user.getUserLogin().getUserName();
+    }
+    public static User getUser(HttpServletRequest request) {
+        User user = (User)request.getSession().getAttribute("user");
+        return user;
+    }
+    public static String getUserGender(HttpServletRequest request){
+       User user = (User)request.getSession().getAttribute("user");
+       return user.getGender()=="M"?"Male":"Female";
+    }
+//    public static List<RolePermission> getUsersPermission(HttpServletRequest request){
+//         User user = (User)request.getSession().getAttribute("user");
+//         return user.getRolesPermission();
+//    }
+//    public static String getIPAddress(HttpServletRequest request){
+//        return request.getRemoteAddr();
+//    }
+}

@@ -1,0 +1,123 @@
+/**
+ * @class Ext.app.Portlet
+ * @extends Ext.panel.Panel
+ * A {@link Ext.panel.Panel Panel} class that is managed by {@link Ext.app.PortalPanel}.
+ */
+Ext.define('Ext.app.view.portlet.PaymentPortlet', {
+    extend: 'Ext.panel.Panel',
+    alias: 'widget.paymentportlet',
+    layout:'fit',
+    tbar:[{text:'View All Payment Status',
+           handler: function(){
+             var Tab = Ext.create('MyApp.view.PaymentStatus');
+                 globalTab.add(Tab);
+                 globalTab.setActiveTab(Tab);
+        
+                    
+        }
+    }],
+    cls: 'x-portlet',
+    initComponent : function(){
+        var donut = false;
+        Ext.apply(this,{
+            width:300,
+            height:300,
+            renderTo:Ext.getBody(),
+            items:[Ext.create('Ext.chart.Chart', {
+            //xtype: 'chart',
+            //id: 'payment_chart',
+            animate: false,
+            store: chartStore,
+            shadow: false,
+            height:100,
+            width:150,
+            legend: {
+                position: 'right'
+            },
+            insetPadding: 20,
+            theme: 'Base:gradients',
+            series: [{
+                type: 'pie',
+                field: 'data1',
+                showInLegend: true,
+                donut: donut,
+//                tips: {
+//                    trackMouse: true,
+//                    //width: 140,
+//                    height: 28,
+//                    renderer: function(storeItem, item) {
+//                        //calculate percentage.
+////                        var total = 0;
+////                        chartStore.each(function(rec) {
+////                            total += rec.get('data1');
+////                        });
+////                        this.setTitle(storeItem.get('name') + ': ' + Math.round(storeItem.get('data1') / total * 100) + '%');
+//                    }
+//                },
+                highlight: {
+                    segment: {
+                        margin: 10
+                    }
+                },
+                label: {
+                    field: 'name',
+                    //display: 'rotate',
+                    contrast: true,
+                    font: '12px Arial'
+                }
+            }]
+        })
+            ]
+        })
+
+
+//       this.items = Ext.create('widget.panel', {
+//            width: 200,
+//            height: 150,
+//            //renderTo: Ext.getBody(),
+//            layout: 'fit',
+//            tbar: [{
+//                text: 'Save Chart',
+//                handler: function() {
+//                    Ext.MessageBox.confirm('Confirm Download', 'Would you like to download the chart as an image?', function(choice){
+//                        if(choice == 'yes'){
+//                            chart.save({
+//                                type: 'image/png'
+//                            });
+//                        }
+//                    });
+//                }
+//            }, {
+//                text: 'Reload Data',
+//                handler: function() {
+//                    store.loadData(generateData(6, 20));
+//                }
+//            }, {
+//                enableToggle: true,
+//                pressed: false,
+//                text: 'Donut',
+//                toggleHandler: function(btn, pressed) {
+//                    var chart = Ext.getCmp('payment_chart');
+//                    chart.series.first().donut = pressed ? 35 : false;
+//                    chart.refresh();
+//                }
+//            }],
+//            items: chart
+//        });
+
+        this.callParent(arguments);
+    },
+    doClose: function() {
+        if (!this.closing) {
+            this.closing = true;
+            this.el.animate({
+                opacity: 0,
+                callback: function(){
+                    this.fireEvent('close', this);
+                    this[this.closeAction]();
+                },
+                scope: this
+            });
+        }
+    }
+});

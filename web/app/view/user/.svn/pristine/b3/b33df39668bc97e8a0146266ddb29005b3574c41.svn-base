@@ -1,0 +1,90 @@
+Ext.define('MyApp.view.user.Edit', {
+    extend: 'Ext.app.view.component.AppWindow',
+    alias: 'widget.useredit',
+    title: 'Edit User',
+    top:{
+        image:BASE_URL+'resources/images/createuser.png',
+        formTitle:'Create User'
+    },
+    width:500,
+    defaults : {
+        width:300,
+        xtype:'textfield'
+    },
+    initComponent: function() {
+       var me = this;
+    	Ext.StoreManager.lookup('UserRoles').load();
+        this.formItems = [
+        {
+            xtype: 'textfield',
+            name : 'name',
+            fieldLabel: 'Name',
+            value : this.rec?this.rec.name:""
+        },{
+            xtype: 'textfield',
+            name : 'userName',
+            fieldLabel: 'Login Id',
+            value : this.rec?this.rec.userName:""
+            
+        }, {
+            xtype: 'combo',
+            fieldLabel:'Role',
+            store:'UserRoles',
+            triggerAction:'all',
+            queryMode: 'local',
+            displayField: 'name',
+            valueField: 'id',
+            name:'roleId',
+            value : this.rec?this.rec.roleId:""
+        },{
+            name : 'emailId',
+            fieldLabel: 'Email',
+            vtype : 'email',
+            value : this.rec?this.rec.emailId:""
+        },
+        {
+            fieldLabel: 'DOB',  
+            xtype:'datefield',
+            name: 'dob',
+            id:'dob_'+this.id,
+            value : this.rec? new Date(this.rec.dob):""
+            
+        },
+        {
+            fieldLabel: 'Contact No',  
+            name: 'contactNo',
+            value : this.rec?this.rec.contactNo:""
+        },{
+            fieldLabel: 'Adress',  
+            name: 'address',
+            value : this.rec?this.rec.address:""
+        },
+        {
+            fieldLabel: 'City',  
+            name: 'city',
+            value : this.rec?this.rec.city:""
+        }
+        
+        
+        ]
+        this.buttons = [
+        {
+            text: 'Save',
+            action: 'save',
+            scope:this,
+            handler: function(btn){
+                app.getController('Users').onSaveClick(this,btn,me.rec);
+            }
+        },
+        {
+            text: 'Cancel',
+            scope: this,
+            handler: this.close
+        }
+        ];
+
+        this.callParent(arguments);
+    }
+});
+
+

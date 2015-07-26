@@ -1,0 +1,83 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package com.dlabs.mis.dao;
+
+
+import com.dlabs.model.Classes;
+import com.kjava.base.ReadableException;
+import com.kjava.base.db.DaoUtil;
+import com.kjava.base.util.ExtJsonUtil;
+import com.kjava.base.util.JSONUtil;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+
+/**
+ *
+ * @author cd
+ */
+public class ComboDAO {
+
+    JSONUtil jsonUtil = new ExtJsonUtil();
+    public JSONObject getAllComboAsJson(Connection conn, int propertyid, int page,int rows) throws ReadableException {
+        JSONObject job = null;
+        ResultSet rs = null;
+        int count = 0;
+        String countQuery=null;
+        String schoolid="1000";
+        String dataQuery =null;
+        boolean parameter=false;
+        if(propertyid==1)///Then return techer id ,value for combo box
+        {
+            countQuery="Select count(1) as count from teacher where schoolid=?";
+            dataQuery ="select teacherid as id , concat(concat(firstname,' '),lastname) as value from teacher where schoolid=? limit ? offset ?";
+        }
+        if(propertyid==2)///Then return class id ,value for combo box
+        {
+            countQuery="SELECT count(1) as count from class where schoolid=?";
+            dataQuery ="select classid as id , name as value from class where schoolid=? limit ? offset ?";
+        }
+        if(propertyid==3)///Then return class id ,value for combo box
+        {
+            countQuery="SELECT count(1) as count from states";
+            dataQuery ="select stateid as id,name as value from states";
+            parameter=true;
+        }
+        if(propertyid==5)///Then return class id ,value for combo box
+        {
+            countQuery="SELECT count(1) as count from users where roleid=3";
+            dataQuery ="select userid as id,name as value from users where roleid=3";
+            parameter=true;
+        }
+        if(propertyid==6)///Then return class id ,value for combo box
+        {
+            countQuery="SELECT count(1) as count from templates";
+            dataQuery ="select id as id,name as value from templates";
+            parameter=true;
+        }
+        try {
+            if(parameter)
+            rs = DaoUtil.executeQuery(conn,countQuery);
+            else
+            rs = DaoUtil.executeQuery(conn,countQuery,schoolid);
+            if (rs.next()) {
+                count = rs.getInt("count");
+            }
+            if(parameter)
+            rs = DaoUtil.executeQuery(conn,dataQuery);
+            else
+            rs = DaoUtil.executeQuery(conn,dataQuery,new Object[]{schoolid,15,0});
+            job = new ExtJsonUtil().getJsonObject(rs, count, page,rows, false);
+        } catch (SQLException ex) {
+            Logger.getLogger(ComboDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return job;
+    }
+}

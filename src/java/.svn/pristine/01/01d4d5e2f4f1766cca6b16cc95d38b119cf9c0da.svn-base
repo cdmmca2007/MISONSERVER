@@ -1,0 +1,259 @@
+package com.dlabs.mis.dao;
+
+//import com.dlabs.config.Property;
+//import com.dlabs.dao.DAO;
+//import com.dlabs.dao.DaoHelper;
+//import com.dlabs.dao.MySqlQuery;
+//import com.dlabs.permission.PermissionDAO;
+//import com.dlabs.session.AuthHandler;
+import com.dlabs.model.User;
+import com.dlabs.model.UserLogin;
+import com.dlabs.model.UserRole;
+import com.dlabs.util.JsonResult;
+import com.kjava.base.ReadableException;
+import com.kjava.base.db.DaoUtil;
+import com.kjava.base.db.DbPool;
+import com.kjava.base.util.ExtJsonUtil;
+import com.kjava.base.util.JSONUtil;
+import com.kjava.util.DateHelper;
+import java.sql.ResultSet;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+
+/**
+ *
+ * @author Kamlesh Kumar Sah
+ */
+public class UserDAO  {
+    int count = 0;
+   JSONUtil jsonUtil = new ExtJsonUtil();
+    public UserDAO() {
+    }
+
+   
+    public List getAll(Connection conn) throws ReadableException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+   
+    public JSONObject getAllAsJson(Connection conn, int page,int rows,java.lang.String searchString,String orderBy) throws ReadableException {
+        JSONObject job = null;
+        String query[] =MySqlQuery.getAllUserQuery(page,rows,orderBy,searchString);
+        ResultSet rs = null;
+        try {
+            rs = DaoUtil.executeQuery(conn, query[0]);
+            if (rs.next()) {
+                count = rs.getInt("count");
+            }
+            rs = DaoUtil.executeQuery(conn, query[1]);
+            job = jsonUtil.getJsonObject(rs, count, page,rows, false);
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return job;
+    }
+
+//    public Object get(Connection conn, Object obj) throws ReadableException {
+//        User user = (User) obj;
+//       // ResultSet rs = DaoUtil.executeQuery(conn, MySqlQuery.getUserById(), user.getUserID());
+//        try{
+//        if(rs.next()){
+//            user = //DaoHelper.getUserObject(rs);
+//        }
+//        }
+//        catch(SQLException ex){
+//            throw new ReadableException("Userodao", "get");
+//        }
+//        return user;
+//    }
+
+    
+    public User addOrEditUser(Connection conn, User user) throws ReadableException {
+        String uId = user.getUserId();
+        String query[] = MySqlQuery.getUserInsertQuery();
+         ResultSet rs = null;
+        	if(uId == null)
+        	{
+        		rs = DaoUtil.executeQuery(conn, query[2], new Object[]{user.getUserLogin().getUserName()});
+            try {
+                if(rs.next()){
+                        return user;
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            String uid = UUID.randomUUID().toString();
+            DaoUtil.executeUpdate(conn,query[0],new Object[]
+            {uid,user.getName(),user.getDob(),user.getGender(),user.getAddress(),user.getCity(),user.getEmailId(),user.getContactNo(),user.getRoleId()});
+            UserLogin ul = user.getUserLogin();
+            DaoUtil.executeUpdate(conn,query[1],new Object[]
+            {uid,ul.getUserName(),"1234","",""});
+            user.setUserId(uid);
+        	}
+        	else
+        	{
+        		String updateQuery[] = MySqlQuery.getUserUpdateQuery();
+        		System.out.println(updateQuery[0]);
+        		DaoUtil.executeUpdate(conn,updateQuery[0],new Object[]
+        	    {user.getName(),user.getDob(),user.getGender(),user.getAddress(),user.getCity(),user.getEmailId(),user.getContactNo(),user.getRoleId(),user.getUserId()});
+        		UserLogin ul = user.getUserLogin();
+        		System.out.println(updateQuery[1]);
+        		System.out.println(ul.getUserName()+user.getUserId());
+        		DaoUtil.executeUpdate(conn,updateQuery[1],new Object[]
+        		{ul.getUserName(),user.getUserId()});
+        		
+        	}
+        
+        
+        return user;
+    }
+
+//    public int edit(Connection conn, Object obj) throws ReadableException {
+//        User u=(User)obj;
+//        int x=0,y=0;
+//        String query[]=MySqlQuery.getUserUpdateQuery();
+//        try{
+//           x= DaoUtil.executeUpdate(conn,query[0] ,new Object[]{u.getSalutation(),u.getFirstName(),u.getLastName(),u.getDob(),u.getGender(),u.getAddress(),u.getCity(),u.getEmailID(),u.getContactno(),u.getRoleid(),u.getDesignation(),u.getHeadQuarter(),u.getDoj(),u.getManagerid(),u.getUserID()});
+//           if (x > 0)
+//               y=DaoUtil.executeUpdate(conn,query[1] ,new Object[]{u.getUsername(),u.getUserID()});
+//
+//        }
+//        catch(SQLException ex){
+//            throw new ReadableException("Userdao", "edit");
+//        }
+//         return y;
+//    }
+
+    public int delete(Connection conn, String userId) throws ReadableException {
+        
+        int x=0,y=0;
+        String query[]=new String[2];
+        query= MySqlQuery.getUserDeleteQuery();
+        
+            x=DaoUtil.executeUpdate(conn,query[1],new Object[]{userId});
+            if(x > 0)
+                y=DaoUtil.executeUpdate(conn,query[0],new Object[]{userId});
+
+        
+       return y;
+    }
+
+//    public List<Doctor> getAllBirthDays(Connection conn) throws ReadableException, SQLException {
+//        Calendar cal = Calendar.getInstance();
+//        cal.add(Calendar.DATE, -7);
+//        Date d1 = new Date(cal.getTimeInMillis());
+//        cal.add(Calendar.DATE, 21);
+//        Date d2 = new Date(cal.getTimeInMillis());
+//        List<Doctor> doctors = new ArrayList<Doctor>();
+//        String query = "select fname,dob from doctor where dob>? and dob<?";
+//        ResultSet rs = DaoUtil.executeQuery(conn, query, new Object[]{d1,d2});
+//        Doctor d = null;
+//        while(rs.next()){
+//            d = new Doctor();
+//            d.setDob(rs.getDate("dob"));
+//            d.setFirstName(rs.getString("fname"));
+//            doctors.add(d);
+//        }
+//        return doctors;
+//    }
+
+    public User validateUser(Connection conn,String uid, String pass) throws ReadableException{
+        User u = null;
+        ResultSet rs =null;
+        try{
+            rs = DaoUtil.executeQuery(conn, MySqlQuery.verifyUser(), new Object[]{uid,pass});
+            if(rs.next()){
+                u=getUserObject(rs);
+                //PermissionDAO pdao = new PermissionDAO();
+                //u.setRolesPermission(pdao.getPermissionsByRole(conn, u.getRoleid()));
+            }
+        }
+        catch (SQLException ex) {
+            throw new ReadableException(ex,ex.getMessage(),"UserDAO", "validateUser");
+        }
+        
+        return u;
+    }
+
+    public boolean changePassword(Connection conn, int uid, String old, String newp) throws ReadableException {
+        String query = "UPDATE userlogin set PASSWORD=? where userid=? and PASSWORD=?";
+            if (DaoUtil.executeUpdate(conn, query, new Object[]{newp, uid, old}) > 0) {
+                return true;
+            } else {
+                return false;
+            }
+       
+
+    }
+
+  
+    private User getUserObject(ResultSet rs) throws SQLException{
+        User u = new User();
+        if(rs.getObject("userid")!=null)
+            u.setUserId(rs.getString("userid"));
+        if(rs.getObject("contactno")!=null)
+            u.setContactNo(rs.getString("contactno"));
+        if(rs.getObject("roleid")!=null)
+            u.setRoleId(rs.getInt("roleid"));
+        if(rs.getObject("username")!=null){
+            UserLogin ul = new UserLogin();
+            ul.setUserName(rs.getString("username"));
+            u.setUserLogin(ul);
+        }
+        if(rs.getObject("sal")!=null)
+            u.setSalutation(rs.getString("sal"));
+        if(rs.getObject("name")!=null)
+            u.setName(rs.getString("name"));
+        if(rs.getObject("city")!=null)
+            u.setCity(rs.getString("city"));
+        if(rs.getObject("address")!=null)
+            u.setAddress(rs.getString("address"));
+        if(rs.getObject("emailid")!=null)
+            u.setEmailId(rs.getString("emailid"));
+        if(rs.getObject("gender")!=null)
+            u.setGender(rs.getString("gender"));
+        if(rs.getObject("dob")!=null)
+            u.setDob(rs.getLong("dob"));
+         if(rs.getObject("permValue")!=null)
+            u.setPermValue(rs.getInt("permValue"));
+      
+        return u;
+    }
+        private UserRole getRoleObject(ResultSet rs) throws SQLException{
+        UserRole u = new UserRole();
+        if(rs.getObject("id")!=null)
+            u.setId(rs.getInt("id"));
+        if(rs.getObject("name")!=null)
+            u.setName(rs.getString("name"));
+        if(rs.getObject("permValue")!=null)
+            u.setPermValue(rs.getInt("permValue"));
+        return u;
+    }
+    
+    public int getCount(){
+        return count;
+    }
+
+    public List<UserRole> getAllRoles(Connection conn) throws ReadableException, SQLException {
+        List<UserRole> result = new ArrayList<UserRole>();
+        ResultSet rs =null;
+        rs = DaoUtil.executeQuery(conn, "select * from roles");
+        while(rs.next()){
+            result.add(getRoleObject(rs));
+        }
+        this.count = result.size();
+        return result;
+    }
+  
+}

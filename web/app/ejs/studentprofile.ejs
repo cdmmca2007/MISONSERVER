@@ -1,0 +1,44 @@
+<div class="left"style="background: transparent;">
+<div class="left" style="border: 1px solid #808080;  margin: 5px 5px 5px; background: none repeat scroll 0% 0% rgb(255, 255, 255); padding-left: 5px;padding-right: 5px;padding-top: 5px;">
+<img src="resources/images/kamlesh.jpg" style="width: 90px; height: 110px;">
+</div>
+</div>
+
+<div class="profile-name-section">
+    <div class="left"><text class="student-name"><%=student.attr("fname")%> <%=student.attr("lname")%></text> <text class="student-name">(<%=student.attr("classname")%> , Roll-No: <%=student.attr("roll")%> )</text></div> 
+    <div class="left link-icons">
+        <span class="home"><a href="#">&nbsp;</a></span>
+        <span class="edit-profile"><a href="#">&nbsp;</a></span>
+        <span class="notification"><a href="#">&nbsp;</a></span>
+        <span class="alerts"><a href="#">&nbsp;</a></span>
+    </div>
+    <div class="left"></div>
+</div>
+<div style="overflow: hidden;" class="linearBg1">
+
+    <div class="left" style="width:33%">
+        <table>
+            <tr> <td width=90 class='label-for'>Gender:</td><td class='label'> <%=student.attr("gender")%></td></tr>
+            <tr><td class='label-for'>Date Of Birth:</td><td class='label'><%=student.attr("dob")%></td></tr>
+            <tr> <td class='label-for'>Nationality:</td><td class='label'><%=student.attr("nationality")%></td></tr>
+            <tr> <td class='label-for'>Religion:</span><td class='label'><%=student.attr("religion")%></td></tr>
+            <tr> <td class='label-for'>Age:</td><td class='label'><%=student.attr("age")%></td></tr></table>
+    </div>
+    <div class="left" style="width:33%">
+
+        <table>
+            <tr><td style='width: 100px;' class='label-for'>Street:</td><td class='label'><%=student.attr("street")%></span></td></tr>
+            <tr><td class='label-for'>City:</td><td class='label'><%=student.attr("city")%></td></tr>
+            <tr><td class='label-for'>District:</td><td class='label'><%=student.attr("district")%></td></tr>
+            <tr><td class='label-for'>State:</td><td class='label'><%=student.attr("state")%></td></tr>
+            <tr><td class='label-for'>Zip Code:</td><td class='label'><%=student.attr("zipCode")%></td></tr>
+        </table>
+
+    </div>
+    <div class="left" style="width:33%">
+        <table>
+            <tr><td style='width: 100px;' class='label-for'>Father's Name:</td><td class='label'><%=student.attr("fathername")%></td></tr>
+            <tr><td class='label-for'>Mother's Name:</td><td class='label'><%=student.attr("mothername")%></td></tr>
+            <tr><td class='label-for'>Contact:</td><td class='label'><%=student.attr("contact")%></td></tr></table>
+    </div>
+</div>

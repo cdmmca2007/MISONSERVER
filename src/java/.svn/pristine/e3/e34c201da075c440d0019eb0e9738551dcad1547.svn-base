@@ -1,0 +1,6 @@
+# To change this template, choose Tools | Templates
+# and open the template in the editor.
+
+test=test
+DASHBOARD_LINKS = SELECT readonly,editable FROM rolesgroupspermission WHERE roleid = ? AND groupid = ?
+GET_CLASS_COMBO = "select classid as id,name as value from class"

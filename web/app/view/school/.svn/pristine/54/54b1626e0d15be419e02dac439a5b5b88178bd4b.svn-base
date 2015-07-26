@@ -1,0 +1,48 @@
+Ext.define('MyApp.view.school.SchoolAdmin',{
+    extend:'Ext.container.Container',
+    alias:'widget.schooladmin',
+    layout:'column',
+    title:'School Aministration',
+    closable:true,
+    cls:'school',
+    items:[{
+            defaults:{
+                xtype:'form'
+            },
+            columnWidth:.5,
+            items:[
+                {
+                    title:'School Details',
+                    defaults:{
+                        xtype:'textfield',
+                        readOnly:true,
+                        readOnlyCls:'readOnly'
+                    },
+                    items:[
+                        {
+                            fieldLabel:'Name',
+                            value:'Project Rajkiya Bidyalaya'
+                        },{
+                            fieldLabel:'Address',
+                            xtype:'textarea',
+                            value:'Sant Tukaram Namgar, Near YCM Hospital, Pimpri 800004'
+                        },{
+                            fieldLabel:'City',
+                            value:'Pune'
+                        },{
+                            fieldLabel:'state',
+                            value:'Mahaashtra'
+                        }
+                    ]
+                }
+            ]
+    },{
+        items:[
+            {
+                html:'test'
+            }
+            
+        ]
+    }]
+})
+

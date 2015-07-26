@@ -1,0 +1,44 @@
+<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN"
+"http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+<jasperReport NAME="sample_report" >
+<queryString>
+<![CDATA[SELECT item_name,item_amount FROM item
+WHERE item_amount <=100]]>
+</queryString>
+<FIELD NAME="ITEM_NAME" class="java.lang.String"/>
+<FIELD NAME="ITEM_AMOUNT" class="java.math.BigDecimal"/>
+<columnHeader>
+<band height="28" isSplitAllowed="true">
+<staticText>
+<reportElement X="40" Y="11" width="193" height="15" KEY="staticText-1"/>
+<TEXT>
+<![CDATA[Item NAME]]>
+</TEXT>
+</staticText>
+<staticText>
+<reportElement X="330" Y="11" width="193" height="15" KEY="staticText-2"/>
+<TEXT>
+<![CDATA[Item Amount]]>
+</TEXT>
+</staticText>
+</band>
+</columnHeader>
+<detail>
+<band height="27" isSplitAllowed="true">
+<textField>
+<reportElement X="47" Y="6" width="173"
+height="18" KEY="textField"/>
+<textFieldExpression class="java.lang.String">
+<![CDATA[$F{ITEM_NAME}]]>
+</textFieldExpression>
+</textField>
+<textField >
+<reportElement X="330" Y="6" width="100"
+height="18" KEY="textField"/>
+<textFieldExpression class="java.math.BigDecimal">
+<![CDATA[$F{ITEM_AMOUNT}]]>
+</textFieldExpression>
+</textField>
+</band>
+</detail>
+</jasperReport>

@@ -1,0 +1,439 @@
+function addStudent(rec){
+    
+    var win;// = Ext.getCmp('addstudent_win');
+    if(!win){
+        win = Ext.create('Ext.app.view.component.AppWindow', {
+            title:rec?'Edit New Student Form':'Add New Student Form',
+            id: rec?'editstudent_win':'addstudent_win',
+            width:400,
+            closeAction:'hide',
+            top:{
+                image:BASE_URL+'resources/images/createuser.png',
+                formTitle:'Create New Student Data'
+            },
+            defaults:{
+                xtype:'textfield',
+                value:'',
+                width:300
+            },
+            url:'ppppp',
+            formItems :[
+            {
+                name : 'name',
+                fieldLabel: 'Student Name',
+                id:'name'
+            },
+            {
+                xtype:'combobox',
+                fieldLabel :'Class',
+                id:'classid',
+                name:'classid',
+                store:Ext.create('MyApp.store.Combo').load({
+                                      params:{propertyId:2}}),
+                typeAhead: true,
+                queryMode: 'local',
+                emptyText: 'Select a Class...',
+                Autoload:true,               
+                valueField :'id',
+                displayField :'value'
+
+            },
+            {
+                xtype:'datefield',
+                name : 'dob',
+                fieldLabel: 'Date of Birth',
+                id:'dob',
+                format: 'm d Y',
+                altFormats: 'm-d-Y|m.d.Y'
+                },
+            {
+                xtype:'datefield',
+                name : 'admissiondate',
+                fieldLabel: 'Date of Admission',
+                id:'admissiondate',
+                format: 'm d Y',
+                altFormats: 'm,d,Y|m.d.Y'
+                },
+
+            {
+                name : 'fathername',
+                fieldLabel:  'Father Name',
+                id:'fathername'
+            },
+            {
+                name : 'mothername',
+                fieldLabel: 'Mother Name',
+                id : 'mothername'
+            },
+            {
+                name : 'caretakername',
+                fieldLabel: 'Care Taker Name',
+                id : 'caretakername'
+            },
+            {
+                name : 'parentemailid',
+                fieldLabel: 'Parent Email Id',
+                id : 'parentemailid'
+            },
+            {
+                name : 'parentmobile',
+                fieldLabel: 'Parent Mobile',
+                id : 'parentmobile'
+            },
+            {
+                name : 'alternateemailid',
+                fieldLabel: 'Alternate Email Id',
+                id: 'alternateemailid'
+            },
+            {
+                name : 'address',
+                fieldLabel: 'Address',
+                id:'address'
+            },
+            {
+                name : 'cityid',
+                fieldLabel: 'City',
+                id:'cityid'
+            },
+            {
+                name : 'stateid',
+                fieldLabel: 'State',
+                id:'stateid',
+                xtype:'combobox',
+                store:Ext.create('MyApp.store.Combo').load({
+                                      params:{propertyId:3}}),/*for State detail id is 6*/
+                typeAhead: true,
+                queryMode: 'local',
+                emptyText: 'Select a State...',
+                Autoload:true,
+                valueField :'id',
+                displayField :'value'
+
+
+
+            },
+            {
+
+                xtype:'combobox',
+                fieldLabel: 'Religion',
+                id:'religion',
+                name : 'religion',
+                store:Ext.create('MyApp.store.Master').load({
+                                              params:{propertyId:4} //peorpetty religion id =4
+                                     }),
+                typeAhead: true,
+                queryMode: 'local',
+                emptyText: 'Select Religion.',
+                Autoload:true,
+                valueField :'id',
+                displayField :'value'
+
+
+
+            
+                
+                
+            }
+            ],
+            buttons :[
+            {
+                text: rec?'Edit':'Add',
+                action: 'save',
+                scope:this,
+                handler:saveStudent
+                /*
+                function (){
+
+
+                
+                var grid = Ext.getCmp('studentgrid');
+
+                var r = Ext.create('Student', {
+                    name:Ext.getCmp('name').getValue(),
+                    dob:Ext.getCmp('dob').getValue(),
+                    address:Ext.getCmp('address').getValue(),
+                    father_name:Ext.getCmp('father_name').getValue(),
+                    mother_name:Ext.getCmp('mother_name').getValue(),
+                    caretaker_name:Ext.getCmp('caretaker_name').getValue(),
+                    parent_email_id:Ext.getCmp('parent_email_id').getValue(),
+                    parent_mobile:Ext.getCmp('parent_mobile').getValue(),
+                    alternate_emailid:Ext.getCmp('alternate_emailid').getValue(),
+                   // addmission_date:Ext.getCmp('addmission_date').getValue(),
+                    class_id:Ext.getCmp('class_id').getValue()
+                    
+                });
+                studentdata.insert(0, r);
+
+                if (this.up('form').getForm().isValid()) {
+                            // In a real application, this would submit the form to the configured url
+                            // this.up('form').getForm().submit();
+                            this.up('form').getForm().reset();
+                            this.up('window').hide();
+                            Ext.MessageBox.alert('Thank you!', 'Your inquiry has been sent. We will respond as soon as possible.');
+                        }
+                   
+                }*/
+            },
+            Ext.cancelButton
+            ]
+        })
+    }
+    if(rec){
+        Ext.getCmp('name').setValue(rec.data.name);
+        Ext.getCmp('class_id').setValue(rec.data.class_id);
+        Ext.getCmp('dob').setValue(rec.data.dob);
+        Ext.getCmp('address').setValue(rec.data.address);
+        Ext.getCmp('father_name').setValue(rec.data.father_name);
+        Ext.getCmp('mother_name').setValue(rec.data.mother_name);
+        Ext.getCmp('caretaker_name').setValue(rec.data.caretaker_name);
+        Ext.getCmp('parent_email_id').setValue(rec.data.parent_email_id);
+        Ext.getCmp('parent_mobile').setValue(rec.data.parent_mobile);
+        Ext.getCmp('alternate_emailid').setValue(rec.data.alternate_emailid);
+    }
+    win.show();
+}
+
+
+function saveStudent(btn){
+
+      var dobdate;
+      var form = btn.up('window').down('form').getForm();
+      var grid =  Ext.getCmp('studentgrid');
+      //var recs =grid.getSelectionModel().getSelection();
+        if(form.isValid()){
+            var obj = form.getValues();
+           
+            obj.admissiondate=new Date(obj.admissiondate).getTime();        
+            obj.dob=new Date(obj.dob).getTime();            
+            Ext.Ajax.request({
+                url:'student/add.do',
+                type:'json',
+                headers:{
+                    'Content-Type':'application/json'
+                },
+                params:Ext.JSON.encode(obj),
+                success: function(res){
+                    Ext.Msg.alert('Success','Class added successfully');
+                 //   var rec = eval('('+res.responseText+')');
+                 //   app.getController('Class').getClassStore().add(rec);
+                }
+            })
+        }
+}
+
+Ext.define('MyApp.view.student.Student' ,{
+    extend: 'Ext.grid.Panel',
+    alias: 'widget.studentlist',
+    closable:true,
+    title: 'Student Details',
+    id:'studentgrid',
+    layout:'fit',
+    viewConfig:{
+        forceFit:true,
+        emptyText:'<div class="no-results">No Results To display</div>'
+    },
+    store:'Student',
+    selModel:Ext.create('Ext.selection.CheckboxModel',{
+        singleSelect:true,
+        listeners:{                
+                selectionchange:function(){
+                  
+                   var  button = Ext.getCmp('StudentEdit');
+                   button.setDisabled(false);
+                   var  delbutton = Ext.getCmp('Studentdelete');
+                   delbutton.setDisabled(false);                   
+                }
+            }
+    }),
+    tbar :[{
+        xtype: 'searchfield',
+        store: Ext.create('Ext.data.Store', {
+            autoLoad: false,
+            fields:['id','name'],
+            proxy: {
+                type: 'ajax',
+                url: 'users.json',
+                reader: {
+                    type: 'json',
+                    root: 'users'
+                }
+            }
+        })
+    },{
+        iconCls: 'icon-add',
+        text: 'Add Student',
+       // listeners:{
+          handler: function(component){
+               // component.getEl().on('click', function(){
+                    addStudent(null);
+               // })
+
+            }
+       // }
+    },{
+        iconCls: 'icon-edit',
+        text: 'Edit',
+        id:'StudentEdit',
+        disabled: true,
+        scope:this,
+        handler: function(component){
+                    var rec=Ext.getCmp('studentgrid').getSelectionModel().getSelection()[0];
+                    addStudent(rec);
+        }
+    }, {
+        iconCls: 'icon-delete',
+        text: 'Delete',
+        disabled: true,
+        id: 'Studentdelete',
+        handler: function(component){
+            Ext.Msg.confirm("Alert","Are you sure want to delete records", function(btn){
+            if(btn=='yes'){
+                var grid = Ext.getCmp('studentgrid');
+                grid.getStore().remove(grid.getSelectionModel().getSelection());
+            }
+        });
+        }
+      
+    },{
+        xtype:'button',
+        text:'Full Detail',
+        iconCls: 'icon-add',
+        listeners:{
+            render: function(component){
+                component.getEl().on('click', function(){                  
+                    //addFeeTemplate();
+                    })
+
+            }
+        }
+    }
+    ],
+    bbar : Ext.create('Ext.PagingToolbar', {
+        store: this.store,
+        displayInfo: true,
+        displayMsg: 'Displaying users {0} - {1} of {2}',
+        emptyMsg: "No user to display",
+        items:[{
+        xtype:'button',
+        text:'Print',        
+        listeners:{
+            render: function(component){
+                component.getEl().on('click', function(){
+                    //addFeeTemplate();
+                    })
+
+            }
+        }
+    },{
+        xtype:'splitbutton',
+        text:'Export Data',
+        arrowAlign:'right',        
+        menu: [{text: 'PDF'},{text: 'Excelsheet'}],
+        listeners:{
+            render: function(component){
+                component.getEl().on('click', function(){
+                    //addFeeTemplate();
+                    })
+
+            }
+        }
+    }]
+    }),    
+    initComponent: function() {
+
+        this.columns=[
+    Ext.create('Ext.grid.RowNumberer'),
+    {
+        header: 'Name',
+        dataIndex:'name'
+    },
+    {
+        header:'Class',
+        dataIndex:'classid'
+    },
+    {
+        header:'Date Of Birth',
+        dataIndex:'dob'
+    },
+
+    {
+        header:'Father Name',
+        dataIndex:'fathername'
+    },
+
+    {
+        header:'Mother Name',
+        dataIndex:'mothername'
+    },
+
+    {
+        header:'CareTaker Name',
+        dataIndex:'caretakername'
+    },
+
+    {
+        header:'Parent email',
+        dataIndex:'parentemailid'
+    },
+
+    {
+        header:'Parent Mobile',
+        dataIndex:'parentmobile'
+    },
+
+    {
+        header:'Alertname Email',
+        dataIndex:'alternateemailid'
+    },
+
+    {
+        header:'Addmission Date',
+        dataIndex:'admissiondate'
+    },
+    {
+        header:'Religion',
+        dataIndex:'religion'
+    },
+    {
+        header:'Address',
+        dataIndex:'address'
+    },
+    {
+        header:'City',
+        dataIndex:'cityid'
+    },{
+        header:'State',
+        dataIndex:'stateid'
+    },{
+        header:'Country',
+        dataIndex:'countryid'
+    },
+
+  ];
+     this.selModel = Ext.create('Ext.selection.CheckboxModel',{
+            singleSelect:true
+        });
+        this.bbar = Ext.create('Ext.PagingToolbar', {
+            store: this.store,
+            displayInfo: true,
+            displayMsg: 'Displaying users {0} - {1} of {2}',
+            emptyMsg: "No user to display"
+        }),
+
+        this.callParent(arguments);
+    },
+
+    onRender : function(){
+        //this.selModel.on('selectionchange', this.onSelectChange);
+        this.callParent(arguments);
+    },
+    selectionChange : function(sm, selected,eOpts){
+       
+        if(sm.getCount()){
+          alert('fff');
+    }
+    }
+});
+
+
+
