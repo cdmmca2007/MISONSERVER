@@ -27,7 +27,7 @@ Ext.define('MyApp.view.master.List' ,{
             store:'Property',
             id:'property_grid',
             title:'Master Tables',
-            width:150,
+            width:'20%',
             vieConfig:{
                 forceFit:true
             },

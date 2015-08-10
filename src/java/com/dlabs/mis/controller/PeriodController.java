@@ -16,12 +16,15 @@ import com.dlabs.mis.model.Classes;
 import com.dlabs.mis.model.Master;
 import com.dlabs.mis.model.Period;
 import com.dlabs.mis.model.Property;
+import com.dlabs.session.AuthHandler;
 import com.kjava.base.db.DbPool;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -95,5 +98,22 @@ public class PeriodController {
         }
         return "";
      }
-   
+   /* @RequestMapping(value=URLMap.DELETE_ONLINE_SCH_EXAM, method= RequestMethod.POST)
+    @ResponseBody
+    public Map<String,Object> delSchOnlineExam(HttpServletRequest request,@RequestBody Map<String,Object> model){
+        
+       try{
+           conn = DbPool.getConnection();
+           String id=AuthHandler.getUserId(request);
+           model.put("modifiedby",id);
+           return periodDAO.delPeriod(conn,model);
+        }
+        catch(Exception ex){
+              
+        }finally{
+            DbPool.close(conn);
+        }
+        return model;
+     }
+   */
 }

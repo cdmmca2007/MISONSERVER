@@ -32,6 +32,16 @@ public class BookTransaction {
     private float  fineamount;
     private String description;
     private int    result;
+    private int    totbookrequest;
+
+    public int getTotbookrequest() {
+        return totbookrequest;
+    }
+
+    public void setTotbookrequest(int totbookrequest) {
+        this.totbookrequest = totbookrequest;
+    }
+    
 
     public int getResult() {
         return result;

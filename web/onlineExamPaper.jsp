@@ -1,0 +1,7 @@
+/*school name and details
+login page
+show exam details 
+then on click on  continue button show instruction
+with start button ....on click show question paper  one by one 
+on completion of exam show submit button.
+verify and store question and answer list.*/

@@ -5,6 +5,7 @@
 
 package com.dlabs.mis.dao;
 
+import com.dlab.spring.web.dao.AbstractSimpleDao;
 import com.dlabs.mis.model.Classes;
 import com.dlabs.mis.model.Period;
 import com.kjava.base.ReadableException;
@@ -14,6 +15,7 @@ import com.kjava.base.util.JSONUtil;
 import java.sql.ResultSet;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.json.simple.JSONObject;
@@ -23,7 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  *
  * @author cd
  */
-public class PeriodDAO {
+public class PeriodDAO  extends AbstractSimpleDao{
 
  JSONUtil jsonUtil = new ExtJsonUtil();
     public Period addOrEditPeriod(Connection conn, Period period) throws ReadableException {
@@ -132,5 +134,17 @@ public class PeriodDAO {
 
         return job;
     }
+    public Map<String, Object> delSchOnlineExam(Connection conn, Map<String, Object> model) throws ReadableException {
+        //logger.debug("Paaram:"+model);
+        if(conn!=null && model!=null)    {
+        String query = this.sqlQueries.getProperty("DEL_PERIOD"); 
 
+        if(this.jdbcTemplate.update(query, model) > 0) {
+            model.put("result", 1);
+        }else
+            model.put("result", 0);
+  
+        }
+        return model;
+    }
 }

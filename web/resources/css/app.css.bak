@@ -685,27 +685,6 @@ margin-top: -100px;
 .icon-cross {
     background-image: url("../../resources/images/icons/cross.gif") !important;
 }
-.icon-green {
-    background-image: url("../../resources/images/icons/green.bmp") !important;
-}
-
 .icon-print {
-    background-image: url("../../resources/images/icons/Print.bmp") !important;
+    background-image: url("../../resources/images/icons/print.jpg") !important;
 }
-
-.icon-lookup {
-    background-image: url("../../resources/images/icons/lookup.png");
-}
-
-.icon-save {
-    background-image: url("../../resources/images/icons/Save.bmp");
-}
-
-.icon-eye {
-    background-image: url("../../resources/images/icons/Eye.bmp");
-}
-
-.icon-grid {
-    background-image: url("../../resources/images/icons/grid.png");
-}
-

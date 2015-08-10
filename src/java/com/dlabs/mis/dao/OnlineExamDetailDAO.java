@@ -269,9 +269,14 @@ public class OnlineExamDetailDAO extends AbstractSimpleDao{
             model.put("tempuserid",java.util.UUID.randomUUID().toString().split("-")[i%4].toUpperCase());
             model.put("temppassword",java.util.UUID.randomUUID().toString().split("-")[i%4]);
             if(this.jdbcTemplate.update(query, model) > 0){
-              ////Put Audit Trial Code 
-              //// Send an email to PM for project allocation
-              //// Map<String,String> pm_emailid=getUserEmailId(project.get("projectmanagerid").toString());
+                try {
+                    conn.commit();
+                    ////Put Audit Trial Code
+                    //// Send an email to PM for project allocation
+                    //// Map<String,String> pm_emailid=getUserEmailId(project.get("projectmanagerid").toString());
+                } catch (SQLException ex) {
+                    Logger.getLogger(OnlineExamDetailDAO.class.getName()).log(Level.SEVERE, null, ex);
+                }
         }
         }
         }

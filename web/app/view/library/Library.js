@@ -8,8 +8,8 @@ function addBook(rec){
             width:550,
             closeAction:'destroy',
             top:{
-                image:BASE_URL+'resources/images/createuser.png',
-                formTitle:'Create Book Details'
+                image:BASE_URL+'resources/images/portal-icon/book.jpg',
+                formTitle:rec?'Edit Book Details For<b>'+rec.data.title+'</b>':'<b>Add New Book Details in Library</b>'
             },
             defaults:{
                 xtype:'textfield',
@@ -21,18 +21,21 @@ function addBook(rec){
             {
                 name : 'id',                
                 id:'name',
-                hidden:true
+                hidden:true,
+                value:rec?rec.data.id:null
             },
             {
                 name : 'bookno',                
                 id:'bookno',
                 fieldLabel: 'Book No',
+                value:rec?rec.data.bookno:null,
                 hidden:true
             },
             {
                 name : 'title',
                 fieldLabel: 'Book Title',
-                id:'title'
+                id:'title',
+                value:rec?rec.data.title:null
             },{
                 xtype:'combobox',
                 fieldLabel :'Book Type',
@@ -45,33 +48,41 @@ function addBook(rec){
                 emptyText: 'Select a Book Type...',
                 Autoload:true,
                 valueField :'id',
-                displayField :'value'
+                displayField :'value',
+                value:rec?rec.data.booktype:null
             },
             {
                 name : 'publisher',
                 fieldLabel: 'Publisher Name',
-                id:'publisher'
+                id:'publisher',
+                value:rec?rec.data.publisher:null
             },{
                 name : 'author',
                 fieldLabel: 'Author Name',
-                id:'author'
+                id:'author',
+                value:rec?rec.data.author:null
             },{
                 name : 'bookcode',
                 fieldLabel: 'Book Code',
-                id:'bookcode'
+                id:'bookcode',
+                value:rec?rec.data.bookcode:null
             },{
                 name : 'bookedition',
                 fieldLabel: 'Book Edition',
-                id:'bookedition'
+                id:'bookedition',
+                value:rec?rec.data.bookedition:null
             },{
                 name : 'price',
                 fieldLabel: 'Book Price',
-                id:'price'
+                id:'price',
+                value:rec?rec.data.price:null
+               
             },{
                 xtype:'combobox',
                 fieldLabel :'For Subject',
                 id:'forsubject',
                 name:'forsubject',                
+                value:rec?rec.data.forsubject:null,
                 store:Ext.create('MyApp.store.Master').load({
                                       params:{propertyId:2}}),//For Location
                 typeAhead: true,
@@ -84,7 +95,8 @@ function addBook(rec){
                 xtype:'combobox',
                 fieldLabel :'For Class',
                 id:'forclass',
-                name:'forclass',                
+                name:'forclass',   
+                hidden:true,
                 store:Ext.create('MyApp.store.Combo').load({
                                       params:{propertyId:-2}}),//Get Session Details
                 typeAhead: true,
@@ -94,19 +106,50 @@ function addBook(rec){
                 valueField :'id',
                 displayField :'value'
             },{
-                xtype: 'radiofield',
+                xtype: 'checkbox',
                 name : 'softcopyavailable',
                 fieldLabel: 'Softcopy Available',
-                id:'softcopyavailable'
+                value:rec?rec.data.softcopyavailable:null,
+                id:'softcopyavailable',
+                listeners:{
+                    select: function(component){
+                     //  var softcopy=Ext.getCmp('softcopyavailable').getValue();
+                       alert("softcopy"); 
+                     /*  if(issueto==='1'){
+                            Ext.getCmp('classid').hide();
+                            Ext.getCmp('studentid').hide();
+                            Ext.getCmp('teacherid').show();
+                        }else if(issueto==='2'){
+                            Ext.getCmp('teacherid').hide();
+                            Ext.getCmp('classid').show();
+                            Ext.getCmp('studentid').show();
+                        }*/
+                    }
+               }
+            },{
+                xtype: 'fileuploadfield',
+                fieldLabel :'Upload File',
+                id:'softcopy',
+                name:'softcopy',
+                hidden:true,
+                buttonText: '',
+                buttonConfig: {
+                iconCls: 'upload-icon'
+                }
             },{
                 name : 'totalcopy',
                 fieldLabel: 'Total Copy Of Book',
-                id:'totalcopy'
+                id:'totalcopy',
+                value:rec?rec.data.totalcopy:null
+               
+                
             },{
                 xtype: 'textarea',
                 name : 'description',
                 fieldLabel: 'Description',
-                id:'description'
+                id:'description',
+                value:rec?rec.data.description:null,
+               
             },{
                 name : 'tag',
                 fieldLabel: 'Tag',
@@ -296,6 +339,12 @@ function saveBook(btn){
       var form = btn.up('window').down('form').getForm();
       if(form.isValid()){
             var obj = form.getValues();
+            
+            if(obj.softcopyavailable=='on')
+                obj.softcopyavailable=1;
+            else 
+                obj.softcopyavailable=0;
+            
             Ext.Ajax.request({
                 url:'library/addbk.do',
                 type:'json',
@@ -416,7 +465,7 @@ function returnBook(v_rec){
                 name : 'returndate',
                 fieldLabel: 'Return Date ',
                 id:'returndate',
-                format: 'm-d-Y',
+                format: 'm d Y',
                 altFormats: 'm-d-Y|m.d.Y'
               },
              {
@@ -584,10 +633,16 @@ function savereturnBook(btn){
                     var rec = eval('('+res.responseText+')');
       
                     if(rec.result===1){
-                     Ext.Msg.alert('Success','Issued Book Returned  successfully');
                      var grid = Ext.getCmp('booktransgrid');
                      grid.getStore().remove(grid.getSelectionModel().getSelection());
-
+                     if(rec.totbookrequest > 0) {
+                        Ext.Msg.confirm("Success","Issued Book Returned  successfully . This book is request by "+rec.totbookrequest +" Person. Pleade press Yes to see the Requester name", function(btn){
+                           if(btn==='yes'){
+                             showRequesterDetails(rec);
+                           }
+                        });
+                    }else
+                        Ext.Msg.alert('Success','Issued Book Returned  successfully');
                     }
                     else
                     Ext.Msg.alert('Failer','Unexpected Error Occured,Please Contact Admin');    
@@ -597,6 +652,292 @@ function savereturnBook(btn){
             });
         }
 }
+
+
+function showRequesterDetails(rec){
+   
+    var bookid=rec.bookid;
+    var win;
+    if(!win){
+        win=Ext.create('Ext.window.Window', {
+            title:'Requester Details for Book:<b><font color=red>'+rec.title+'</font></b>',
+            id:'requesterwindow',
+            width:600,
+            height:500,
+            closeAction:'destroy',
+            top:{
+                image:BASE_URL+'resources/images/createuser.png',
+                formTitle:'Requester Details for Book :<b><font color=red>'+rec.title+'</font></b>'
+            },
+            defaults:{
+                xtype:'textfield',
+                value:'',
+                width:580
+            },
+            items :[
+              {
+                  xtype: 'fieldcontainer',
+                  combineErrors: true,
+                  layout: 'hbox',
+                  items: [
+                       {
+                        xtype:Ext.create('MyApp.view.library.BookRequesterList'),                        
+                        store:Ext.StoreManager.lookup('BookRequesterList').load({
+                                      params:{bookid:bookid}
+                        })
+                  }]
+              } 
+            ],
+            buttons :[
+            {
+                text: 'Print',
+                action: 'print',
+                scope:this,
+                listeners:{
+                render: function(component){
+                component.getEl().on('click', function(){                                        
+                    ///saveClassSubject(rec)
+                 });
+                }
+              }
+                    
+            },
+            {xtype:'btncancel'}
+            ]
+        });
+    }
+    win.show();
+}
+
+function showBookedHistory(rec){
+   
+    var bookid=rec.data.id;
+    var win;
+    if(!win){
+        win=Ext.create('Ext.window.Window', {
+            title:'Requester Details for Book:<b><font color=red>'+rec.title+'</font></b>',
+            id:'requesterwindow',
+            width:700,
+            height:500,
+            closeAction:'destroy',
+            top:{
+                image:BASE_URL+'resources/images/createuser.png',
+                formTitle:'Requester Details for Book :<b><font color=red>'+rec.title+'</font></b>'
+            },
+            defaults:{
+                xtype:'textfield',
+                value:'',
+                width:700
+            },
+            items :[
+              {
+                  xtype: 'fieldcontainer',
+                  combineErrors: true,
+                  layout: 'hbox',
+                  items: [
+                       {
+                        xtype:Ext.create('MyApp.view.library.BookedHistory'),                        
+                        store:Ext.StoreManager.lookup('BookedHistory').load({
+                                      params:{bookid:bookid}
+                        })
+                  }]
+              } 
+            ],
+            buttons :[
+            {xtype:'btncancel'}
+            ]
+        });
+    }
+    win.show();
+}
+
+
+function demandOrRequestBook(rec){
+    
+var win = Ext.getCmp('demandreqbook_win');
+    if(!win){
+        win=Ext.create('Ext.app.view.component.AppWindow', {
+            title:'Request / Demand Book  Form Window',
+            id:'demandreqbook_win',
+            width:550,
+            closeAction:'destroy',
+            top:{
+                image:BASE_URL+'resources/images/portal-icon/requestbook.jpg',
+                formTitle:'Request for Book :<b>'+rec.data.title+'</b>'
+            },
+            defaults:{
+                xtype:'textfield',
+                value:'',
+                width:500
+            },
+            formItems :[
+            {
+                name : 'bookid',                
+                id:'bookid',
+                hidden:true,
+                value:rec.data.id
+            },
+            {
+                name : 'sessionid',                
+                id:'sessionid',
+                hidden:true,
+                value:SETTING.Users.properties.session_id
+            },
+            
+            {
+                name : 'title',
+                fieldLabel: 'Book Title',
+                id:'title',
+                value:rec.data.title
+            },{
+                xtype:'combobox',
+                fieldLabel :'Requested By',
+                id:'requestedby',
+                name:'requestedby',                
+                store:Ext.create('Ext.data.Store', {
+                    fields: ['id', 'value'],
+                    data : [
+                    {"id":"1","value":"Teacher"},
+                    {"id":"2","value":"Student"}
+                ]
+                }),
+                typeAhead: true,
+                queryMode: 'local',
+                emptyText: 'Select Requester ...',
+                Autoload:true,
+                valueField :'id',
+                displayField :'value',
+                listeners:{
+                    select: function(component){
+                        var issueto=Ext.getCmp('requestedby').getValue();
+                        
+                       if(issueto==='1'){
+                            Ext.getCmp('classid').hide();
+                            Ext.getCmp('studentid').hide();
+                            Ext.getCmp('teacherid').show();
+                        }else if(issueto==='2'){
+                            Ext.getCmp('teacherid').hide();
+                            Ext.getCmp('classid').show();
+                            Ext.getCmp('studentid').show();
+                        }
+                    }
+               }
+            },{
+                xtype:'combobox',
+                fieldLabel :'Select Teacher',
+                id:'teacherid',
+                name:'teacherid',                
+                store:Ext.create('MyApp.store.Combo').load(
+                          {
+                                      params:{propertyId:5
+                          }}
+                ),
+                typeAhead: true,
+                queryMode: 'local',
+                emptyText: 'Select Teacher Name',
+                Autoload:true,
+                valueField :'id',
+                displayField :'value',
+                hidden:true
+            },{
+                xtype:'combobox',
+                fieldLabel :'Select Class',
+                id:'classid',
+                name:'classid',                
+                store:Ext.create('MyApp.store.ClassCombo1').load({
+                                      params:{propertyId:2,
+                                              classid:SETTING.Users.properties.session_id,
+                                              teacherid :SETTING.Users.userId
+                                    }}),
+                typeAhead: true,
+                queryMode: 'local',
+                emptyText: 'Select Class Name',
+                Autoload:true,
+                valueField :'id',
+                displayField :'value',
+                hidden:true,
+                listeners:{
+                    select: function(component){
+                    var classid=Ext.getCmp('classid').getValue();
+                    Ext.getCmp('studentid').getStore().load({
+                     params:{
+                             propertyId:7,///Student List
+                             classid   :classid+'&'+SETTING.Users.properties.session_id,
+                             teacherid :SETTING.Users.userId
+                     }
+               });
+                    }
+               }
+            },{
+                xtype:'combobox',
+                fieldLabel :'Select Student',
+                id:'studentid',
+                name:'studentid',                
+                store:'ClassCombo',
+                typeAhead: true,
+                queryMode: 'local',
+                emptyText: 'Select Student Name',
+                Autoload:true,
+                valueField :'id',
+                displayField :'value',
+                hidden:true
+            },{
+                xtype:'datefield',
+                name : 'enddate',
+                fieldLabel: 'Notify If Book Available before Date',
+                id:'enddate',
+                format: 'm d Y',
+                altFormats: 'm,d,Y|m.d.Y'
+            },
+            {
+                xtype: 'textarea',
+                name : 'description',
+                fieldLabel: 'Description',
+                id:'description'
+            }
+            ],
+            buttons :[
+            {
+                text: 'Save',
+                action: 'save',
+                scope:this,
+                handler:saveRequestOrDemandBook
+            },
+            {xtype:'btncancel'}
+            ]
+        });
+    }
+    win.show();     
+    
+}
+
+function saveRequestOrDemandBook(btn){
+    var form = btn.up('window').down('form').getForm();
+      if(form.isValid()){
+            var obj = form.getValues();
+            
+            obj.enddate=new Date(obj.enddate).getTime();
+            Ext.Ajax.request({
+                url:'library/addbookreq.do',
+                type:'json',
+                headers:{
+                    'Content-Type':'application/json'
+                },
+                params:Ext.JSON.encode(obj),
+                success: function(res){
+                    var rec = eval('('+res.responseText+')');
+                    if(rec.result=='1'){
+                     Ext.Msg.alert('Success','Book Request added successfully. You will be notified on availablity of this Book');
+                    }
+                    else
+                    Ext.Msg.alert('Failer','Unexpected Error Occured,Please Contact Admin');    
+                 //   var rec = eval('('+res.responseText+')');
+                 //   app.getController('Class').getClassStore().add(rec);
+                }
+            });
+        }
+}
+
 
 Ext.define('MyApp.view.library.Library' ,{
     extend: 'Ext.panel.Panel',
@@ -618,13 +959,20 @@ Ext.define('MyApp.view.library.Library' ,{
             listeners:{
 
                 selectionchange : function(sm){
-                    
-                 var rec=Ext.getCmp('book_grid').getSelectionModel().getSelection()[0];
-                 
-                 Ext.StoreMgr.lookup('BookDetail').load({
+
+                Ext.getCmp('bookEdit').setDisabled((sm.getCount()==0));
+                Ext.getCmp('bookDelete').setDisabled((sm.getCount()==0));
+                Ext.getCmp('bookIssue').setDisabled((sm.getCount()==0));
+                Ext.getCmp('bookHistory').setDisabled((sm.getCount()==0));
+                Ext.getCmp('bookDemand').setDisabled((sm.getCount()==0));
+                
+                if(sm.getCount()===1) {    
+                    var rec=Ext.getCmp('book_grid').getSelectionModel().getSelection()[0];
+                    Ext.StoreMgr.lookup('BookDetail').load({
                             params:{'id':rec.data.id
                     }}
                  );
+                }
                 } 
             }
         });
@@ -634,7 +982,7 @@ Ext.define('MyApp.view.library.Library' ,{
             store:'BookList',
             id:'book_grid',
             title:'Book List',
-            width:300,
+            width:'30%',
             selModel:masterSM,
             vieConfig:{
                 forceFit:true
@@ -642,8 +990,18 @@ Ext.define('MyApp.view.library.Library' ,{
             columns:[
             Ext.create('Ext.grid.RowNumberer'),
             {
+                header: 'Book Id',  
+                dataIndex: 'id', 
+                hidden:true
+            },
+            {
                 header: 'Book No',  
                 dataIndex: 'bookno', 
+                style :'color:#17385B;font-weight:bold',
+                hidden:true
+            },{
+                header: 'Book Code',  
+                dataIndex: 'bookcode', 
                 style :'color:#17385B;font-weight:bold',
                 width:'20%'
             },{
@@ -657,15 +1015,14 @@ Ext.define('MyApp.view.library.Library' ,{
                 header: 'Author',  
                 dataIndex: 'author', 
                 style :'color:#17385B;font-weight:bold',
-                width:'40%'
+                width:'30%'
             }
-            ]
-            
+            ] 
         },{
             xtype:'panel',
             extend: 'Ext.panel.Panel',
             ///store:'',
-            id:'innerpanel',
+            id:'innerpanel-1',
             layout:{
                type:'vbox',
                align:'stretch'
@@ -686,7 +1043,6 @@ Ext.define('MyApp.view.library.Library' ,{
                         id   :'bookdetailgrid',
                         store:'BookDetail',
                         height:150,
-                        width :700,
                         vieConfig:{
                            forceFit:true
                         },
@@ -696,13 +1052,13 @@ Ext.define('MyApp.view.library.Library' ,{
                                   return "<font color=red><b>" + value + "</b></font>";
                              }   
                              },
-                            {header :'<font color=green><b>Subject</b></font>',dataIndex:'forsubject',flex:1},
-                            {header :'<font color=green><b>Category</b></font>',dataIndex:'booktype'},
-                            {header :'<font color=green><b>Book Code</b></font>',dataIndex:'bookcode'},
-                            {header :'<font color=green><b>Book Edition</b></font>',dataIndex:'bookedition'},
-                            {header :'<font color=green><b>Price</b></font>',dataIndex:'price'},
-                            {header :'<font color=green><b>Tot Copy </b></font>',dataIndex:'totalcopy'},
-                            {header :'<font color=red><b>Tot Issued</b></font>',dataIndex:'totissued',
+                            {header :'<font color=green><b>Subject</b></font>',width:'20%',dataIndex:'forsubject',flex:1},
+                            {header :'<font color=green><b>Category</b></font>',width:'20%',dataIndex:'booktype'},
+                            {header :'<font color=green><b>Book Code</b></font>',width:'15%',dataIndex:'bookcode'},
+                            {header :'<font color=green><b>Book Edition</b></font>',width:'15%',dataIndex:'bookedition'},
+                            {header :'<font color=green><b>Price</b></font>',width:'15%',dataIndex:'price'},
+                            {header :'<font color=green><b>Tot Copy </b></font>',dataIndex:'totalcopy',hidden:true},
+                            {header :'<font color=red><b>Tot Issued</b></font>',dataIndex:'totissued',hidden:true,
                              renderer: function(value) {         
                                   return "<font color=red><b>" + value + "</b></font>";
                              }   
@@ -721,12 +1077,12 @@ Ext.define('MyApp.view.library.Library' ,{
                     selModel:Ext.create('Ext.selection.CheckboxModel',{
                     singleSelect:true,
                         listeners:{                
-                                selectionchange:function(){
+                                selectionchange:function(sm){
 
-                                   var  button = Ext.getCmp('returnButton');
-                                   button.setDisabled(false);
-                                   var  delbutton = Ext.getCmp('renewButton');
-                                   delbutton.setDisabled(false);                   
+                                   Ext.getCmp('returnButton').setDisabled((sm.getCount()==0));
+                                   Ext.getCmp('renewButton').setDisabled((sm.getCount()==0));
+                                   Ext.getCmp('alertButton').setDisabled((sm.getCount()==0));
+                  
                                 }
                             }
                     }),
@@ -734,28 +1090,33 @@ Ext.define('MyApp.view.library.Library' ,{
                             Ext.create('Ext.grid.RowNumberer'),
                             {header :'<font color=green><b>Book No</b></font>',
                              dataIndex:'bookno',
-                             width:'60'
+                             width:'7%'
+                            },
+                            {header :'<font color=green><b>Book Code</b></font>',
+                             dataIndex:'bookcode',
+                             width:'10%'
                             },
                             {header :'<font color=green><b>Title</b></font>',
+                                width:'15%',
                              dataIndex:'title',flex:1
                             },
                             {header :'<font color=green><b>Teacher</b></font>',
-                             id:'teachername',   
+                             id:'teachername',   width:'12%',
                              dataIndex:'teachername'},
                             {header :'<font color=green><b>Class</b></font>',
-                             dataIndex:'classname',flex:1,
+                             dataIndex:'classname',flex:1,width:'10%',
                              id:'classname'   
                              },
                             {header :'<font color=green><b>Student</b></font>',
-                             dataIndex:'studentname',flex:1,
+                             dataIndex:'studentname',flex:1,width:'12%',
                              id:'studentname'   
                              },
                             {header :'<font color=green><b>From Date</b></font>',
-                             dataIndex:'fromdate'},
+                             dataIndex:'fromdate',width:'10%'},
                             {header :'<font color=green><b>To Date</b></font>',
-                             dataIndex:'todate'},
+                             dataIndex:'todate',width:'10%'},
                             {header :'<font color=green><b>Description</b></font>',
-                             dataIndex:'description'}
+                             dataIndex:'description',width:'10%'}
                         ],
                     tbar :[{
                         xtype:'combobox',
@@ -979,30 +1340,60 @@ Ext.define('MyApp.view.library.Library' ,{
     this.selModel=Ext.create('Ext.selection.CheckboxModel',{
         singleSelect:true,
         listeners:{
-                selectionchange:function(){
-
-                   var  button = Ext.getCmp('classEdit');
-                   button.setDisabled(false);
-                   var  delbutton = Ext.getCmp('classDelete');
-                   delbutton.setDisabled(false);
+                selectionchange:function(sm){
+                 /*  Ext.getCmp('bookEdit').setDisabled((sm.getCount()==0));*/
                 }
             }
     });
     this.tbar =[{
-        xtype: 'searchfield',
-        store: Ext.create('Ext.data.Store', {
-            autoLoad: false,
-            fields:['id','name'],
-            proxy: {
-                type: 'ajax',
-                url: 'users.json',
-                reader: {
-                    type: 'json',
-                    root: 'users'
+                        xtype:'combobox',
+                        id:'booksearchtype',
+                        name:'booksearchtype',                
+                        store:Ext.create('MyApp.store.GenericSearchComboBox').load({
+                                              params:{module:'Library'
+                                            }}),
+                        typeAhead: true,
+                        queryMode: 'local',
+                        emptyText: 'Search Book by',
+                        Autoload:true,
+                        width:"110",
+                        valueField :'id',
+                        displayField :'value',
+                        listeners:{
+                            select: function(component){
+                            var searchtype=Ext.getCmp('booksearchtype').getRawValue();
+                            var field=Ext.getCmp('searchtext');
+                            field.emptyText = "Search by "+searchtype;
+                            field.applyEmptyText();
+                        }
+                       }
+
+        },
+        {
+            xtype: 'textfield',
+            id: 'searchtext',
+            name: 'searchtext',
+            emptyText: 'Enter Search Text',
+            width: 150,
+            listeners:  {
+                specialkey: function (f,e) {    
+                     if (e.getKey() == e.ENTER) {
+                        
+                        var searchcolumn=Ext.getCmp('booksearchtype').getValue();
+                        var columnvalue=Ext.getCmp('searchtext').getValue();
+                        if(searchcolumn!=null && columnvalue!=null) {
+                        Ext.getCmp('book_grid').getStore().load({
+                                                         params:{
+                                                            columnname  :searchcolumn,
+                                                            columnvalue :columnvalue,
+                        }
+                        });
+                    }
+                    }
                 }
             }
-        })
-    },{
+        },
+        {
         iconCls: 'icon-add',
         text: '<font color:"#17385B"><b>Add Book</b></font>',
         listeners:{
@@ -1020,8 +1411,11 @@ Ext.define('MyApp.view.library.Library' ,{
         id:'bookEdit',
         scope:this,
         handler: function(component){
-                    var rec=Ext.getCmp('classgrid').getSelectionModel().getSelection()[0];
-                    addClasses(rec);
+                    var rec=Ext.getCmp('book_grid').getSelectionModel().getSelection()[0];
+                    if(rec!=null)
+                        addBook(rec);
+                    else
+                        Ext.Msg.alert('Warning','Please Select Book from Book List Grid to Edit the Details');
         }
     },{
         iconCls: 'icon-delete',
@@ -1029,10 +1423,36 @@ Ext.define('MyApp.view.library.Library' ,{
         disabled: true,        
         id:'bookDelete',
         handler: function(component){
-            Ext.Msg.confirm("Alert","Are you sure want to delete records", function(btn){
+            Ext.Msg.confirm("Alert","Are you sure want to delete Book", function(btn){
             if(btn==='yes'){
-                var grid = Ext.getCmp('classgrid');
-                grid.getStore().remove(grid.getSelectionModel().getSelection());
+                var grid = Ext.getCmp('book_grid').getSelectionModel().getSelection()[0];
+                var data={  
+                            'id':grid.data.id
+                         }; 
+                if(grid!=null){
+                  Ext.Ajax.request({
+                    url:'library/delbk.do',
+                    type:'json',
+                    headers:{
+                        'Content-Type':'application/json'
+                    },
+                    params:Ext.JSON.encode(data),
+                    success: function(res){
+                        var rec = eval('('+res.responseText+')');
+                        if(rec.result==1) {
+                        Ext.getCmp('book_grid').getStore().remove(Ext.getCmp('book_grid').getSelectionModel().getSelection());
+                        Ext.Msg.alert('Success','Book Deleted Successfully');
+                        }
+                        else if(rec.result==3)
+                        Ext.Msg.alert('Failure','Error Occured , Please Contact Admin');    
+                        else if(rec.result==2)
+                        Ext.Msg.alert('Warning','Book has booking History or Currently booked so can not be deleted');    
+                         
+                    }
+                });  
+                 
+
+                }
             }
         });
         }
@@ -1040,6 +1460,8 @@ Ext.define('MyApp.view.library.Library' ,{
         xtype:'button',
         text:'<font color:"#17385B"><b>Issue Book</b></font>',
         iconCls: 'icon-add',
+        id:'bookIssue',
+        disabled: true,        
         listeners:{
             render: function(component){
                 component.getEl().on('click', function(){                    
@@ -1056,34 +1478,32 @@ Ext.define('MyApp.view.library.Library' ,{
                            issueBook(rec,record);
                        }
                     }
-                    //if(rec.data.totalcopy - rec.data.totissued)
-                    ///addVendor(rec);
                 });
             }
         }
     },{
-        iconCls: 'icon-delete',
+        iconCls: 'icon-grid',
         text: '<font color:"#17385B"><b>Issued History</b></font>',
-        id:'history',
+        id:'bookHistory',
+        disabled: true,        
         handler: function(component){
-            Ext.Msg.confirm("Alert","Are you sure want to delete records", function(btn){
-            if(btn==='yes'){
-                var grid = Ext.getCmp('classgrid');
-                grid.getStore().remove(grid.getSelectionModel().getSelection());
-            }
-        });
+              var rec=Ext.getCmp('book_grid').getSelectionModel().getSelection()[0];            
+              showBookedHistory(rec);
+              
         }
     },{
-        iconCls: 'icon-delete',
-        text: '<font color:"#17385B"><b>Demand/Reuqest Book</b></font>',
-        id:'vendorDelete',
+        iconCls: 'icon-lookup',
+        text: '<font color:"#17385B"><b>Demand/Request Book</b></font>',
+        id:'bookDemand',
+        disabled: true,        
         handler: function(component){
-            Ext.Msg.confirm("Alert","Are you sure want to delete records", function(btn){
-            if(btn==='yes'){
-                var grid = Ext.getCmp('classgrid');
-                grid.getStore().remove(grid.getSelectionModel().getSelection());
+                
+            var rec=Ext.getCmp('book_grid').getSelectionModel().getSelection()[0];
+            if(rec!=null){
+                demandOrRequestBook(rec);
             }
-        });
+                
+                
         }
     },{
         xtype:'splitbutton',
@@ -1111,8 +1531,8 @@ Ext.define('MyApp.view.library.Library' ,{
         listeners:{
             render: function(component){
                 component.getEl().on('click', function(){
-                    //addFeeTemplate();
-                    })
+
+                })
 
             }
         }

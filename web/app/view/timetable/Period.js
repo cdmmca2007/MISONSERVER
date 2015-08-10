@@ -97,7 +97,7 @@ Ext.define('MyApp.view.timetable.Period' ,{
     id:'periodgrid',
     layout:'fit',
 
-   /* selModel:Ext.create('Ext.selection.CheckboxModel',{
+    /*selModel:Ext.create('Ext.selection.CheckboxModel',{
             singleSelect:true,
             listeners:{
                 //selectionchange : app.getController('Master').selectionChange
@@ -145,13 +145,23 @@ Ext.define('MyApp.view.timetable.Period' ,{
 
   ],
     store:'Period',
-    selModel:Ext.create('Ext.selection.CheckboxModel',{
+    /*selModel:Ext.create('Ext.selection.CheckboxModel',{
     singleSelect:true,
     style :'color:#17385B;font-weight:bold'
     }),
     selModel: {
             selType: 'cellmodel'
-    },    
+    },*/   
+    selModel:Ext.create('Ext.selection.CheckboxModel',{
+            singleSelect:true,
+            listeners:{
+                //selectionchange : app.getController('Master').selectionChange
+                selectionchange:function(sm){
+                    //Ext.getCmp('periodEdit').setDisabled((sm.getCount()==0));
+                    Ext.getCmp('periodDelete').setDisabled((sm.getCount()==0));
+                }
+            }
+    }),
     plugins: [Ext.create('Ext.grid.plugin.CellEditing', {
         clicksToEdit: 1
     })],
@@ -200,8 +210,8 @@ Ext.define('MyApp.view.timetable.Period' ,{
         disabled: true,
         scope:this,
         handler: function(component){
-                    var rec=Ext.getCmp('studentgrid').getSelectionModel().getSelection()[0];
-                    addStudent(rec);
+                   /* var rec=Ext.getCmp('studentgrid').getSelectionModel().getSelection()[0];
+                    addStudent(rec);*/
         }
     },{
         iconCls: 'icon-delete',
@@ -210,14 +220,38 @@ Ext.define('MyApp.view.timetable.Period' ,{
         id: 'periodDelete',
         handler: function(component){
             Ext.Msg.confirm("Alert","Are you sure want to delete records", function(btn){
-            if(btn=='yes'){
-                var grid = Ext.getCmp('studentgrid');
-                grid.getStore().remove(grid.getSelectionModel().getSelection());
+            if(btn==='yes'){
+                var grid = Ext.getCmp('periodgrid');
+                var data={  
+                            'periodid':grid.data.periodid
+                         }; 
+                if(grid!=null){
+                  Ext.Ajax.request({
+                    url:'period/del.do',
+                    type:'json',
+                    headers:{
+                        'Content-Type':'application/json'
+                    },
+                    params:Ext.JSON.encode(data),
+                    success: function(res){
+                        var rec = eval('('+res.responseText+')');
+                        if(rec.result==1)
+                        Ext.Msg.alert('Success','Period Deleted Successfully');
+                        if(rec.result==2)
+                        Ext.Msg.alert('Warning','You can not delete the Period which is already used in Timetables.');
+                    
+                        else
+                        Ext.Msg.alert('Failure','Error Occured , Please Contact Admin');    
+                    }
+                });  
+                 grid.getStore().remove(grid.getSelectionModel().getSelection());
+                }
+                
             }
         });
         }
 
-    },
+    }
     ],
     bbar : Ext.create('Ext.PagingToolbar', {
         store: this.store,

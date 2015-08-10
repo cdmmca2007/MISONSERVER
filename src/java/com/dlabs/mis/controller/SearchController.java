@@ -59,4 +59,19 @@ public class SearchController {
         }
         return "";
     }
+    @RequestMapping(value = URLMap.SEARCH_TYPE_COMBO, method = RequestMethod.GET)
+    @ResponseBody
+    public String getSearchTypeComboBox(
+            @RequestParam("module") String module
+            ) {
+        try {
+            conn = DbPool.getConnection();
+            return searchDAO.getSearchTypeComboBox(conn, module).toString();
+        } catch (Exception ex) {
+        } finally {
+            DbPool.close(conn);
+        }
+        return "";
+    }
+    
 }

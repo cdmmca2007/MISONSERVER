@@ -15,13 +15,16 @@ import com.dlabs.mis.dao.LibraryDAO;
 import com.dlabs.mis.dao.MasterDAO;
 import com.dlabs.mis.dao.PaymentDAO;
 import com.dlabs.mis.model.*;
+import com.dlabs.session.AuthHandler;
 
 import com.kjava.base.db.DbPool;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -60,10 +63,15 @@ public class LibraryController {
 
     @RequestMapping(value=URLMap.GET_BOOKLIST, method= RequestMethod.GET)
     @ResponseBody
-    public String getBookList(){
+    public String getBookList(@RequestParam("columnname")  String columnname,
+                              @RequestParam("columnvalue") String columnvalue
+    ){
        try{
+            String searchstring="";
             conn = DbPool.getConnection();
-           return libraryDAO.getAllBooksAsJson(conn,0,25).toString();
+            if (columnname!=null && !columnname.equals("") && columnvalue !=null && !columnvalue.equals(""))
+               searchstring=" "+columnname+" like"+"\"%"+columnvalue+"%\"";
+           return libraryDAO.getAllBooksAsJson(conn,searchstring,0,25).toString();
         }
        
         catch(Exception ex){            
@@ -153,4 +161,68 @@ public class LibraryController {
         }
         return obj;
     }
+    @RequestMapping(value=URLMap.DELETE_BOOK, method= RequestMethod.POST)
+    @ResponseBody
+    public Map<String,Object> deleteBook(HttpServletRequest request,@RequestBody Map<String,Object> model){
+        
+       try{
+           conn = DbPool.getConnection();
+           String id=AuthHandler.getUserId(request);
+           model.put("modifiedby",id);
+           return libraryDAO.deleteBook(conn,model);
+        }
+        catch(Exception ex){
+              
+        }finally{
+            DbPool.close(conn);
+        }
+        return model;
+     }
+    @RequestMapping(value=URLMap.ADD_BOOK_DEMAND, method= RequestMethod.POST)
+    @ResponseBody
+    public Map<String,Object> addBookRequest(HttpServletRequest request,@RequestBody Map<String,Object> model){
+        
+       try{
+           conn = DbPool.getConnection();
+           String id=AuthHandler.getUserId(request);
+           model.put("createdby",id);
+           model.put("modifiedby",id);
+           return libraryDAO.addBookRequest(conn,model);
+        }
+        catch(Exception ex){
+              
+        }finally{
+            DbPool.close(conn);
+        }
+        return model;
+     }
+    @RequestMapping(value=URLMap.GET_BOOK_REQUSTER_LIST, method= RequestMethod.GET)
+    @ResponseBody
+    public String getBookRequesterListAsJson(@RequestParam("bookid") String bookid
+            
+    ){
+       try{
+            conn = DbPool.getConnection();
+           return libraryDAO.getBookRequesterListAsJson(conn,bookid,1,25).toString();
+        }
+        catch(Exception ex){            
+        }finally{
+            DbPool.close(conn);
+        }
+        return ""; 
+     }
+    @RequestMapping(value=URLMap.GET_BOOKED_HISTORY, method= RequestMethod.GET)
+    @ResponseBody
+    public String getAllBookHistoryAsJson(@RequestParam("bookid") String bookid
+            ){
+       try{
+            conn = DbPool.getConnection();
+           return libraryDAO.getAllBookHistoryAsJson(conn,bookid,1,25).toString();
+        }
+        catch(Exception ex){            
+        }finally{
+            DbPool.close(conn);
+        }
+        return ""; 
+     }
 }

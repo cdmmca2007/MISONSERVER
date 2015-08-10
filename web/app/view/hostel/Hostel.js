@@ -646,18 +646,6 @@ Ext.define('MyApp.view.hostel.Hostel' ,{
                             params:{'id':rec.data.pid
                     }}
                  );
-              /*   Ext.StoreMgr.lookup('TransportPlace').reload({
-                            params:{'routeid':rec.data.routeid
-                    }}
-                                 
-                 );  
-                 Ext.StoreMgr.lookup('TransportVehicle').load({
-                            params:{'routeid':rec.data.routeid
-                    }}
-                                 
-                 );  
-              */ 
-                     
                 } 
             }
         });
@@ -779,6 +767,7 @@ Ext.define('MyApp.view.hostel.Hostel' ,{
                     ],
                        tbar :[{
                             iconCls: 'icon-add',
+                            id:'allocateroom',
                             text: '<b>Allocate Room</b>',
                             listeners:{
                                 render: function(component){
@@ -797,6 +786,7 @@ Ext.define('MyApp.view.hostel.Hostel' ,{
                          {
                             iconCls: 'icon-add',
                             text: '<b>Re-Allocate Room</b>',
+                            id:'reallocateroon',
                             disabled: true,
                             listeners:{
                                 render: function(component){
@@ -956,6 +946,7 @@ Ext.define('MyApp.view.hostel.Hostel' ,{
                         }                  
                     },{
                             iconCls: 'icon-add',
+                            id:'payhostelfee',
                             text: '<b>Pay Hostel Fee</b>',
                             listeners:{
                                 render: function(component){
@@ -975,6 +966,7 @@ Ext.define('MyApp.view.hostel.Hostel' ,{
                          },
                          {
                             iconCls: 'icon-add',
+                            id:'vacentroom',
                             text: '<b>Vecant Room</b>',
                             listeners:{
                                 render: function(component){
@@ -987,6 +979,7 @@ Ext.define('MyApp.view.hostel.Hostel' ,{
                         },        
                          {
                             iconCls: 'icon-add',
+                            id:'hosteldefaulterlist',
                             text: '<b>Hostel Fee Defaulter List</b>',
                             listeners:{
                                 render: function(component){
@@ -1008,16 +1001,18 @@ Ext.define('MyApp.view.hostel.Hostel' ,{
         listeners:{
                 selectionchange:function(){
 
-                   var  button = Ext.getCmp('classEdit');
+                 /*  var  button = Ext.getCmp('classEdit');
                    button.setDisabled(false);
                    var  delbutton = Ext.getCmp('classDelete');
                    delbutton.setDisabled(false);
+                 */  
                 }
             }
     });
     
     this.tbar =[{
         xtype: 'searchfield',
+        id   :'hostelsearchfield',
         store: Ext.create('Ext.data.Store', {
             autoLoad: false,
             fields:['id','name'],
@@ -1032,6 +1027,7 @@ Ext.define('MyApp.view.hostel.Hostel' ,{
         })
     },{
         iconCls: 'icon-add',
+        id     :'addHostel',
         text: '<b>Add Hostel</b>',
         listeners:{
             render: function(component){
@@ -1045,7 +1041,7 @@ Ext.define('MyApp.view.hostel.Hostel' ,{
         iconCls: 'icon-edit',
         text: '<b>Edit Hostel</b>',
         disabled: true,
-        id:'routeEdit',
+        id:'editHostel',
         scope:this,
         handler: function(component){
                     var rec=Ext.getCmp('classgrid').getSelectionModel().getSelection()[0];
@@ -1055,7 +1051,7 @@ Ext.define('MyApp.view.hostel.Hostel' ,{
         iconCls: 'icon-delete',
         text: '<b>Delete Hostel</b>',
         disabled: true,        
-        id:'routeDelete',
+        id:'hostelDelete',
         handler: function(component){
             Ext.Msg.confirm("Alert","Are you sure want to delete records", function(btn){
             if(btn==='yes'){
@@ -1067,6 +1063,7 @@ Ext.define('MyApp.view.hostel.Hostel' ,{
     },{
         xtype:'button',
         text:'<b>Add Room</b>',
+        id:'addRoom',
         iconCls: 'icon-add',
         listeners:{
             render: function(component){
@@ -1083,6 +1080,7 @@ Ext.define('MyApp.view.hostel.Hostel' ,{
     },{
         xtype:'button',
         text:'<b>Edit Room</b>',
+        id:'editRoom',
         iconCls: 'icon-edit',
         disabled: true,
         scope :this,
@@ -1099,7 +1097,7 @@ Ext.define('MyApp.view.hostel.Hostel' ,{
         iconCls: 'icon-delete',
         text: '<b>Delete Room</b>',
         disabled: true,        
-        id:'vendorDelete',
+        id:'delRoom',
         handler: function(component){
             Ext.Msg.confirm("Alert","Are you sure want to delete records", function(btn){
             if(btn==='yes'){
@@ -1129,6 +1127,7 @@ Ext.define('MyApp.view.hostel.Hostel' ,{
     },{
         xtype:'splitbutton',
         text:'<b>Export Data</b>',
+        id:'exporthosteldata',
         arrowAlign:'right',
         menu: [{text: 'PDF'},{text: 'Excelsheet'}],
         listeners:{

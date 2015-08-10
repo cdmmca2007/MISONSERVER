@@ -298,8 +298,13 @@ Ext.define('MyApp.view.elearning.ElearningScheduleExam' ,{
         header:'<font color=#17385B><b>Scheduled Date</b></font>',
         dataIndex:'scheduleddatetxt',
         width    :'12%',
-        renderer:function(value){
+        renderer:function(value,metadata,record){
+            var todaysdate=new Date().getTime();  
+            if (todaysdate < record.data.scheduleddate)
             return '<font color=green><b>'+value+'</b></font>';
+            else
+            return '<font color=red><b>'+value+'</b></font>';
+                
         }
         
     },{

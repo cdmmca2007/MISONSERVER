@@ -57,6 +57,7 @@ public interface URLMap {
     String GET_EMAIL ="/mail/get.do";
     String ADD_EMAIL ="/mail/add.do";
     String ADD_PERIOD="/period/add.do";
+    String DEL_PERIOD="/period/del.do";
     String GET_PERIOD="/period/get.do";
     String ADD_PERIOD_DATA="period/addTT.do";
     String GET_TIMETABLE="/timetable/get.do";
@@ -220,5 +221,12 @@ public interface URLMap {
     String RESCHEDULE_ONLINE_EXAM="onlinexam/reschexam.do";
     String DELETE_ONLINE_SCH_EXAM="onlinexam/delschexam.do";
     String PRINT_USER_PASS="onlinexam/printuserpass.do";
+    
+    String SEARCH_TYPE_COMBO="search/getsearchtype.do";
+    String DELETE_BOOK="library/delbk.do";
+    String ADD_BOOK_DEMAND="library/addbookreq.do";
+    String GET_BOOK_REQUSTER_LIST="library/getbkreqerlist.do";
+    String GET_BOOKED_HISTORY="library/getbkhstrylst.do";
+    
 }
 

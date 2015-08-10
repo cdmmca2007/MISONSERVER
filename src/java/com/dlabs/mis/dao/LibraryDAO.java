@@ -4,6 +4,7 @@
  */
 package com.dlabs.mis.dao;
 
+import com.dlab.spring.web.dao.AbstractSimpleDao;
 import com.dlabs.mis.model.BookDetail;
 import com.dlabs.mis.model.BookTransaction;
 import com.kjava.base.ReadableException;
@@ -13,15 +14,20 @@ import com.kjava.base.util.JSONUtil;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.json.simple.JSONObject;
+import org.springframework.stereotype.Repository;
 
 /**
  *
  * @author cd
  */
-public class LibraryDAO {
+@Repository("libraryDAO")
+public class LibraryDAO extends AbstractSimpleDao{
 
     JSONUtil jsonUtil = new ExtJsonUtil();
     
@@ -44,9 +50,19 @@ public class LibraryDAO {
               obj.setId(id);
               conn.commit();
           }
-          
+                
         }
         else{
+           String updatequery="UPDATE  bookdetail SET booktype = ? , title = ? , publisher = ? , author = ? , 	bookcode = ? ,bookedition = ?, description = ? ,price = ?, forsubject = ? , 	softcopyavailable = ? , 	totalcopy = ? ,	modifiedby = ? 	WHERE id = ?";
+           if(DaoUtil.executeUpdate(conn, updatequery,new Object[]{
+                                       obj.getBooktype(),obj.getTitle(),obj.getPublisher(),obj.getAuthor(),
+                                       obj.getBookcode(),obj.getBookedition(),obj.getDescription(),
+                                       obj.getPrice(),obj.getForsubject(),obj.getSoftcopyavailable(),
+                                       obj.getTotalcopy(),obj.getModifiedby() , obj.getId()
+          })==1){
+              conn.commit();
+          }       
+    
         }
         } catch (SQLException ex) {
             throw new ReadableException(ex.getCause(),ex.getMessage(),"LibraryDAO", "addoredit");
@@ -54,13 +70,21 @@ public class LibraryDAO {
         return obj;
     }
 
-    public Object getAllBooksAsJson(Connection conn, int page, int rows) throws ReadableException {
+    public Object getAllBooksAsJson(Connection conn, String searchstring,int page, int rows) throws ReadableException {
 
         JSONObject job = null;
-        String selectquery= "SELECT id,bookno,title,author  FROM bookdetail WHERE deleted=0 LIMIT ? OFFSET ?";
+        String countquery = "SELECT count(1) as count FROM bookdetail WHERE deleted=0";
+        String selectquery= "SELECT * FROM bookdetail WHERE deleted=0";
+        
+        if(!searchstring.equals("")){
+            countquery  = countquery   + " and " + searchstring;
+            selectquery = selectquery  + " and " + searchstring; 
+        }
+        selectquery = selectquery  + " LIMIT ? OFFSET ?";
+        
         int count =0;        
         try{
-            ResultSet rs = DaoUtil.executeQuery(conn,"SELECT count(1) as count FROM bookdetail WHERE deleted=0 ");
+            ResultSet rs = DaoUtil.executeQuery(conn,countquery);
             if(rs.next()) {
                 count = rs.getInt("count");
             }
@@ -350,6 +374,7 @@ public class LibraryDAO {
                 {
                     obj.setResult(1);
                     conn.commit();
+                    obj.setTotbookrequest(checkBookRequest(conn,obj));
                 }    
             }
             
@@ -375,5 +400,122 @@ public class LibraryDAO {
         }
         return obj;
 
+    }
+    
+    public Map<String, Object> deleteBook(Connection conn, Map<String, Object> model) throws ReadableException {
+        //logger.debug("Paaram:"+model);
+        
+        if(conn!=null && model!=null)    {
+            try {
+                String checkquery = this.sqlQueries.getProperty("CHECK_BOOK_BOOKING");
+                String query = this.sqlQueries.getProperty("DELETE_BOOK");
+                ResultSet rs = DaoUtil.executeQuery(conn,checkquery,new Object[]{model.get("id").toString()});
+                if(rs.next()) {
+                    if(rs.getInt("count") == 0){
+                         if(this.jdbcTemplate.update(query, model) > 0) {
+                              model.put("result", 1);/*Deleted Succesfully*/
+                         }
+                    }
+                    else
+                    {
+                        model.put("result", 2);
+                    }    
+                }
+               
+            } catch (SQLException ex) {
+                model.put("result", 3);
+                Logger.getLogger(LibraryDAO.class.getName()).log(Level.SEVERE, null, ex);
+                
+            }
+  
+        }
+        return model;
+    }
+     public Map<String, Object> addBookRequest(Connection conn, Map<String, Object> model) throws ReadableException {
+        //logger.debug("Paaram:"+model);
+        try {
+        if(conn!=null && model!=null)    {
+            
+        if(model.get("requestedby").toString().equals("1")) {
+               model.put("requesterid",model.get("teacherid").toString());
+               model.put("batchid", null);
+        }       
+        else {
+               String batchid=new GetBatch(model.get("classid").toString(),model.get("sessionid").toString()).BatchId(conn);
+               model.put("requesterid",model.get("studentid").toString());
+               model.put("batchid", batchid);
+        }       
+        
+        String query = this.sqlQueries.getProperty("ADD_BOOK_REQUEST_DEMAND"); 
+        model.put("requestid",UUID.randomUUID().toString());
+        if(this.jdbcTemplate.update(query, model) > 0) {
+            model.put("result",1);
+            conn.commit();
+              
+        }
+        }
+        } 
+        catch (SQLException ex) {
+            model.put("result",2);
+            Logger.getLogger(MasterDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return model;
+    }
+
+    private int checkBookRequest(Connection conn, BookTransaction obj) throws ReadableException {
+        
+        try {
+            String checkquery = this.sqlQueries.getProperty("CHECK_BOOK_REQUEST");
+            
+            ResultSet rs = DaoUtil.executeQuery(conn,checkquery,new Object[]{obj.getBookid()});
+            if(rs.next()) {
+               return rs.getInt("count"); 
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(LibraryDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
+
+    public Object getBookRequesterListAsJson(Connection conn, String bookid, int page, int rows) throws ReadableException {
+        JSONObject job = null;
+        int count=0;
+        String selectquery  =this.sqlQueries.getProperty("GET_BOOK_REQUESTER_LIST");
+        String countquery = this.sqlQueries.getProperty("GET_BOOK_REQUESTER_LIST_COUNT");  
+
+        try{
+            ResultSet rs = DaoUtil.executeQuery(conn,countquery,new Object[]{bookid});
+            if(rs.next()) {
+                count = rs.getInt("count");
+            }
+            rs = DaoUtil.executeQuery(conn,selectquery,new Object[]{bookid,15,0});
+            job = jsonUtil.getJsonObject(rs, count, page,rows, false);
+        }
+        catch (SQLException ex) {
+            Logger.getLogger(MasterDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+       return job; 
+    }
+    
+    
+    public JSONObject getAllBookHistoryAsJson(Connection conn, String bookid,int page,int rows) throws ReadableException {
+
+        JSONObject job = null;
+        int count=0;
+        String selectquery  =this.sqlQueries.getProperty("GET_BOOKED_HISTORY");;  
+        String countquery   =this.sqlQueries.getProperty("GET_BOOKED_HISTORY_COUNT");;  
+
+        try{
+            ResultSet rs = DaoUtil.executeQuery(conn,countquery,new Object[]{bookid,bookid});
+            if(rs.next()) {
+                count = rs.getInt("count");
+            }
+            rs = DaoUtil.executeQuery(conn,selectquery,new Object[]{bookid,bookid,15,0});
+            job = jsonUtil.getJsonObject(rs, count, page,rows, false);
+        }
+        catch (SQLException ex) {
+            Logger.getLogger(MasterDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+       return job; 
     }
 }
