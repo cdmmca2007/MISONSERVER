@@ -17,7 +17,7 @@ Ext.define('MyApp.view.leave.AttendanceTab' ,{
             split:'true',
             collapsible:true,
             hideHeaders:true,
-            width:150,
+            width:160,
             vieConfig:{
                 forceFit:true,
                 loadMask:true
@@ -62,7 +62,7 @@ Ext.define('MyApp.view.leave.AttendanceTab' ,{
               
             },{
                 iconCls: 'icon-add',
-                text: 'Add',
+                text: '<b>Add</b>',
                 handler: function(){
                     this.up('attandance').onAddClick();
                 }

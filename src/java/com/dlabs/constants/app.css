@@ -1,0 +1,710 @@
+/* 
+    Document   : app
+    Created on : 17 Mar, 2013, 2:56:54 PM
+    Author     : Kamlesh the admin
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+root { 
+    display: block;
+}
+#app-header {
+    font-family: arial;
+    text-align: center;
+    background: -moz-linear-gradient(center top, #074E7C, #095F93) repeat scroll 0 0 transparent;
+}
+#app-header .x-panel-body-default{
+    background: none;
+}
+#app-portal .x-tab-bar{
+    background: #095F93 !important;
+}
+#app-portal .x-tab-bar-top .x-tab-bar-body{
+    background: #095F93 !important;
+    border-width: 0 1px !important;
+    padding: 4px 0 0 !important;
+}
+.welcome .x-form-display-field{
+    color:#fff;
+   text-align: left; 
+}
+#app-header .x-btn-center .x-btn-inner{
+    color:#fff;
+}
+#app-header .x-form-text{
+    border-radius: 10px 0 0 10px;
+}
+#app-header .x-form-text{
+    border-radius: 10px 0 0 10px;
+}
+#app-header .x-form-search-trigger{
+    border-radius:0 10px 10px 0
+}
+
+/* attendance*/
+.att-P,.att-A,.att-S{
+    padding: 0 8px;
+}
+.att-P div{
+    background: url("../images/OK.png") no-repeat;
+    padding:4px;
+    width:20px;
+}
+.att-A div{
+   background: url("../images/exclamation-red.png") no-repeat;
+    padding:4px;
+     width:20px;
+}
+.att-S div{
+   background: #ffcccc;
+   padding:4px;
+    width:20px;
+}
+.att-S{
+   /*background: #ffcccc;*/
+}
+.menu-separator{
+    margin-right: 5px;
+}
+#app-header .x-docked{
+    border-width: 0 !important;
+    background: none;
+}
+#app-header .x-docked-noborder-right{
+    border-width: 0 !important;
+}
+.label-for{
+    color: #3d4fee;
+}
+.label{
+    color: #000;
+    font-family: tahoma,arial,verdana,sans-serif;
+    font-size: 12px;
+}
+
+.attendance-Y{
+    background: #00ff00;
+    width:20px;
+    border: solid 1px #ffffff;
+}
+.attendance-H{
+    background: #FF0000;
+    width:20px;
+    border: solid 1px #ffffff;
+}
+.attendance-N{
+    background: #0000FF;
+    width:20px;
+    border: solid 1px #ffffff;
+}
+
+
+
+/*******************************************/
+.icon-add {
+    background-image: url("../../resources/images/add.png") !important;
+}
+.icon-edit {
+    background-image: url("../../resources/images/calendar.gif") !important;
+}
+.icon-delete {
+    background-image: url("../../resources/images/delete.png") !important;
+}
+
+.x-portlet {
+    margin:10px;
+    padding: 5px;
+}
+.x-portlet img {
+    cursor: pointer;
+}
+.x-portlet .x-panel-body {
+    background: #fff;
+}
+
+.no-results{
+    color:#ccc;
+    padding: 100px;
+    font-size: 14px;
+}
+.readOnly{
+   
+}
+.readOnly .x-form-field {
+    border:none;
+    background-image: none;
+}
+
+/************************** Data view****************/
+.x-portlet .x-panel-body{
+    background: white;
+    font: 10px Arial, Helvetica, sans-serif;
+}
+.x-portlet .thumb{
+    /*background: #dddddd;
+    padding: 3px;*/
+}
+
+.x-quirks .x-portlet .thumb {
+    padding-bottom: 3px;
+}
+
+.x-portlet .thumb img{
+    height: 50px;
+    width: 50px;
+}
+
+.x-portlet .f-thumb img{
+    height: 70px;
+    width:  70px;
+}
+
+.x-portlet .thumb-wrap{
+    float: left;
+    margin: 0 4px;
+    padding: 3px;
+    height:85px;
+    text-align: center;
+}
+.x-portlet .thumb-wrap span {  
+    display: block;
+    overflow: hidden;
+    text-align: center;
+    width: 60px; /* for ie to ensure that the text is centered */
+}
+
+.x-portlet .x-item-over{
+    background-color: #DBEEFF;
+    background-image: -moz-linear-gradient(center top , #DBEEFF, #D0E7FF 48%, #BBD2F0 52%, #BED6F5);
+    border-color: #81A4D0;
+/*    border:1px solid #dddddd;
+    background: #efefef url(../images/over.gif) repeat-x left top;
+    padding: 3px;*/
+}
+
+.x-portlet .x-item-selected{
+    background: #eff5fb url(../images/selected.gif) no-repeat right bottom;
+/*    border:1px solid #99bbe8;*/
+   /* padding: 3px;*/
+}
+.x-portlet .x-item-selected .thumb{
+    background:transparent;
+}
+
+.x-portlet .loading-indicator {
+    font-size:11px;
+    background-image:url('../../extjs/resources/themes/images/default/grid/loading.gif');
+    background-repeat: no-repeat;
+    background-position: left;
+    padding-left:20px;
+    margin:10px;
+}
+
+.x-view-selector {
+    position:absolute;
+    left:0;
+    top:0;
+    width:0;
+    border:1px dotted;
+    opacity: .5;
+    -moz-opacity: .5;
+    filter:alpha(opacity=50);
+    zoom:1;
+    background-color:#c3daf9;
+    border-color:#3399bb;
+}
+.ext-strict .ext-ie .x-tree .x-panel-bwrap{
+    position:relative;
+    overflow:hidden;
+}
+
+.rowcontent1 .x-grid-cell { 
+    background-color: #ffe2e9; 
+    color: #900; 
+} 
+ 
+.rowcontent .x-grid-cell { 
+    background-color: #e2ffe9; 
+    color: green; 
+}
+.initiated .x-grid-cell { 
+    background-color: #BBD2F0; 
+    color: #000; 
+} 
+.imp {
+    
+    background:red !important;
+    font-size: medium;
+    color: black;
+    font-weight: bold;
+}
+
+.x-grid-row-alt {
+background: red !important;
+}
+
+/* Below css is for Payment html , Kamlesh to change */
+.pmain{
+    background:white;
+}
+
+.pheader{
+    background: #00689D;
+    height: 45px;
+}
+
+.companyname{
+    font-size: 14px;
+    color: white;
+    float: left;
+    font-weight: bold;
+    margin: 10px 10px 10px 10px;   
+}
+.todaysdate{
+     font-size: 10px;
+     color: white;
+     float:right;
+     font-weight: bold;
+     margin: 0 0 10px 50px
+    
+}
+.username{
+     font-size: 11px;
+     color: white;
+     float: right;
+     font-weight: bold;
+     margin: 2px 0 10px 400px
+    
+}
+
+.pheader h3{
+    color: white;
+   
+}
+.pheader h4{
+    color: #00689D;
+    font-size: 10px;
+    float: right;
+}
+
+.pbody{
+    background: white;
+    height: 540px;
+}
+
+.center{
+    
+    margin: 20px 50px 0px 30px;
+    background: white;
+    border: 1px;
+    
+}
+.studentdesc{
+     font-size: 11px;
+}
+.schooldesc{
+     font-size: 11px;
+}
+.proceed{
+     font-size: 11px;
+}
+.feedesc{  
+     font-size: 11px;
+}
+
+.heading{
+     font-size: 12px;
+     font-weight: bold;
+     color: #00689D;
+     width: 200px;
+}
+.data{
+     font-size: 11px;     
+     width: 400px;
+}
+
+.linestyle{
+    height:1px;
+    border-width:0;
+    background-color:#db6800;
+    background: #db6800
+}
+
+.heading1{
+     font-size: 12px;
+     font-weight: bold;
+     color: #00689D;
+     width: 200px;
+     margin:5px 50px 5px 20px;
+}
+
+#content {
+    display: none;
+    }
+ 
+#loading {
+    top: 200px;
+    margin: auto;
+    position: absolute;
+    z-index: 1000;
+    width: 160px;
+    height: 24px;
+    background: url(loadingimage.gif) no-repeat;
+    cursor: wait;
+    }
+.f-label1{
+    color:#345593;
+    float:left;
+    width:130px;
+}
+.f-table-top{
+    border: 1px solid #000000;
+   /* border-bottom: 1px dashed #000000;*/
+    margin-top: 30px;
+     margin-top: 10px;
+    width:100%
+}
+
+.f-item{
+    margin: 2px 0px 3px 0;
+}
+.p-row-header span{
+    margin:3px 0 3px 40px;
+    font-weight: bold;
+}
+.p-row-item span{
+    margin:3px 0 3px 30px;
+}
+.p-row-item{
+    line-height: 22px;
+}
+.p-item-cell{
+    border-right: 1px solid #000;
+}
+.edit-form img{
+    background-image: url(../images/pencil.jpg);
+}
+
+.samainpanel{
+    border: none;
+}
+.detailpanel{    
+    border: none;
+}
+.detailform{
+    border: none;
+}
+.detailform div{
+    border: none;
+}
+
+.sabutton{
+    background-color: red;
+    border: none;
+}
+.label1{
+    font-weight: bold;
+    margin-left: 10px;
+}
+.value1{
+    font-weight: normal;
+}
+.label-detail2{
+    width:100px;
+}
+.label-attendance{
+    padding-left:5px;
+}
+.label-attendance .present{
+    background-color: green;
+    padding-left:15px;
+}
+.label-attendance .late{
+    background-color: yellow;
+     padding-left:15px;
+}
+.label-attendance .absent{
+    background-color: red;
+    padding-left:15px;
+}
+
+.cal-portal .x-datepicker-disabled a{
+    background: url(../images/delete.png) no-repeat;
+    height:20px;
+}
+.cal-portal .x-datepicker-active a{
+    background: url(../images/OK.png) no-repeat;
+    height:20px;
+}
+.cal-portal table.x-datepicker-inner{
+    text-align: center;
+}
+.cal-portal table tbody tr td:first-child a{
+    background: red !important;
+}
+.week-range{
+    width: 40px;
+}
+/* search result*/
+.search-result li{
+    background: -moz-linear-gradient(center top , #FAF7F6, #EBECE5 50%, #FEFEF6) repeat scroll 0 0 transparent;
+    border-color: #c8a52e; 
+}
+.search-result a{
+    text-decoration: none;
+}
+.search-result h3{
+    color:black;
+}
+.search-result span{
+    color: gray;
+}
+.x-btn-icon.myprofile{
+     background: url(../images/icons/users.png) no-repeat;
+     background-size: 20px 20px;
+}
+.x-btn-icon.cal{
+     background: url(../images/icons/calendar.png) no-repeat;
+}
+
+.x-btn-icon.setting{
+     background: url(../images/icons/setting.png) no-repeat;
+     background-size: 20px 20px;
+}
+
+
+#timetablegrid .x-grid-row{
+    height: 60px;    
+    background-color: lightgoldenrodyellow;
+   
+}
+#timetablegrid .x-grid-cell{
+    width: 200px;
+    background-color: lightgoldenrodyellow;
+   
+}
+
+
+/*---------------------*/
+
+.folder-portlet {
+    margin: 10px;
+    padding: 5px;
+}
+.folder-portlet img {
+    cursor: pointer;
+}
+.folder-portlet .x-panel-body {
+    background: #fff;
+}
+
+.folder-portlet .x-panel-body{
+    background: white;
+    font: 10px Arial, Helvetica, sans-serif;
+}
+.folder-portlet .thumb{
+    /*background: #dddddd;
+    padding: 3px;*/
+    margin: 20px;
+    padding: 10px;
+
+}
+
+.x-quirks .folder-portlet .thumb {
+    padding-bottom: 3px;
+}
+
+.folder-portlet .f-thumb img{
+    height: 70px;
+    width:  70px;
+}
+
+.folder-portlet .thumb-wrap{
+    float: left;
+    margin: 20px;
+    padding: 10px;
+    height:85px;
+    text-align: center;
+}
+.folder-portlet .thumb-wrap span {  
+    display: block;
+    overflow: hidden;
+    text-align: center;
+    width: 60px; /* for ie to ensure that the text is centered */
+}
+
+.folder-portlet .x-item-over{
+/*    border:1px solid #dddddd;*/
+    background: #efefef url(../images/over.gif) repeat-x left top;
+/*    padding: 3px;*/
+}
+
+.folder-portlet .x-item-selected{
+    background: #eff5fb url(../images/selected.gif) no-repeat right bottom;
+/*    border:1px solid #99bbe8;*/
+   /* padding: 3px;*/
+}
+.folder-portlet .x-item-selected .thumb{
+    background:transparent;
+}
+
+.folder-portlet .loading-indicator {
+    font-size:11px;
+    background-image:url('../../extjs/resources/themes/images/default/grid/loading.gif');
+    background-repeat: no-repeat;
+    background-position: left;
+    padding-left:20px;
+    margin:10px;
+}
+
+/* Attendence Date calender button CSS */
+
+/*.ui-datepicker.ui-widget.ui-widget-content.ui-helper-clearfix.ui-corner-all {
+    //margin-left: 77%;
+    //margin-top: -10%;
+    //position: absolute;
+   display: block !important;
+}*/
+
+/*.portlet-content .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+border: 1px solid #17B8E3;
+border-radius: 4px;
+//display: block !important;
+}*/
+
+.abscent_class {
+    background: orange !important;
+    color: red !important;
+    font-weight: bold !important;
+}
+.present_class {
+    background: greenyellow !important;
+    color: #008000 !important;
+}
+.late_class {
+    background: yellow !important;
+}
+/*
+.ui-state-disabled, .ui-widget-content .ui-state-disabled, .ui-widget-header .ui-state-disabled {
+    display:none !important;
+}
+
+/*
+.ui-datepicker {
+z-index: 1000;
+ width: 17em;
+width:500px;
+padding: .2em .2em 0;
+display: none;
+position: absolute;
+padding: 100px 20px;
+top: 100px;
+left: 50%;
+margin-top: -100px;
+ } */
+
+/*---------------------*/
+
+.report-portlet {
+    margin: 10px;
+    padding: 5px;
+}
+.report-portlet img {
+    cursor: pointer;
+}
+.report-portlet .x-panel-body {
+    background: #fff;
+}
+
+.report-portlet .x-panel-body{
+    background: white;
+    font: 10px Arial, Helvetica, sans-serif;
+}
+.report-portlet .thumb{
+    margin: 20px;
+    padding: 10px;
+
+}
+
+.x-quirks .report-portlet .thumb {
+    padding-bottom: 3px;
+}
+
+.report-portlet .f-thumb img{
+    height: 170px;
+    width:  170px;
+}
+
+.report-portlet .thumb-wrap{
+    float: left;
+    margin: 20px;
+    padding: 10px;
+    height:175px;
+    text-align: center;
+}
+.report-portlet .thumb-wrap span {  
+    display: block;
+    overflow: hidden;
+    text-align: center;
+    width: 170px; /* for ie to ensure that the text is centered */
+}
+
+.report-portlet .x-item-over{
+/*    border:1px solid #dddddd;*/
+    background: #efefef url(../images/over.gif) repeat-x left top;
+/*    padding: 3px;*/
+}
+
+.report-portlet .x-item-selected{
+    background: #eff5fb url(../images/selected.gif) no-repeat right bottom;
+/*    border:1px solid #99bbe8;*/
+   /* padding: 3px;*/
+}
+.report-portlet .x-item-selected .thumb{
+    background:transparent;
+}
+
+.report-portlet .loading-indicator {
+    font-size:11px;
+    background-image:url('../../extjs/resources/themes/images/default/grid/loading.gif');
+    background-repeat: no-repeat;
+    background-position: left;
+    padding-left:20px;
+    margin:10px;
+}
+
+.view-sch {
+    background-image: url("../../resources/images/icons/calendar.png") !important;
+}
+.preview {
+    background-image: url("../../resources/images/icons/preview.jpg") !important;
+}
+
+.icon-cross {
+    background-image: url("../../resources/images/icons/cross.gif") !important;
+}
+.icon-green {
+    background-image: url("../../resources/images/icons/green.bmp") !important;
+}
+
+.icon-print {
+    background-image: url("../../resources/images/icons/Print.bmp") !important;
+}
+
+.icon-lookup {
+    background-image: url("../../resources/images/icons/lookup.png");
+}
+
+.icon-save {
+    background-image: url("../../resources/images/icons/Save.bmp");
+}
+
+.icon-eye {
+    background-image: url("../../resources/images/icons/Eye.bmp");
+}
+
+.icon-grid {
+    background-image: url("../../resources/images/icons/grid.png");
+}
+

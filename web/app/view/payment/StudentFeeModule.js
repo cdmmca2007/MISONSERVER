@@ -45,7 +45,6 @@ function showFeeStructureDetails(rec){
        var Tab = Ext.create('MyApp.view.payment.EditStudentMonthlyFee');
        app1.getDashboard().add(Tab);
        app1.getDashboard().setActiveTab(Tab);  
-      
  }
  
  
@@ -122,13 +121,14 @@ function showFeeStructureDetails(rec){
         header:'Total Amount',
         dataIndex:'amount',
         style :'color:#17385B;font-weight:bold',
-        width:'7%'
+        width:'15%'
     },{ 
         header:'Mark Paid',
         dataIndex:'markpaid',
         xtype:'checkcolumn',
-        style :'color:#17385B;font-weight:bold',
-        width:'7%',
+        style :'color:#17385B;font-weight:bold;align:center',
+        width:'10%',
+        
         stopSelection: false,
         listeners :{
             checkchange: function(box, rowIndex,checked,eOpts ){

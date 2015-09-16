@@ -64,8 +64,8 @@ public class ComboDAO {
         }
         if(propertyid==6)///Then return class id ,value for combo box
         {
-            countQuery="SELECT count(1) as count from templates";
-            dataQuery ="select id as id,name as value from templates";
+            countQuery="SELECT count(1) as count from templates where expire=0";
+            dataQuery ="select id as id,name as value from templates where expire=0";
             parameter=true;
         }
         if(propertyid==7)///Then return class id ,value for combo box
@@ -77,7 +77,7 @@ public class ComboDAO {
         if(propertyid==8)///retrun fee strcuture
         {
             countQuery="SELECT count(1) as count from feestructure";
-            dataQuery ="select fee_Structure_id as id,CONCAT(CONCAT(fee_name,' - '),fee_Amount) as value from feestructure";
+            dataQuery ="select fee_Structure_id as id,concat(concat(CONCAT(CONCAT(fee_name,' / '),fee_Amount),' - '),fee_type) as value from feestructure";
             parameter=true;
         }    
         

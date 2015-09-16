@@ -5,7 +5,7 @@
 <%@page import="com.kjava.base.db.DbPool"%>
 <%@page import="java.sql.Connection"%>
 <%
-       Connection conn =DbPool.getConnection();       
+       Connection conn = DbPool.getConnection();
        String formno=request.getParameter("formno"); 
        if(formno==null)
           formno="N/A"; 
@@ -117,7 +117,7 @@
                     
        if(rs1.next()){ 
        }       
-       String current_session="00a24b9a-5bb2-4466-b629-f9d91de9e551"; 
+       String current_session="47ee876b-9880-4067-bfff-3fb73742d103"; 
        String[] query={"SELECT schoolname, description ,websiteurl , addressline1,addressline2,city ,state,country ,pinnumber,contact1 , contact2,contact3 ,emailid1 , emailid2 FROM schooladmin",
                        "SELECT class.classid , class.name  FROM class INNER JOIN sessions  ON sessions.class_id=class.classid AND sessions.session_id='"+current_session+"'",
                        "SELECT id,value FROM master WHERE propertyid=4",//Religion

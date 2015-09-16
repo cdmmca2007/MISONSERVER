@@ -7,6 +7,7 @@ Ext.define('MyApp.model.BookTransaction', {
 	'studentid', 
 	'fromdate', 
 	'todate', 
+        'todateorg',
 	'issueddate', 
 	'issuedby', 
 	'returnedflag', 

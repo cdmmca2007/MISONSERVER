@@ -110,7 +110,7 @@ function addHomework(rec,classid,sessionid){
             width:400,                       
             closeAction:'destroy',
             top:{
-                image:BASE_URL+'resources/images/createuser.png',
+                image:BASE_URL+'resources/images/portal-icon/homework.png',
                 formTitle:'Create New  Homework For Class'
             },
             defaults:{
@@ -204,7 +204,7 @@ function addHomework(rec,classid,sessionid){
                 buttonText: '',
                 buttonConfig: {
                 iconCls: 'upload-icon'
-                }
+            }
             },{
                 xtype:'checkbox',
                 fieldLabel :'Send Notification to Parent',
@@ -349,12 +349,10 @@ Ext.define('MyApp.view.homework.HomeWork' ,{
     this.selModel=Ext.create('Ext.selection.CheckboxModel',{
         singleSelect:true,
         listeners:{
-                selectionchange:function(){
+                selectionchange:function(sm){
 
-                   var  button = Ext.getCmp('noticeEdit');
-                   button.setDisabled(false);
-                   var  delbutton = Ext.getCmp('noticeDelete');
-                   delbutton.setDisabled(false);
+                   Ext.getCmp('hwDelete').setDisabled((sm.getCount()==0));
+                   Ext.getCmp('hwEdit').setDisabled((sm.getCount()==0));
                 }
             }
     });

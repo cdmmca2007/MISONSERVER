@@ -23,7 +23,7 @@ Ext.define('MyApp.view.Viewport', {
                    padding:'5 5 2'
                 },{
                   xtype:'displayfield',
-                  value:'Hello <b>' + SETTING.Users.name+  '</b><br> Welcome to <b><a style="color:white" href="'+SETTING.Users.properties.websiteurl+'">'+SETTING.Users.properties.schoolname+'</a></b>',
+                  value:'Hello <b>' + SETTING.Users.name?SETTING.Users.name:null+  '</b><br> Welcome to <b><a style="color:white" href="'+SETTING.Users.properties.websiteurl+'">'+SETTING.Users.properties.schoolname+'</a></b>',
                   width:200,
                   cls:'welcome',
                   height:40

@@ -14,13 +14,13 @@ function addMoreFee(){
             width:400,
             closeAction:'destroy',
             top:{
-                image:BASE_URL+'resources/images/createuser.png',
+                image:BASE_URL+'resources/images/portal-icon/fee_struc2.jpg',
                 formTitle:'Add Addiotnal Fee for :'+'<font color=red><b>'+rec.studentname+' </b></font><font color=green>Class :<b>' +rec.classname+'</b></font>'
             },
             defaults:{
                 xtype:'textfield',
                 value:'',
-                width:300
+                width:350
             },
             url:'ppppp',
             formItems :[

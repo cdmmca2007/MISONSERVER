@@ -11,12 +11,40 @@ import com.dlabs.mis.dao.MasterDAO;
 import com.dlabs.mis.dao.StudentAdmissionDAO;
 import com.dlabs.mis.dao.StudentDAO;
 import com.dlabs.mis.model.*;
+import com.dlabs.mis.model.NewStudent;
+import com.dlabs.session.AuthHandler;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.tool.xml.Pipeline;
+import com.itextpdf.tool.xml.XMLWorker;
+import com.itextpdf.tool.xml.XMLWorkerHelper;
+import com.itextpdf.tool.xml.css.CssFile;
+import com.itextpdf.tool.xml.css.StyleAttrCSSResolver;
+import com.itextpdf.tool.xml.html.Tags;
+import com.itextpdf.tool.xml.parser.XMLParser;
+import com.itextpdf.tool.xml.pipeline.css.CSSResolver;
+import com.itextpdf.tool.xml.pipeline.css.CssResolverPipeline;
+import com.itextpdf.tool.xml.pipeline.end.PdfWriterPipeline;
+import com.itextpdf.tool.xml.pipeline.html.HtmlPipeline;
+import com.itextpdf.tool.xml.pipeline.html.HtmlPipelineContext;
 import com.kjava.base.db.DbPool;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.StringReader;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,9 +53,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import com.dlabs.mis.model.NewStudent;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 /**
  *
  * @author cd
@@ -249,5 +274,197 @@ public class StudentAdmissionController {
         }
         return obj;
     } 
+    @RequestMapping(value=URLMap.ATTACH_ADMISSION_DOCUMENT, method=RequestMethod.POST)
+    @ResponseBody
+    public String attachAdmissionDocument(HttpServletRequest obj){
+        int flag=0;
+        try{
+           conn = DbPool.getConnection();
+            flag=studentAdmissionDAO.attachAdmissionDocument(conn,obj);
+        }
+        catch(Exception ex){
+            
+        }finally{
+            DbPool.close(conn);
+        }
+        if(flag==1)
+        return "{success:true}";
+        else
+        return "{failure:true}";    
+    }
+    @RequestMapping(value=URLMap.ADMISSION_FEE_RECIEPT, method= RequestMethod.POST)
+    @ResponseBody
+    public String getAdmissionFeePaymentReciept(
+                   HttpServletRequest request,@RequestBody Map<String,Object> model
+            ){
+       try{
+            conn = DbPool.getConnection();
+            return studentAdmissionDAO.getAdmissionFeePaymentReciept(conn,model).toString();
+        }
+
+        catch(Exception ex){
+
+        }finally{
+            DbPool.close(conn);
+        }
+        return "";
+     }
+    
+    @RequestMapping(value=URLMap.GET_ADMISSION_FEE, method=RequestMethod.GET)
+    @ResponseBody
+    public String getAllAdmissionFeeAsJson(
+                   @RequestParam("studentid") String studentid,
+                   @RequestParam("templateid") String templateid
+            )
+    {
+        try{
+           conn = DbPool.getConnection();           
+            Map<String, Object> model =new HashMap<String, Object>();
+            model.put("studentid", studentid);
+            model.put("templateid", templateid);
+
+           return studentAdmissionDAO.getAllAdmissionFeeAsJson(conn,model).toString();
+        }
+        catch(Exception ex){
+            
+        }finally{
+            DbPool.close(conn);
+        }
+        return "";
+    }
+    
+    
+    
+    @RequestMapping(value=URLMap.PAY_ADMISSION_FEE, method= RequestMethod.POST)
+    @ResponseBody
+    public Map<String,Object> payAdmissionFee(HttpServletRequest request,@RequestBody Map<String,Object> model){
+        
+       try{
+           conn = DbPool.getConnection();
+           String id=AuthHandler.getUserId(request);
+           model.put("createdby",id);
+           return studentAdmissionDAO.payAdmissionFee(conn,model);
+        }
+        catch(Exception ex){
+              
+        }finally{
+            DbPool.close(conn);
+        }
+        return model;
+    }        
+    
+    @RequestMapping(value=URLMap.DOWNLOAD_ADM_PAY_REC, method= RequestMethod.POST)
+    @ResponseBody
+    public HttpServletResponse downloadAdmissionFeePaymentReciept(
+                   HttpServletRequest request,HttpServletResponse response
+    ) throws DocumentException{
+        
+     /*   response.setContentType("application/pdf");
+        try {
+        OutputStream os = response.getOutputStream();
+        Document document = new Document(PageSize.LETTER);
+        PdfWriter pdfWriter = PdfWriter.getInstance(document,os);
+        document.open();
+        document.addAuthor("Real Gagnon");
+        document.addCreator("Real's HowTo");
+        document.addSubject("Thanks for your support");
+        document.addCreationDate();
+        document.addTitle("Please read this");
+
+        XMLWorkerHelper worker = XMLWorkerHelper.getInstance();
+        String data=new String();
+        if(request.getParameter("downloadrecdata")!=null){
+            data=request.getParameter("downloadrecdata");
+        }else
+        {
+            data="No Data";
+        }
+        String content="";
+        String str = "<html><head></head><body>"+data+"</body></html>";
+        worker.parseXHtml(pdfWriter, document, new StringReader(str));
+        document.close();
+        os.close();
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }*/
+        
+   try 
+    {
+        String htmlstring=new String();
+        if(request.getParameter("downloadrecdata")!=null){
+            htmlstring=request.getParameter("downloadrecdata");
+        }else
+        {
+            htmlstring="No Data";
+        }
+
+        InputStream is = new ByteArrayInputStream(htmlstring.getBytes());             
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(); 
+
+        // step 1
+        Document document = new Document();
+
+        // step 2
+        PdfWriter writer = PdfWriter.getInstance(document, baos);
+
+        writer.setInitialLeading(12.5f);
+
+        // step 3
+        document.open();
+
+        HtmlPipelineContext htmlContext = new HtmlPipelineContext(null);
+
+        htmlContext.setTagFactory(Tags.getHtmlTagProcessorFactory());
+
+        // CSS
+        CSSResolver cssResolver = new StyleAttrCSSResolver();
+        InputStream csspathtest = Thread.currentThread().getContextClassLoader().getResourceAsStream("app.css");            
+        CssFile cssfiletest = XMLWorkerHelper.getCSS(csspathtest);
+        cssResolver.addCss(cssfiletest);             
+
+        Pipeline<?> pipeline =  new CssResolverPipeline(cssResolver, new HtmlPipeline(htmlContext, new PdfWriterPipeline(document, writer)));
+
+        XMLWorker worker = new XMLWorker(pipeline, true);
+        XMLParser p = new XMLParser(worker);
+        p.parse(is); //new FileInputStream("results/demo2/walden.html"));
+
+        // step     
+        document.close();
+
+        response.setContentType("application/pdf");
+        response.setHeader("Expires", "0");
+        response.setHeader("Cache-Control", "must-revalidate, post-check=0, pre-check=0");           
+        response.setHeader("Content-Type", "application/pdf");
+        response.setHeader("Content-disposition","attachment;filename=file.pdf");
+        response.setContentLength(baos.size());
+        OutputStream os = response.getOutputStream();
+        baos.writeTo(os);
+        os.flush();
+        os.close();
+     }  catch (IOException ex) {        
+            Logger.getLogger(StudentAdmissionController.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+    return response;
+
+    }
+    @RequestMapping(value=URLMap.ADD_ADMISSION_FEE_PAYMENT, method= RequestMethod.POST)
+    @ResponseBody
+    public String addAdmissionFeePayment(
+                   HttpServletRequest request,@RequestBody Map<String,Object>[] model
+            ){
+       try{
+            conn = DbPool.getConnection();
+            return studentAdmissionDAO.addAdmissionFeePayment(conn,model).toString();
+        }
+
+        catch(Exception ex){
+
+        }finally{
+            DbPool.close(conn);
+        }
+        return "";
+     }
+    
     
 }

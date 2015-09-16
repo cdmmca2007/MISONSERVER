@@ -218,11 +218,8 @@ Ext.define('MyApp.view.notice.Notification' ,{
         singleSelect:true,
         listeners:{
                 selectionchange:function(){
-
-                   var  button = Ext.getCmp('noticeEdit');
-                   button.setDisabled(false);
-                   var  delbutton = Ext.getCmp('noticeDelete');
-                   delbutton.setDisabled(false);
+                Ext.getCmp('noticeEdit').setDisabled((sm.getCount()==0));
+                Ext.getCmp('noticeDelete').setDisabled((sm.getCount()==0));
                 }
             }
     });

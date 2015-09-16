@@ -10,16 +10,136 @@ Ext.util.Format.attendanceRenderer = function(val,meta,record,row,col,store,grid
             return "SUNDAY"[row%6];
         }
     }
-    
-    
 };
+
+
+function uploadExcelSheet(classid,sessionid){
+
+    var win = Ext.getCmp('uploadexcelattendence_win');
+    if(!win){//Ext.app.view.component.AppWindow
+        win=Ext.create('Ext.app.view.component.AppWindow', {
+            title:'<font color=#17385B><b>Student Attendence Excelsheet Upload</b></font>',
+            id:'uploadexcelattendence_win',
+            width:400,                       
+            closeAction:'destroy',
+            top:{
+                image:BASE_URL+'resources/images/createuser.png',
+                formTitle:'Upload Student Monthly Attendence Excelsheet'
+            },
+            defaults:{
+                xtype:'textfield',
+                value:'',
+                width:300
+            },
+            formItems :[
+            {
+                name : 'createdby',
+                id:'createdby',
+                hidden:true,
+                value:SETTING.Users.userId
+            },{
+                xtype:'combobox',
+                fieldLabel :'Class',
+                id:'classid',
+                name:'classid',
+                store:Ext.create('MyApp.store.Master').load({
+                                      params:{propertyId:2}}),
+                typeAhead: true,
+                queryMode: 'local',
+                emptyText: 'Select Class',
+                Autoload:true,               
+                valueField :'id',
+                displayField :'value'
+            },
+            {
+                name : 'sessionid',
+                fieldLabel: 'sessionid',
+                id:'sessionid',
+                hidden:true,
+                value:sessionid
+            },
+            {
+                xtype:'combobox',
+                fieldLabel :'Month',
+                id:'month',
+                name:'month',
+                store:Ext.create('MyApp.store.Master').load({
+                                      params:{propertyId:12}}),
+                typeAhead: true,
+                queryMode: 'local',
+                emptyText: 'Select Month',
+                Autoload:true,               
+                valueField :'id',
+                displayField :'value'
+            },{
+                xtype: 'fileuploadfield',
+                fieldLabel :'Upload File',
+                id:'file',
+                name:'file',
+                buttonText: '',
+                buttonConfig: {
+                iconCls: 'upload-icon'
+                }
+            }
+            ],
+            buttons :[
+            {
+                text: 'Upload',
+                action: 'save',
+                scope:this,
+                handler:uploadExcelSheetData
+            },
+            {xtype:'btncancel'}
+            ]
+        });
+    }
+    win.show();
+}
+
+function uploadExcelSheetData(btn){
+    
+     var form = btn.up('window').down('form').getForm();
+     if(form.isValid()){
+           form.submit({
+                    url: 'homework/add.do',
+                    success: function(fp, o) {
+                    Ext.example.msg('Success','Homework Added Successfully');
+                    var classid=Ext.getCmp('hwclasscombo').getValue();                    
+                    var sessionid=Ext.getCmp('hwsessioncombo').getValue();    
+                    if(sessionid!=null && classid!=null)
+                     {
+                         Ext.StoreManager.lookup('HomeWork').load({
+                                params:{sessionid:sessionid,
+                                        classid:classid,
+                                        createdby:SETTING.Users.userId
+                                }
+                         });
+                     }
+                    },
+                    failure: function(fp, o) {
+                        Ext.example.msg('Failure','Unexpected Error Occured,Please Contact Administrator');
+                    }
+          }); 
+      }
+}
+
+
 Ext.define('MyApp.view.leave.MonthlyAttendanceSheet' ,{
     extend: 'Ext.grid.Panel',
     alias: 'widget.monthlyattendance',
     title: 'Month',
     store:'MonthlyAttendance',
     enableLocking:true,
-    columns:[{
+    columns:[
+        {
+        header: 'Admision No',  
+        dataIndex: 'addmission_no',
+        locked:true,
+        style :'color:#17385B;font-weight:bold',
+        width: 90,
+        renderer:function(value){return '<b>'+value+'</b>';}
+    },
+        {
         header: 'Roll No',  
         dataIndex: 'rollNo',
         locked:true,
@@ -30,7 +150,7 @@ Ext.define('MyApp.view.leave.MonthlyAttendanceSheet' ,{
         header: 'Name',  
         dataIndex: 'name',
         locked:true,
-        width: 140,
+        width: 120,
         style :'color:#17385B;font-weight:bold',
         renderer:function(value){return '<font color=green><b>'+value+'</b></font>';}
     },{
@@ -222,11 +342,65 @@ Ext.define('MyApp.view.leave.MonthlyAttendanceSheet' ,{
     }
     ],
     bbar:[{
-       text:'Submit',
+       text:'<b>Submit</b>',
        handler: function(){
            this.up('monthlyattendance').updateAttendance();
        }
-    }],
+    },{
+        xtype:'splitbutton',
+        text:'<b>More</b>',
+        arrowAlign:'right',        
+        menu: [{
+                   text: '<font color=#17385B><b>Upload Attendence Excel</b></font>',
+                   handler: function(){
+                       
+                       uploadExcelSheet(1,2);
+//                       
+//                     var sessionid=Ext.getCmp('studsession').getValue(); 
+//                     var classid=Ext.getCmp('studclasscombo').getValue();                     
+//                     var data={sessionid:sessionid,
+//                               classid:classid,
+//                               rolltype:1
+//                              };  
+//                        Ext.Ajax.request({
+//                        url:'student/setrollno.do',
+//                        type:'json',
+//                        headers:{
+//                            'Content-Type':'application/json'
+//                        },
+//                        params:Ext.JSON.encode(data),
+//                        success: function(res){
+//                            var rec = eval('('+res.responseText+')');
+//                            if(rec.Success)
+//                            Ext.Msg.alert('Success','Role Number Added successfully');
+//                            else
+//                            Ext.Msg.alert('Failure','Error Occured , Please Contact Admin');    
+//                        }
+//                    });
+                   }
+               },{
+                   text: '<font color=#17385B><b>Download Excel</b></font>',
+                   handler: function(){
+                        
+                   }
+               },{
+                   text: '<font color=#17385B><b>Download PDF</b></font>',
+                   handler: function(){
+                        
+                   }
+               },
+               {text: '<font color=#17385B><b>View Attendence Report</b></font>',
+                handler: function(){} 
+               }
+              ],
+        listeners:{
+            render: function(component){
+                component.getEl().on('click', function(){
+                    });
+
+            }
+        }
+    },],
     initComponent: function() {
         this.callParent(arguments);
         

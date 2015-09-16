@@ -115,7 +115,7 @@ public class AttendanceDAO {
     }
 
     public JSONObject getAttendanceSheet(Connection conn, int id) throws ReadableException {
-        String query = "SELECT m.*, m.sheet_id sheetId,map.roll_no rollNo,CONCAT(CONCAT(CONCAT(CONCAT(s.fname,' '),case when s.mname is null then '' else s.mname end),' '),s.lname) as name  FROM "
+        String query = "SELECT m.*, m.sheet_id sheetId,s.addmission_no,map.roll_no rollNo,CONCAT(CONCAT(CONCAT(CONCAT(s.fname,' '),case when s.mname is null then '' else s.mname end),' '),s.lname) as name  FROM "
                 + " monthly_attendance m INNER JOIN attendance_sheet a ON a.sheet_id=m.sheet_id  INNER JOIN student_class_map map ON m.student_id=map.student_id AND map.batch_id=a.batch_id "
                 + "inner join student s on map.student_id = s.studentid WHERE m.sheet_id=? ";//sqlQueries.getProperty("GET_SHEET");
         ResultSet rs = DaoUtil.executeQuery(conn, query, new Object[]{id});

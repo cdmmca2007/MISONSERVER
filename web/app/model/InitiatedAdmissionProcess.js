@@ -6,6 +6,7 @@ Ext.define('MyApp.model.InitiatedAdmissionProcess', {
         'name',
         'fathername',
         'parentemailid',
+        'studentid',
         'parentmobile',
         'status',
         'examstatus',

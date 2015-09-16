@@ -1,15 +1,295 @@
 var currentItem;
- 
-function generateAdmissionFee(rec){
-    
-    
-    Ext.create('MyApp.view.addmission.AdmissionFeeWindow',{
-            title:'Admission Fee Preview Reciept',
-            templateDetailStore:rec
-        }).show();
+
+function payFee(sessionid,classid,rec){
+
+    var win=Ext.getCmp('admissionfee_win');
+    if(!win){
+        win = Ext.create('Ext.app.view.component.AppWindow', {
+            title:'Admission Fee Form',
+            id: 'admissionfee_win',
+            width:400,
+            closeAction:'hide',
+            top:{
+                image:BASE_URL+'resources/images/portal-icon/fee_struc.jpg',
+                formTitle:'Select the Fee Template to Generate the admission fee'
+            },
+            defaults:{
+                xtype:'textfield',
+                value:'',
+                width:300,
+                labelWidth:130
+            },
+            formItems :[
+            {
+                name : 'studentid',
+                id:'studentid',
+                value:rec?rec.data.studentid:null,
+                hidden:true
+            },    
+            {
+                name : 'sessionid',
+                fieldLabel: 'SessionName',
+                id:'sessionid',
+                value:sessionid,
+                hidden:true
+            },
+            {
+                name : 'status',
+                id:'status',
+                value:rec?rec.data.status:null,
+                hidden:true
+            },
+            {
+                name : 'classid',
+                fieldLabel: 'classid',
+                id:'classid',
+                value:classid,
+                hidden:true
+            }, {
+                xtype:'combobox',
+                fieldLabel :'Select Fee Template',
+                id:'templateid',
+                name:'templateid',
+                store:Ext.create('MyApp.store.Combo').load({
+                                      params:{propertyId:6}}),
+                typeAhead: true,
+                queryMode: 'local',
+                emptyText: 'Select a Fee Template...',
+                Autoload:true,               
+                valueField :'id',
+                displayField :'value'
+            }
+                   
+            ],
+            buttons :[
+            {
+                text: 'Submit',
+                action: 'Send',
+                scope:this,
+                handler:payAdmissionFee
+            },
+            {xtype:'btncancel'}
+            ]
+        });
+    }
+    win.show();
     
 } 
  
+function payAdmissionFee(btn) {
+    
+        var subjectstore = Ext.StoreManager.lookup('PayAdmissionFee');
+        var form = btn.up('window').down('form').getForm();
+        var obj = form.getValues();           
+               if(obj.status!=="Confirm"){
+                                    Ext.Msg.alert('Success','Fee Can not be generated ,Admission not confirm yet');   
+               }
+                else{
+        
+                var data={
+                    'studentid':obj.studentid,
+                    'templateid':obj.templateid
+                };
+                var win;
+                if(!win){
+                    win=Ext.create('Ext.window.Window', {
+                        title:'Pay Admission Fee',
+                        id:'payadmissionfeegridwindow',
+                        width:600,
+                        height:400,
+                        closeAction:'destroy',
+                        top:{
+                            image:BASE_URL+'resources/images/portal-icon/fee_struc.jpg',
+                            formTitle:'Admission Fee Payment'
+                        },
+                        defaults:{
+                            xtype:'textfield',
+                            value:'',
+                            width:580
+                        },
+                        items :[
+                          {
+                              xtype: 'fieldcontainer',
+                              combineErrors: true,
+                              layout: 'hbox',
+                              items: [
+                                   {
+                                    xtype:Ext.create('MyApp.view.addmission.PayAdmissionFee'),                        
+                                    store:Ext.StoreManager.lookup('PayAdmissionFee').load({
+                                                  params:{   'studentid':obj.studentid,
+                                                             'templateid':obj.templateid
+                                    }
+                                    })
+                              }]
+                          } 
+                        ],
+                        buttons :[
+                        {
+                            text: 'Add More Fee',
+                            action: 'save',
+                            iconCls: 'icon-add',
+                            scope:this,
+                            listeners:{
+                            render: function(component){
+                            component.getEl().on('click', function(){                                        
+                                var win;
+                                if(!win){
+                                    win = Ext.create('Ext.app.view.component.AppWindow', {
+                                        title:'<font color=#17385B><b>Additional Fee Details</b></font>',
+                                        id: 'addadminfee_win',
+                                        width:400,
+                                        closeAction:'destroy',
+                                        top:{
+                                            image:BASE_URL+'resources/images/portal-icon/fee_struc2.jpg',
+                                            formTitle:'Add Addtional Fee to Admission fee'
+                                        },
+                                        defaults:{
+                                            xtype:'textfield',
+                                            value:'',
+                                            width:350
+                                        },
+                                        formItems :[
+                                        {
+                                            xtype:'combobox',
+                                            fieldLabel :'Select Fee',
+                                            id:'selectfeestuc',
+                                            emptyText: 'Select',       
+                                            store:Ext.create('MyApp.store.Combo').load({
+                                                                  params:{propertyId:8}}),
+                                            Autoload:true,
+                                            queryMode: 'local',
+                                            displayField: 'value',
+                                            valueField: 'id',
+                                            name:'feetype'
+                                       },
+                                       {
+                                            name : 'feename',
+                                            fieldLabel: 'Fee Name',
+                                            id:'feename',
+                                            emptyText: 'In Case Fee not Present'       ,
+                                            hidden:true
+                                       },
+                                       {
+                                            name : 'feeamount',
+                                            fieldLabel: 'Fee Amount',
+                                            id:'feeamount',
+                                            hidden:true
+                                        }                                        
+                                        ],
+                                        buttons :[
+                                        {
+                                            text: 'Add',
+                                            action: 'save',
+                                            scope:this,
+                                            listeners:{
+                                            render: function(component){
+                                            component.getEl().on('click', function(){                                        
+                                                
+                                            var grid = Ext.getCmp('payadissionfeewindow');
+                                            //grid.getStore().remove(grid.getSelectionModel().getSelection());
+                                            if(Ext.getCmp('selectfeestuc').getValue()!=null) {
+                                             
+                                            var fee=Ext.getCmp('selectfeestuc').getRawValue();
+                                            var fee_amount=fee.substring(fee.lastIndexOf(' / ')+3,fee.lastIndexOf(' - '));
+                                            var fee_name=fee.substring(1,fee.lastIndexOf(' / '));
+                                            var fee_type=fee.substring(fee.lastIndexOf(' - ')+3,fee.length);
+                                                
+                                            var data={  
+                                                           'fee_structure_id':Ext.getCmp('selectfeestuc').getValue(),
+                                                           'fee_amount':fee_amount,
+                                                           'fee_type'  :fee_type,
+                                                           'fee_name'  :fee_name
+                                                          }  
+                                            grid.getStore().add(data); 
+                                            }else{
+                                              Ext.Msg.alert('Warning','Please Select Fee from List to add');                   
+                                            }
+                                            /*my_store.add(record);
+                                            my_store.commitChanges();              */
+                                             });
+                                            }
+                                          } 
+                                        },
+                                        {xtype:'btncancel'}
+                                        ]
+                                    });
+                                }
+                                win.show();
+                             });
+                            }
+                          }
+                        },    
+                        {
+                            text: 'Comfirm Payement',
+                            action: 'save',
+                            iconCls: 'icon-confirm',
+                            scope:this,
+                            listeners:{
+                            render: function(component){
+                            component.getEl().on('click', function(){   
+                                var id=currentItem.getId();
+                                var rec=Ext.getCmp(id).getSelectionModel().getSelection()[0];
+                                var records=Ext.StoreManager.lookup('PayAdmissionFee').getRange();
+                                
+                                var data = [];
+                                
+                                Ext.each(records, function(rec1){
+                                    rec1.data.templateid=obj.templateid;
+                                    rec1.data.studentid =rec.data.studentid;   
+                                    rec1.data.createdby =SETTING.Users.userId;   
+
+                                    data.push(rec1.data);
+                                });
+                                Ext.Ajax.request({
+                                        url:'admission/addadmfee.do',
+                                        type:'json',
+                                        scope:this,
+                                        headers:{
+                                            'Content-Type':'application/json'  
+                                        },
+                                        params:Ext.JSON.encode(data),
+                                        success: function(res){
+                                            Ext.Msg.alert('Success','Admission Fee added successfully');
+                                            var rec = eval('('+res.responseText+')');
+                                        }
+                                    });            
+                             });
+                            }
+                          }
+
+                        },
+                        {xtype:'btncancel',
+                         iconCls: 'icon-cancel'
+                        }
+                        ]
+                    });
+                }
+                win.show();
+                
+                
+               /* Ext.Ajax.request({
+                    url:'admission/paymtrecipt.do',
+                    type:'json',
+                    headers:{
+                        'Content-Type':'application/json'
+                    },
+                    params:Ext.JSON.encode(data),
+                    success: function(res){
+                        var alldata = eval('('+res.responseText+')');
+                        
+                       
+                        Ext.create
+                        ('MyApp.view.addmission.AdmissionPaymentReciept',{
+                                    title:'Admission Fee Payment Reciept',
+                                    paymentDetail:alldata
+                        }).show();
+                    }
+                    }); */
+                        
+    }
+    
+    
+}
 function addStudent(sessionid,classid,rec){
 
     var win= Ext.getCmp('admisstudent_win');
@@ -599,8 +879,31 @@ function addStudent(sessionid,classid,rec){
                     params:Ext.JSON.encode(data),
                     success: function(res){
                         var rec = eval('('+res.responseText+')');
-                        if(rec.admissionno!=null)
+                        if(rec.admissionno!=null) {
+                        
                         Ext.Msg.alert('Success','Student Detail Saved successfully');
+                        
+                        var sessionid=Ext.getCmp('admisnstudsession').getValue();
+                        var classid  =Ext.getCmp('admsnstudclasscombo').getValue();                                
+
+                        if(sessionid!=null && classid!=null)    
+                            {
+
+                                    Ext.getCmp('admissionstudentgrid').getStore().reload({
+                                                params:{'classid':classid,
+                                                        'sessionid':sessionid
+                                    }});
+                            }   
+
+                        if(sessionid!=null && classid!=null)    
+                            {
+
+                                    Ext.getCmp('offadmissionstudentgrid').getStore().reload({
+                                                params:{'classid':classid,
+                                                        'sessionid':sessionid
+                                    }});
+                            } 
+                        }
                         else
                         Ext.Msg.alert('Success','Error Occured , Please Contact Administrator');    
                      //   var rec = eval('('+res.responseText+')');
@@ -744,6 +1047,102 @@ function addStudent(sessionid,classid,rec){
     win.show();
 }
 
+function admissionDocument(sessionid,classid,rec){
+
+var win=Ext.getCmp('addmis_doc_win');
+    if(!win){
+        win = Ext.create('Ext.app.view.component.AppWindow', {
+            title:'Student Admission Document',
+            id: 'addmis_doc_win',
+            width:400,
+            closeAction:'hide',
+            top:{
+                image:BASE_URL+'resources/images/portal-icon/document2.jpg',
+                formTitle:'Attach Student Form, Document Etc for Admission Process'
+            },
+            defaults:{
+                xtype:'textfield',
+                value:'',
+                width:300,
+                labelWidth:130
+            },
+            url:'ppppp',
+            
+            formItems :[
+            {
+                name : 'id',
+                id:'id',
+                value:rec?rec.data.studentid:null,
+                hidden:true
+            },    
+            {
+                name : 'sessionid',
+                fieldLabel: 'SessionName',
+                id:'sessionid',
+                value:sessionid,
+                hidden:true
+            },
+            {
+                name : 'classid',
+                fieldLabel: 'classid',
+                id:'classid',
+                value:classid,
+                hidden:true
+            },
+            {
+                xtype:'combobox',
+                fieldLabel :'Document Name',
+                id:'documenttype',
+                name:'documenttype',
+                store:Ext.create('MyApp.store.Master').load({
+                                      params:{propertyId:46}}),
+                typeAhead: true,
+                queryMode: 'local',
+                emptyText: 'Select Document',
+                Autoload:true,               
+                valueField :'id',
+                displayField :'value'
+            },{
+                xtype: 'fileuploadfield',
+                fieldLabel :'Upload Document',
+                id:'file',
+                name:'file',
+                buttonText: '',
+                buttonConfig: {
+                iconCls: 'upload-icon'
+            }
+            }           
+            ],
+            buttons :[
+            {
+                text: 'Add',
+                action: 'Send',
+                scope:this,
+                handler:attachDoc                
+            },
+            {xtype:'btncancel'}
+            ]
+        });
+    }
+    win.show();    
+    
+}
+
+function attachDoc(btn){
+    var form = btn.up('window').down('form').getForm();
+     if(form.isValid()){
+           form.submit({
+                    url: 'studentadmission/adddocument.do',
+                    success: function(fp, o) {
+                    Ext.example.msg('Success','Document Added Successfully');
+                    },
+                    failure: function(fp, o) {
+                        Ext.example.msg('Failure','Unexpected Error Occured,Please Contact Administrator');
+                    }
+          }); 
+      }
+    
+}
 
 function initiateAdmissionOnline(sessionid,classid){
     
@@ -848,7 +1247,29 @@ function SendLink(btn){
                 success: function(res){
                     var rec = eval('('+res.responseText+')');
                     if(rec.formid!=null)
+                    {
                     Ext.Msg.alert('Success','Student Admission Form Link Send to Parent Email-Id successfully');
+                        var sessionid=Ext.getCmp('admisnstudsession').getValue();
+                        var classid  =Ext.getCmp('admsnstudclasscombo').getValue();                                
+
+                        if(sessionid!=null && classid!=null)    
+                            {
+
+                                    Ext.getCmp('admissionstudentgrid').getStore().reload({
+                                                params:{'classid':classid,
+                                                        'sessionid':sessionid
+                                    }});
+                            }   
+
+                            if(sessionid!=null && classid!=null)    
+                            {
+
+                                    Ext.getCmp('offadmissionstudentgrid').getStore().reload({
+                                                params:{'classid':classid,
+                                                        'sessionid':sessionid
+                                    }});
+                            }                     
+                    }
                     else
                     Ext.Msg.alert('Success','Unexpected Error Occured during processing , Please Contact Administrator');    
                     var rec = eval('('+res.responseText+')');
@@ -1006,8 +1427,32 @@ function sendExtrcInterveiw(btn){
                 params:Ext.JSON.encode(obj),
                 success: function(res){
                     var rec = eval('('+res.responseText+')');
-                    if(rec.result==1)
-                    Ext.Msg.alert('Success','Student Examination & Interview Details Send to Parent Email-Id successfully');
+                    if(rec.result==1) {
+                    
+                        Ext.Msg.alert('Success','Student Examination & Interview Details Send to Parent Email-Id successfully');
+                        
+                        var sessionid=Ext.getCmp('admisnstudsession').getValue();
+                        var classid  =Ext.getCmp('admsnstudclasscombo').getValue();                                
+
+                        if(sessionid!=null && classid!=null)    
+                            {
+
+                                    Ext.getCmp('admissionstudentgrid').getStore().reload({
+                                                params:{'classid':classid,
+                                                        'sessionid':sessionid
+                                    }});
+                            }   
+
+                            if(sessionid!=null && classid!=null)    
+                            {
+
+                                    Ext.getCmp('offadmissionstudentgrid').getStore().reload({
+                                                params:{'classid':classid,
+                                                        'sessionid':sessionid
+                                    }});
+                            } 
+
+                    }
                     else
                     Ext.Msg.alert('Success','Unexpected Error Occured during processing , Please Contact Administrator');    
                 }
@@ -1019,7 +1464,7 @@ Ext.define('MyApp.view.addmission.StudentAddmission' ,{
     extend: 'Ext.tab.Panel',
     alias: 'widget.admissionstudentlist',
     closable:true,
-    title: 'Student Addmission Management',
+    title: 'Student Admission Management',
     layout:'fit',    
     viewConfig:{
                     forceFit:true,
@@ -1033,8 +1478,19 @@ Ext.define('MyApp.view.addmission.StudentAddmission' ,{
             title:'<font color=red>Online Student Application</font>',
             id:'admissionstudentgrid',            
             viewConfig:{
-                    forceFit:true,
-                    emptyText:'<div class="no-results">No Results To display</div>'
+                        forceFit:true,
+                        emptyText:'<div class="no-results">No Results To display</div>',
+                        stripeRows:false ,
+                        enableRowBody: true,
+                        showPreview: true,      
+                        getRowClass: function(record, rowIndex,rp){
+                            
+                            if(record.data.status=='Initiated' || record.data.status=='Applied' ){              
+                            return "initiated";
+                            }else {
+                                return "rowcontent";
+                            }
+            }
             },
             listeners: {
                activate: function(tab) {
@@ -1070,16 +1526,26 @@ Ext.define('MyApp.view.addmission.StudentAddmission' ,{
             selModel:Ext.create('Ext.selection.CheckboxModel',{
                     singleSelect:true,
                     listeners:{
-                            selectionchange:function(){
-
-                               var  button = Ext.getCmp('admsnStudentEdit');
-                               button.setDisabled(false);
-                               var  delbutton = Ext.getCmp('admsnStudentDelete');
-                               delbutton.setDisabled(false);
+                            selectionchange:function(sm){
+                                Ext.getCmp('admsnStudentEdit').setDisabled((sm.getCount()==0));
+                                Ext.getCmp('admsnStudentDelete').setDisabled((sm.getCount()==0));
+                                Ext.getCmp('admsnStudentsch').setDisabled((sm.getCount()==0));
+                                Ext.getCmp('admsnStudentfee').setDisabled((sm.getCount()==0));
+                                Ext.getCmp('admsnStudentdoc').setDisabled((sm.getCount()==0));
+                                Ext.getCmp('admsnStudentpayfee').setDisabled((sm.getCount()==0));
                             }
                         }
             }),
             columns:[Ext.create('Ext.grid.RowNumberer'),
+            
+            {
+                
+                dataIndex:'studentid',
+                id:'studentid',
+                name:'studentid',
+                hidden:true,
+                width :'10%'
+            },
             {
                 header: 'Form-No',
                 dataIndex:'formno',
@@ -1117,19 +1583,19 @@ Ext.define('MyApp.view.addmission.StudentAddmission' ,{
             {
                 header:'Email-Id',
                 dataIndex:'parentemailid',
-                width :'10%',
+                width :'9%',
                 style :'color:#17385B;font-weight:bold'
             },
             {
                 header:'ContactNo',
                 dataIndex:'parentmobile',
-                width :'10%',
+                width :'9%',
                 style :'color:#17385B;font-weight:bold'
             },
             {
                 header:'Exam Status',
                 dataIndex:'selectteststatus',
-                width :'10%',
+                width :'9%',
                 style :'color:#17385B;font-weight:bold',
                 renderer:function(value){
                  if(value=='1')
@@ -1143,7 +1609,7 @@ Ext.define('MyApp.view.addmission.StudentAddmission' ,{
             {
                 header:'Interview Status',
                 dataIndex:'selectinterstatus',
-                width :'15%',
+                width :'13%',
                 style :'color:#17385B;font-weight:bold',
                 renderer:function(value){
                  if(value=='1')
@@ -1158,7 +1624,12 @@ Ext.define('MyApp.view.addmission.StudentAddmission' ,{
             {
                 header:'Final Status',
                 dataIndex:'finalstatus',
-                width :'15%',
+                width :'12%',
+                style :'color:#17385B;font-weight:bold'
+            },{
+                header:'Fee Status',
+                dataIndex:'feestatus',
+                width :'10%',
                 style :'color:#17385B;font-weight:bold'
             }]
           },{
@@ -1188,12 +1659,13 @@ Ext.define('MyApp.view.addmission.StudentAddmission' ,{
             selModel:Ext.create('Ext.selection.CheckboxModel',{
                     singleSelect:true,
                     listeners:{
-                            selectionchange:function(){
-
-                               var  button = Ext.getCmp('admsnStudentEdit');
-                               button.setDisabled(false);
-                               var  delbutton = Ext.getCmp('admsnStudentDelete');
-                               delbutton.setDisabled(false);
+                            selectionchange:function(sm){
+                                Ext.getCmp('admsnStudentEdit').setDisabled((sm.getCount()==0));
+                                Ext.getCmp('admsnStudentDelete').setDisabled((sm.getCount()==0));
+                                Ext.getCmp('admsnStudentsch').setDisabled((sm.getCount()==0));
+                                Ext.getCmp('admsnStudentfee').setDisabled((sm.getCount()==0));
+                                Ext.getCmp('admsnStudentdoc').setDisabled((sm.getCount()==0));
+                                Ext.getCmp('admsnStudentpayfee').setDisabled((sm.getCount()==0));
                             }
                         }
             }),
@@ -1241,31 +1713,36 @@ Ext.define('MyApp.view.addmission.StudentAddmission' ,{
             {
                 header:'ContactNo',
                 dataIndex:'parentmobile',
-                width :'10%',
+                width :'9%',
                 style :'color:#17385B;font-weight:bold'
             },
             {
                 header:'Status',
                 dataIndex:'status',
-                width :'10%',
+                width :'9%',
                 style :'color:#17385B;font-weight:bold'
             },
             {
                 header:'Exam Status',
                 dataIndex:'examstatus',
-                width :'10%',
+                width :'9%',
                 style :'color:#17385B;font-weight:bold'
             },
             {
                 header:'Interview Status',
                 dataIndex:'interviewstatus',
-                width :'15%',
+                width :'13%',
                 style :'color:#17385B;font-weight:bold'
             },
             {
                 header:'Final Status',
                 dataIndex:'finalstatus',
-                width :'15%',
+                width :'12%',
+                style :'color:#17385B;font-weight:bold'
+            },{
+                header:'Fee Status',
+                dataIndex:'feestatus',
+                width :'10%',
                 style :'color:#17385B;font-weight:bold'
             }
            ],
@@ -1377,12 +1854,13 @@ Ext.define('MyApp.view.addmission.StudentAddmission' ,{
      this.selModel=Ext.create('Ext.selection.CheckboxModel',{
         singleSelect:true,
         listeners:{
-                selectionchange:function(){
+                selectionchange:function(sm){
+                                Ext.getCmp('admsnStudentEdit').setDisabled((sm.getCount()==0));
+                                Ext.getCmp('admsnStudentDelete').setDisabled((sm.getCount()==0));
+                                Ext.getCmp('admsnStudentsch').setDisabled((sm.getCount()==0));
+                                Ext.getCmp('admsnStudentfee').setDisabled((sm.getCount()==0));
+                                Ext.getCmp('admsnStudentdoc').setDisabled((sm.getCount()==0));
 
-                   var  button = Ext.getCmp('admsnStudentEdit');
-                   button.setDisabled(false);
-                   var  delbutton = Ext.getCmp('admsnStudentDelete');
-                   delbutton.setDisabled(false);
                 }
             }
     });
@@ -1526,6 +2004,8 @@ Ext.define('MyApp.view.addmission.StudentAddmission' ,{
         xtype:'button',
         text:'<b>Schedule Exam/Interview</b>',
         arrowAlign:'right',        
+        disabled: true,
+        id: 'admsnStudentsch',
         listeners:{
             render: function(component){
               component.getEl().on('click', function(){
@@ -1542,18 +2022,67 @@ Ext.define('MyApp.view.addmission.StudentAddmission' ,{
               });
             }
         }
+    },,{
+        xtype:'button',
+        text:'<b>Attach Document</b>',
+        arrowAlign:'right',        
+        disabled: true,
+        id: 'admsnStudentdoc',
+        listeners:{
+            render: function(component){
+              component.getEl().on('click', function(){
+                
+                var rec=Ext.getCmp('admissionstudentgrid').getSelectionModel().getSelection()[0];
+                var sessionid=Ext.getCmp('admisnstudsession').getValue(); 
+                var classid=Ext.getCmp('admsnstudclasscombo').getValue();                     
+                
+                if(rec!=null){
+                    admissionDocument(sessionid , classid , rec);
+                }else{
+                  Ext.Msg.alert('<font color=red><b>Warning</b></font>','Please select Student from Gird to attach the document');  
+                }  
+                
+                    
+              });
+            }
+        }
     },{
         xtype:'button',
-        text:'<b>Addmission Fees</b>',
+        text:'<b>Pay Fees</b>',
         iconCls: 'icon-add',
+        disabled: true,
+        id: 'admsnStudentpayfee',        
         listeners:{
             render: function(component){
                 component.getEl().on('click', function(){                  
                    var id=currentItem.getId();
                    var rec=Ext.getCmp(id).getSelectionModel().getSelection()[0];
+                   var sessionid=Ext.getCmp('admisnstudsession').getValue(); 
+                   var classid=Ext.getCmp('admsnstudclasscombo').getValue();                     
                    
                     if(rec!=null)
-                         generateAdmissionFee(rec);                         
+                         payFee(sessionid,classid,rec);                         
+                    else
+                         Ext.Msg.alert('Warning','Please Select Student to Generate Admission Fee');        
+                    });
+            }
+        }
+    },{
+        xtype:'button',
+        text:'<b>Fees Recipt</b>',
+        iconCls: 'icon-add',
+        disabled: true,
+        id: 'admsnStudentfee',        
+        listeners:{
+            render: function(component){
+                component.getEl().on('click', function(){                  
+                   var id=currentItem.getId();
+                   var rec=Ext.getCmp(id).getSelectionModel().getSelection()[0];
+                   var sessionid=Ext.getCmp('admisnstudsession').getValue(); 
+                   var classid=Ext.getCmp('admsnstudclasscombo').getValue();                     
+                   
+                    if(rec!=null)
+                         generateAdmissionFee(sessionid,classid,rec);                         
                     else
                          Ext.Msg.alert('Warning','Please Select Student to Generate Admission Fee');        
                     });

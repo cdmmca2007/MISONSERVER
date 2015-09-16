@@ -44,6 +44,11 @@ Ext.define('MyApp.view.component.DashBoardTab',{
                                }
                            }
                            
+                       },{
+                           xtype:'image',
+                           margin:'0 20 5 20',
+                           src:'users/getprofile.pic',
+                           name:'profilepic'
                        }
                    ]
                   }

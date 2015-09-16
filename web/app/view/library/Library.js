@@ -1085,7 +1085,21 @@ Ext.define('MyApp.view.library.Library' ,{
                   
                                 }
                             }
-                    }),
+                    }),viewConfig:{
+                        forceFit:true,
+                        emptyText:'<div class="no-results">No Results To display</div>',
+                        stripeRows:false ,
+                        enableRowBody: true,
+                        showPreview: true,      
+                        getRowClass: function(record, rowIndex,rp){
+                            
+                            if(record.data.todateorg < new Date().getTime()){              
+                            return "rowcontent1";
+                            }else{
+                                return "rowcontent";
+                            }
+                    }
+                    },
                     columns:[
                             Ext.create('Ext.grid.RowNumberer'),
                             {header :'<font color=green><b>Book No</b></font>',
@@ -1114,7 +1128,9 @@ Ext.define('MyApp.view.library.Library' ,{
                             {header :'<font color=green><b>From Date</b></font>',
                              dataIndex:'fromdate',width:'10%'},
                             {header :'<font color=green><b>To Date</b></font>',
-                             dataIndex:'todate',width:'10%'},
+                             dataIndex:'todate',
+                             width:'10%',
+                            },
                             {header :'<font color=green><b>Description</b></font>',
                              dataIndex:'description',width:'10%'}
                         ],

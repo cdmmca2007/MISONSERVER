@@ -10,6 +10,7 @@ import com.dlabs.mis.model.OnlineExamDetail;
 import com.dlabs.mis.model.OnlineExamQuestion;
 import com.kjava.base.ReadableException;
 import com.kjava.base.db.DaoUtil;
+import com.kjava.base.db.DbPool;
 import com.kjava.base.util.ExtJsonUtil;
 import com.kjava.base.util.JSONUtil;
 import java.sql.Connection;
@@ -362,5 +363,55 @@ public class OnlineExamDetailDAO extends AbstractSimpleDao{
         }
         return job;
         
+    }
+
+    public Map<String, Object> verifyLogin(Map<String, Object> obj) throws ReadableException, SQLException {
+        
+        Connection conn=DbPool.getConnection();
+        try {
+            if(obj.get("u")!=null && obj.get("p")!=null) {
+            String selectquery = "SELECT id , schonlineexamid, studentid FROM studentonlineexam WHERE tempuserid=? AND temppassword=?";
+            ResultSet rs1=DaoUtil.executeQuery(conn,selectquery,new Object[]{obj.get("u"),obj.get("p")});
+            if(rs1.next()) {
+                obj.put("result", 1);
+                if(rs1.getObject("studentid")!=null)
+                  obj.put("studentid",rs1.getString("studentid"));
+                if(rs1.getObject("id")!=null)
+                  obj.put("id",rs1.getString("id"));
+                if(rs1.getObject("schonlineexamid")!=null)
+                  obj.put("schexamid",rs1.getString("schonlineexamid"));
+            }else
+                obj.put("result", 0);
+            }
+            if(obj.get("a")!=null && obj.get("d")!=null) {
+            String selectquery = "SELECT CONCAT(CONCAT(CONCAT(CONCAT(s.fname,' '),CASE WHEN s.mname IS NULL THEN '' ELSE s.mname END),' '),s.lname) AS name, oled.examname , m.value examsubject, FROM_UNIXTIME(oles.examdate/1000,'%d-%m-%Y') AS examdate, c.name AS classname " +
+                                    "  FROM student s " +
+                                    "  JOIN studentonlineexam sol    ON sol.studentid= s.studentid " +
+                                    "  JOIN onlineexamschedule oles  ON oles.pid     = sol.schonlineexamid " +
+                                    "  JOIN onlineexamdetail oled    ON oled.id      = oles.examid " +
+                                    "  JOIN sessions   ss            ON ss.batch_id  = oles.batchid " +
+                                    "  JOIN class      c             ON ss.class_id  = c.classid " +
+                                    "  JOIN master     m             ON m.id         = oled.subjectid AND m.propertyid=2" +
+                                    " WHERE sol.id=? AND sol.studentid=?" +
+                                    "   AND s.addmission_no=? AND FROM_UNIXTIME(s.dob/1000,'%d-%m-%Y') =?";
+            ResultSet rs1=DaoUtil.executeQuery(conn,selectquery,new Object[]{obj.get("id"),obj.get("studentid"), obj.get("a"),obj.get("d")});
+            if(rs1.next()) {
+               if(rs1.getObject("name")!=null) obj.put("studentname",rs1.getString("name"));
+               if(rs1.getObject("examname")!=null) obj.put("examname",rs1.getString("examname"));
+               if(rs1.getObject("examsubject")!=null) obj.put("examsubject",rs1.getString("examsubject"));
+               if(rs1.getObject("examdate")!=null) obj.put("examdate",rs1.getString("examdate"));
+               if(rs1.getObject("classname")!=null) obj.put("classname",rs1.getString("classname"));
+               obj.put("resultadmisionno", 1);
+            }else
+                obj.put("resultadmisionno", 0);
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(OnlineExamDetailDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally{
+            conn.close(); 
+        }
+        
+        return obj;
     }
 }

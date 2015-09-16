@@ -15,6 +15,8 @@ import com.kjava.base.db.DbPool;
 import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -189,4 +191,5 @@ public class OnlineExamDetailController {
         }
         return ""; 
      }
+    
 }

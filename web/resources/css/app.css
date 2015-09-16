@@ -112,6 +112,14 @@ root {
     background-image: url("../../resources/images/delete.png") !important;
 }
 
+.icon-confirm {
+    background-image: url("../../resources/images/OK.png") !important;
+}
+
+.icon-cancel {
+    background-image: url("../../resources/images/icons/cross.gif") !important;
+}
+
 .x-portlet {
     margin:10px;
     padding: 5px;
@@ -218,21 +226,20 @@ root {
     position:relative;
     overflow:hidden;
 }
-.rowcontent {
-    
-    background:#fdffc9 !important;
-    font-size: small;
-    color: green;
-    font-weight: bolder;
-}
 
-.rowcontent1 {
-    
-    background:#fdffc9 !important;
-    font-size: medium;
-    color: black;
+.rowcontent1 .x-grid-cell { 
+    background-color: #ffe2e9; 
+    color: #900; 
+} 
+ 
+.rowcontent .x-grid-cell { 
+    background-color: #e2ffe9; 
+    color: green; 
 }
-
+.initiated .x-grid-cell { 
+    background-color: #BBD2F0; 
+    color: #000; 
+} 
 .imp {
     
     background:red !important;

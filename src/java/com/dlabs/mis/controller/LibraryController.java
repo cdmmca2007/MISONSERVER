@@ -195,7 +195,7 @@ public class LibraryController {
             DbPool.close(conn);
         }
         return model;
-     }
+    }
     @RequestMapping(value=URLMap.GET_BOOK_REQUSTER_LIST, method= RequestMethod.GET)
     @ResponseBody
     public String getBookRequesterListAsJson(@RequestParam("bookid") String bookid

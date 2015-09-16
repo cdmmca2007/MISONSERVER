@@ -3,6 +3,7 @@ Ext.define('MyApp.model.MonthlyAttendance', {
     fields:[
         {name:'sheetId', type:'int'},
         {name:'rollNo', type:'int'},
+        {name:'addmission_no', type:'int'},
         {name:'studentId', type:'String',mapping:'student_id'},
         {name:'name', type:'string'},
         {name:'d1'},

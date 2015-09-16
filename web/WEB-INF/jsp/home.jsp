@@ -37,6 +37,10 @@
     <!-- shared example code -->   
     <script type="text/javascript" src="app/app.js"></script>
     <iframe id="downloadfile" hidden="true"></iframe>
+    <div style="display: none;" id="downloadrecdiv">
+        <form id='downloadrec' method='POST' action='download/downloadadmpayrec.do'>
+             <input name="downloadrecdata" id="downloadrecdata"/>
+    </form></div>
 </body>
 </html>
 

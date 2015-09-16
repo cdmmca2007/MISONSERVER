@@ -200,7 +200,7 @@ public class UserDAO  {
         String obj[]={"SELECT schoolid , schoolname , websiteurl FROM schooladmin",            
                       "SELECT DISTINCT session_id ,year FROM sessions WHERE currentsession=1",
                       "SELECT class_id, 1 AS isclassteacher FROM sessions WHERE class_teacher=? AND session_id=?",
-                      "SELECT passwordsetting as val FROM users WHERE userid=?"};   
+                      "SELECT passwordsetting  as val ,  profilepic FROM users WHERE userid=?"};   
         try{
             rs = DaoUtil.executeQuery(conn, MySqlQuery.verifyUser(), new Object[]{uid,pass});
             if(rs.next()){
@@ -240,6 +240,8 @@ public class UserDAO  {
             rs = DaoUtil.executeQuery(conn,obj[3],new Object[]{u.getUserId()});                     
             if(rs.next()){
                if(rs.getObject("val")!=null)p.put("setpaswdsetng",rs.getInt("val")); 
+               if(rs.getObject("profilepic")!=null)p.put("profilepic",rs.getString("profilepic")); 
+               
             }
             if(u.getRoleId()==4){ //return batch_id of student       
                String batchid=new GetBatch().getBatchidForStudent(conn, sessionid, studentid);

@@ -127,6 +127,13 @@ public class LibraryDAO extends AbstractSimpleDao{
         return job;   
     }
 
+   /*
+  1. JDBC DEtails
+2. Reports break
+3. Edit Fee.....
+4. Student one link all data  
+   */ 
+    
     public BookTransaction addIssueBook(Connection conn, BookTransaction obj) throws ReadableException {
         
       String insert="INSERT INTO booktransaction " +
@@ -201,7 +208,7 @@ public class LibraryDAO extends AbstractSimpleDao{
         String selectquery  ="SELECT bd.bookno,bt.id,bt.bookid,bd.title, " +
                             "        bt.teacherid,u.name AS teachername, " +
                             "	FROM_UNIXTIME(bt.fromdate/1000,'%d-%m-%Y') AS fromdate," +
-                            "	FROM_UNIXTIME(bt.todate/1000,'%d-%m-%Y') AS todate,bt.issueddate,bt.issuedby,bt.returnedflag, " +
+                            "	FROM_UNIXTIME(bt.todate/1000,'%d-%m-%Y') AS todate,bt.todate as todateorg ,bt.issueddate,bt.issuedby,bt.returnedflag, " +
                             "	bt.returneddate,bt.renewedflag,bt.renewdnumber,bt.latefineflag,bt.fineamount,bt.description " +
                             "  FROM 	booktransaction bt " +
                             " INNER  JOIN bookdetail  bd ON bd.id=bt.bookid " +
@@ -238,7 +245,7 @@ public class LibraryDAO extends AbstractSimpleDao{
         String selectquery  ="SELECT 	bt.id,bd.bookno,bt.bookid,bd.title, " +
                             "        bt.teacherid,u.name AS teachername, " +
                             "	FROM_UNIXTIME(bt.fromdate/1000,'%d-%m-%Y') AS fromdate," +
-                            "	FROM_UNIXTIME(bt.todate/1000,'%d-%m-%Y') AS todate,bt.issueddate,bt.issuedby,bt.returnedflag, " +
+                            "	FROM_UNIXTIME(bt.todate/1000,'%d-%m-%Y') AS todate,bt.todate as todateorg,bt.issueddate,bt.issuedby,bt.returnedflag, " +
                             "	bt.returneddate,bt.renewedflag,bt.renewdnumber,bt.latefineflag,bt.fineamount,bt.description " +
                             "  FROM 	booktransaction bt " +
                             " INNER  JOIN bookdetail  bd ON bd.id=bt.bookid " +
@@ -276,7 +283,7 @@ public class LibraryDAO extends AbstractSimpleDao{
         String selectquery     ="SELECT bt.id,bd.bookno,bt.bookid,bd.title,c.name AS classname,bt.studentid," +
                                 "       CONCAT(CONCAT(CONCAT(CONCAT(s.fname,' '),case when s.mname is null then '' else s.mname end),' '),s.lname) AS studentname," +
                                 "	FROM_UNIXTIME(bt.fromdate/1000,'%d-%m-%Y') AS fromdate," +
-                                "	FROM_UNIXTIME(bt.todate/1000,'%d-%m-%Y') AS todate,bt.issueddate,bt.issuedby,bt.returnedflag, " +
+                                "	FROM_UNIXTIME(bt.todate/1000,'%d-%m-%Y') AS todate,bt.todate as todateorg,bt.issueddate,bt.issuedby,bt.returnedflag, " +
                                 "	bt.returneddate,bt.renewedflag,bt.renewdnumber,bt.latefineflag,bt.fineamount,bt.description " +
                                 "  FROM booktransaction bt" +
                                 " INNER JOIN bookdetail  bd ON bd.id=bt.bookid " +
@@ -320,7 +327,7 @@ public class LibraryDAO extends AbstractSimpleDao{
         String selectquery     ="SELECT bt.id,bd.bookno,bt.bookid,bd.title,c.name AS classname,bt.studentid," +
                                 "       CONCAT(CONCAT(CONCAT(CONCAT(s.fname,' '),case when s.mname is null then '' else s.mname end),' '),s.lname) AS studentname," +
                                 "	FROM_UNIXTIME(bt.fromdate/1000,'%d-%m-%Y') AS fromdate," +
-                                "	FROM_UNIXTIME(bt.todate/1000,'%d-%m-%Y') AS todate,bt.issueddate,bt.issuedby,bt.returnedflag, " +
+                                "	FROM_UNIXTIME(bt.todate/1000,'%d-%m-%Y') AS todate,bt.todate as todateorg,bt.issueddate,bt.issuedby,bt.returnedflag, " +
                                 "	bt.returneddate,bt.renewedflag,bt.renewdnumber,bt.latefineflag,bt.fineamount,bt.description " +
                                 "  FROM booktransaction bt" +
                                 " INNER JOIN bookdetail  bd ON bd.id=bt.bookid " +
@@ -431,7 +438,7 @@ public class LibraryDAO extends AbstractSimpleDao{
         }
         return model;
     }
-     public Map<String, Object> addBookRequest(Connection conn, Map<String, Object> model) throws ReadableException {
+   public Map<String, Object> addBookRequest(Connection conn, Map<String, Object> model) throws ReadableException {
         //logger.debug("Paaram:"+model);
         try {
         if(conn!=null && model!=null)    {
@@ -466,7 +473,6 @@ public class LibraryDAO extends AbstractSimpleDao{
         
         try {
             String checkquery = this.sqlQueries.getProperty("CHECK_BOOK_REQUEST");
-            
             ResultSet rs = DaoUtil.executeQuery(conn,checkquery,new Object[]{obj.getBookid()});
             if(rs.next()) {
                return rs.getInt("count"); 

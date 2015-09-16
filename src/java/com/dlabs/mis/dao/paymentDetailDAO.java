@@ -427,7 +427,7 @@ public class paymentDetailDAO {
                         " INNER JOIN templates t ON t.id     =s.template_id " +
                         " INNER JOIN master   m  ON m.id=g.for_year " +
                         " WHERE g.for_month= '"+obj.getMonthid()+"'" +
-                        "   AND g.class_id ='"+batchid+"' limit ? offset ?";
+                        "   AND g.class_id ='"+batchid+"' GROUP BY g.class_id  , g.for_month limit ? offset ?";
             flag=1;
         }     
         try{

@@ -32,7 +32,7 @@ Ext.require([
     success : function(response){
         if(response.responseText){
             SETTING.Users = eval('('+response.responseText+')'); 
-            if(new Date().getTime()>new Date('09/09/2015').getTime()){
+            if(new Date().getTime()>new Date('12/12/2015').getTime()){
                  window.top.location.href = "./mis/login.html";
             }
         }else{

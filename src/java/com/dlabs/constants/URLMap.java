@@ -18,7 +18,6 @@ public interface URLMap {
     String GET_MASTER = "/master/get.do";
     String GET_PROPRTIES = "/master/properties.do";
     String LOG_BUG = "/master/addbug.do";
-    
     String GET_TEMPLATES ="/payment/getTemplates.do";
     String GET_TEMPLATE ="/payment/getTemplate.do";
     String ADD_TEMPLATES = "/payment/addTemplates.do";
@@ -228,5 +227,14 @@ public interface URLMap {
     String GET_BOOK_REQUSTER_LIST="library/getbkreqerlist.do";
     String GET_BOOKED_HISTORY="library/getbkhstrylst.do";
     
+    
+    String ATTACH_ADMISSION_DOCUMENT="studentadmission/adddocument.do";
+    String ADMISSION_FEE_RECIEPT="admission/paymtrecipt.do";
+    
+    
+    String DOWNLOAD_ADM_PAY_REC="download/downloadadmpayrec.do";
+    String PAY_ADMISSION_FEE="admission/payfee.do";    
+    String GET_ADMISSION_FEE="admission/getadmissionfee.do";
+    String ADD_ADMISSION_FEE_PAYMENT="admission/addadmfee.do";
 }
 
