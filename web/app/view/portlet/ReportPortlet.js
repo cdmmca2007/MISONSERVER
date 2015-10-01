@@ -33,7 +33,26 @@ function showReport(rec){
     var Tab = Ext.create('MyApp.view.misreport.ClassReport');
     app1.getDashboard().add(Tab);
     app1.getDashboard().setActiveTab(Tab);  
-   } 
+   }
+   else if(rec.data.id==24 && rec.data.name=='Daily Attendence Report'){
+    var app1=app.getController('Dashboard')
+    var Tab = Ext.create('MyApp.view.misreport.DailyAttendenceReportForAllClass');
+    app1.getDashboard().add(Tab);
+    app1.getDashboard().setActiveTab(Tab);  
+   }
+   else if(rec.data.id==21 && rec.data.name=='Student Fee Reports'){
+    var app1=app.getController('Dashboard')
+    var Tab = Ext.create('MyApp.view.misreport.StudentFeeReport');
+    app1.getDashboard().add(Tab);
+    app1.getDashboard().setActiveTab(Tab);  
+   }
+   else if(rec.data.id==3 && rec.data.name=='Exam Report Analysis'){
+    var app1=app.getController('Dashboard')
+    var Tab = Ext.create('MyApp.view.misreport.ExamReportAnalysis');
+    app1.getDashboard().add(Tab);
+    app1.getDashboard().setActiveTab(Tab);  
+   }
+   
    else{
        Ext.Msg.alert("This Report is in development phase");     
    }

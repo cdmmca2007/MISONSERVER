@@ -85,7 +85,7 @@ Ext.define('Ext.app.view.portlet.PaymentPortlet', {
                         id    :'paymentchart',
                         store: Ext.create('MyApp.store.PaymentReportPerClass').load({
                         params:{                            
-                                 classid   :'d6f54930-7210-4bf3-ab90-3976752d4d9a',
+                                 classid   :'f3cb8779-99be-46ab-9014-680c42af36d8',
                                  sessionid :SETTING.Users.properties.session_id        
                         }
                         }),
@@ -144,7 +144,7 @@ Ext.define('Ext.app.view.portlet.PaymentPortlet', {
                         height:200,
                         store: Ext.create('MyApp.store.ClassAttendenceReport').load({
                         params:{                            
-                                 classid   :'d6f54930-7210-4bf3-ab90-3976752d4d9a',
+                                 classid   :'f3cb8779-99be-46ab-9014-680c42af36d8',
                                  sessionid :SETTING.Users.properties.session_id        
                         }
                         }),

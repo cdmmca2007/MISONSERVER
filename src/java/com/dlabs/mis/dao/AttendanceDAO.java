@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -53,6 +55,7 @@ public class AttendanceDAO {
     }
 
     public void updateAttendanceSheet(Connection conn,int sheetId,AttendanceUpdateModel[] sheets) throws ReadableException {
+        try {
         String query = "UPDATE monthly_attendance SET "+sheets[0].getFieldName()+" = ? WHERE sheet_id = ? AND student_id=?";
         ///String smsquery ="SELECT parentmobile AS contactno FROM student WHERE studentid IN (";
         ///String studentids="'";
@@ -65,6 +68,9 @@ public class AttendanceDAO {
            query=query+studentids+")";
            
         }*/
+        }catch(Exception ex){
+             Logger.getLogger(AttendanceDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }   
 
     public JSONObject getAttendanceSheets(Connection conn, AttendanceSheet obj) throws ReadableException {
@@ -85,14 +91,18 @@ public class AttendanceDAO {
         return jsonUtil.getJsonObject(rs, 0, 1, 25);
     }
     public AttendanceSheet addAttendanceSheet(Connection conn, AttendanceSheet sheet) throws ReadableException, SQLException {
-        
+        try {
         if(sheet.getClassId().equalsIgnoreCase(""))
           sheet.setClassId(null);
         else
         {
         sheet.setBatchId(new GetBatch(sheet.getClassId(),sheet.getSessionid()).BatchId(conn));
-        DaoUtil.executeUpdate(conn, sqlQueries.getProperty("ADD_SHEET"), 
-                new Object[]{sheet.getMonth(),sheet.getBatchId()});
+        
+        String checkquery=sqlQueries.getProperty("CHECK_SHEET");
+        ResultSet rs_check=DaoUtil.executeQuery(conn, checkquery,new Object[]{sheet.getMonth(),sheet.getBatchId()});
+        if(rs_check!=null && rs_check.next() && rs_check.getInt("count")==0) {
+            
+        DaoUtil.executeUpdate(conn, sqlQueries.getProperty("ADD_SHEET"),new Object[]{sheet.getMonth(),sheet.getBatchId()});
         ResultSet rs = DaoUtil.executeQuery(conn, sqlQueries.getProperty("NEW_SHEET"), null);
        
         if(rs.next()){
@@ -103,7 +113,15 @@ public class AttendanceDAO {
                 String studentId = rsStudent.getString("student_id");
                 this.addMonthlyAttendance(conn,sheet.getId(),studentId);              
             }
+            sheet.setResult(1);
         }
+        }else{
+          sheet.setResult(-1);
+        }
+        }
+        }catch(Exception ex) {
+          sheet.setResult(0);
+           Logger.getLogger(AttendanceDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return sheet;
     }

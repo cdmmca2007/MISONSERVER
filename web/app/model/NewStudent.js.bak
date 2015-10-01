@@ -11,6 +11,6 @@ Ext.define('MyApp.model.NewStudent', {
         'admissiontype','gender','batch_id','annualincome','fatherhighestedu','occupation',
         'interviewid','entranceexamid',
         'intrvexamdate' , 'selectteststatus' , 'totscore' , 'intrviewdate' ,
-        'selectinterstatus' ,'intervcomment','category'
+        'selectinterstatus' ,'intervcomment'
      ]
 });

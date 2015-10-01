@@ -236,5 +236,12 @@ public interface URLMap {
     String PAY_ADMISSION_FEE="admission/payfee.do";    
     String GET_ADMISSION_FEE="admission/getadmissionfee.do";
     String ADD_ADMISSION_FEE_PAYMENT="admission/addadmfee.do";
+    String ADD_DEPARTMENT_HEAD="master/adddepartmenthead.do";
+    String GET_DEPT_HEADLIST="master/getdeptheadseting.do";
+    String GET_DAILY_ATTENDENCE_REPORT="misreport/getdailyattdnc.do";
+    String GET_LIST_OF_ABSENT_STUDENT="misreport/getlistofabsentstudent.do";
+    String GET_STUDENT_YEARLY_PAYMENT_REPORT="misreport/getsprfc.do";
+    String GET_EXAM_REPORT_ANALYSIS="misreport/geteras.do";
+    String GET_EXAM_REPORT_ANALYSIS_SUBJECT_WISE="misreport/geterassubjectwise.do";
 }
 

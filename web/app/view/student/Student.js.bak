@@ -181,22 +181,6 @@ function addStudent(sessionid,classid,rec){
                                     width:600                                    
                                 },{
                                     xtype:'combobox',
-                                    fieldLabel: 'Category',
-                                    id:'category',
-                                    name : 'category',
-                                    store:Ext.create('MyApp.store.Master').load({
-                                                                  params:{propertyId:47} //peorpetty religion id =4
-                                                         }),
-                                    typeAhead: true,
-                                    queryMode: 'local',
-                                    emptyText: 'Select Category.',
-                                    Autoload:true,
-                                    valueField :'id',
-                                    displayField :'value',
-                                    width:600,
-                                    value:rec?rec.data.category:null
-                                },{
-                                    xtype:'combobox',
                                     fieldLabel: 'Nationality',
                                     id:'nationality',
                                     name : 'nationality',
@@ -558,7 +542,6 @@ function addStudent(sessionid,classid,rec){
                             'blood_group'       :Ext.getCmp('blood_group').getValue(),
                             'admissiontype'     :Ext.getCmp('admissiontype').getValue(),
                             'gender'            :Ext.getCmp('gender').getValue(),
-                            'category'          :Ext.getCmp('category').getValue(),
                             'studentid'         :rec?rec.data.studentid:null
                          };                             
                   Ext.Ajax.request({

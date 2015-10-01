@@ -1,5 +1,54 @@
 var currentItem;
 
+
+function reLoadAdmissionList(){
+    var sessionid=Ext.getCmp('admisnstudsession').getValue();
+    var classid  =Ext.getCmp('admsnstudclasscombo').getValue();                                
+    if(sessionid!=null && classid!=null)    
+    {
+         Ext.getCmp('admissionstudentgrid').getStore().reload({
+         params:{                             
+                 classid   :classid ,
+                 sessionid :sessionid
+         }
+         });
+    } 
+}
+
+function generateAdmissionFeeReceipt(sessionid,classid,rec){
+    
+    if(rec.data.feepaid==0){
+        Ext.Msg.alert('Warning','Fee receipt can not be generated ,Admission not confirm yet/ Fee Not Paid');   
+    }
+    else
+    {
+     var data={
+                    'studentid':rec.data.studentid,
+                    'templateid':rec.data.templateid
+              };   
+     Ext.Ajax.request({
+                    url:'admission/paymtrecipt.do',
+                    type:'json',
+                    headers:{
+                        'Content-Type':'application/json'
+                    },
+                    params:Ext.JSON.encode(data),
+                    success: function(res){
+                        var alldata = eval('('+res.responseText+')');
+                        
+                       
+                        Ext.create
+                        ('MyApp.view.addmission.AdmissionPaymentReciept',{
+                                    title:'Admission Fee Payment Reciept',
+                                    paymentDetail:alldata
+                                    
+                        }).show();
+                    }
+     }); 
+    }
+}
+
+
 function payFee(sessionid,classid,rec){
 
     var win=Ext.getCmp('admissionfee_win');
@@ -11,7 +60,7 @@ function payFee(sessionid,classid,rec){
             closeAction:'hide',
             top:{
                 image:BASE_URL+'resources/images/portal-icon/fee_struc.jpg',
-                formTitle:'Select the Fee Template to Generate the admission fee'
+                formTitle:'Select the Fee Template to Generate the admission fee for <b>'+rec?rec.data.name:''+'</b>'
             },
             defaults:{
                 xtype:'textfield',
@@ -220,7 +269,7 @@ function payAdmissionFee(btn) {
                           }
                         },    
                         {
-                            text: 'Comfirm Payement',
+                            text: 'Comfirm Payment',
                             action: 'save',
                             iconCls: 'icon-confirm',
                             scope:this,
@@ -249,8 +298,9 @@ function payAdmissionFee(btn) {
                                         },
                                         params:Ext.JSON.encode(data),
                                         success: function(res){
-                                            Ext.Msg.alert('Success','Admission Fee added successfully');
+                                            Ext.Msg.alert('Success','Admission Fee has paid successfully');
                                             var rec = eval('('+res.responseText+')');
+                                            reLoadAdmissionList();
                                         }
                                     });            
                              });
@@ -298,7 +348,7 @@ function addStudent(sessionid,classid,rec){
             title:rec?'Edit New Student Form':'Add New Student Form',
             id: rec?'admisstudent_win':'admisstudent_win',
             width:620,
-            height:580,
+            height:590,
             closeAction:'hide',
             top:{
                 image:BASE_URL+'resources/images/createuser.png',
@@ -335,6 +385,14 @@ function addStudent(sessionid,classid,rec){
                                         height:18
                             },
                             items:[
+                                {
+                                    name : 'studentid',
+                                    fieldLabel: 'studentid',
+                                    id:'studentid',
+                                    value:rec.data.studentid,
+                                    readOnly:true,
+                                    width:600
+                                },
                                 {
                                     name : 'sessionname',
                                     fieldLabel: 'SessionName',
@@ -428,20 +486,20 @@ function addStudent(sessionid,classid,rec){
                                     name : 'dob',
                                     fieldLabel: 'Date of Birth',
                                     id:'dob',
-                                    format: 'm d Y',
-                                    altFormats: 'm-d-Y|m.d.Y',
+                                    format: 'm/d/Y',
+                                   // altFormats: 'm-d-Y|m.d.Y',
                                     width:600,
-                                    value:rec?rec.data.dob:null
+                                ///    value:rec?rec.data.dob:null
                                     },
                                 {
                                     xtype:'datefield',
                                     name : 'admissiondate',
                                     fieldLabel: 'Date of Admission',
                                     id:'admissiondate',
-                                    format: 'm d Y',
-                                    altFormats: 'm,d,Y|m.d.Y',
+                                    format: 'm/d/Y',
+                                    //altFormats: 'm,d,Y|m.d.Y',
                                     width:600,
-                                    value:rec?rec.data.admissiondate:null
+                                ///    value:rec?rec.data.admissiondate:null
                                 },
                                 {
                                     xtype:'combobox',
@@ -485,6 +543,22 @@ function addStudent(sessionid,classid,rec){
                                     displayField :'value',
                                     width:600 ,
                                     value:rec.data.religion
+                                },{
+                                    xtype:'combobox',
+                                    fieldLabel: 'Category',
+                                    id:'category',
+                                    name : 'category',
+                                    store:Ext.create('MyApp.store.Master').load({
+                                                                  params:{propertyId:47} //peorpetty religion id =4
+                                                         }),
+                                    typeAhead: true,
+                                    queryMode: 'local',
+                                    emptyText: 'Select Category.',
+                                    Autoload:true,
+                                    valueField :'id',
+                                    displayField :'value',
+                                    width:600,
+                                    value:rec?rec.data.category:null
                                 },{
                                     xtype:'combobox',
                                     fieldLabel: 'Nationality',
@@ -704,10 +778,10 @@ function addStudent(sessionid,classid,rec){
                                     name : 'intrvexamdate',
                                     fieldLabel: 'Date of Intrance Exam',
                                     id:'intrvexamdate',
-                                    format: 'm d Y',
+                                    format: 'm/d/Y',
                                     altFormats: 'm,d,Y|m.d.Y',
                                     width:600,
-                                    value:rec.data.intrvexamdate
+                                  //  value:rec.data.intrvexamdate
                                 },
                                 {
                                     xtype:'combobox',
@@ -772,10 +846,10 @@ function addStudent(sessionid,classid,rec){
                                 name : 'intrviewdate',
                                 fieldLabel: 'Date of Interview',
                                 id:'intrviewdate',
-                                format: 'm d Y',
+                                format: 'm/d/Y',
                                 altFormats: 'm,d,Y|m.d.Y',
                                 width:600,
-                                value:rec.data.intrviewdate
+                                //value:rec.data.intrviewdate
                                 },
                                 {
                                     xtype:'combobox',
@@ -867,7 +941,10 @@ function addStudent(sessionid,classid,rec){
                             'createdby'         :SETTING.Users.userId,
                             'modifiedby'        :SETTING.Users.userId,
                             'interviewid'       :Ext.getCmp('interviewid').getValue() ,
-                            'entranceexamid'    :Ext.getCmp('entranceexamid').getValue()
+                            'category'          :Ext.getCmp('category').getValue()  ,
+                            'entranceexamid'    :Ext.getCmp('entranceexamid').getValue(),
+                            'studentid'         :Ext.getCmp('studentid').getValue(),
+                            
 
                          };                             
                   Ext.Ajax.request({
@@ -966,7 +1043,9 @@ function addStudent(sessionid,classid,rec){
                             'createdby'         :SETTING.Users.userId,
                             'modifiedby'        :SETTING.Users.userId,
                             'interviewid'       :Ext.getCmp('interviewid').getValue() ,
-                            'entranceexamid'    :Ext.getCmp('entranceexamid').getValue()
+                            'entranceexamid'    :Ext.getCmp('entranceexamid').getValue(),
+                            'category'          :Ext.getCmp('category').getValue(), 
+                            'studentid'         :Ext.getCmp('studentid').getValue()
                          };  
                 
                 Ext.Msg.confirm("Alert","Are You sure you want to confirm Addmision", function(btn){
@@ -980,8 +1059,10 @@ function addStudent(sessionid,classid,rec){
                     params:Ext.JSON.encode(data),
                     success: function(res){
                         var rec = eval('('+res.responseText+')');
-                        if(rec.admissionno!=null)
+                        if(rec.admissionno!=null) {
                         Ext.Msg.alert('Success','Student Admission Confirmed , added successfully ,<b> Admission Number </b>:'+rec.admissionno);
+                        reLoadAdmissionList();
+                        }
                         else
                         Ext.Msg.alert('Success','Error Occured , Please Contact Administrator');    
                     }
@@ -1009,8 +1090,8 @@ function addStudent(sessionid,classid,rec){
         Ext.getCmp('mname').setValue(rec.data.mname);                            
         Ext.getCmp('lname').setValue(rec.data.lname);                            
         Ext.getCmp('classid').setValue(Ext.getCmp('classid').getValue());                            
-        Ext.getCmp('dob').setValue(rec.data.dob);                           
-        Ext.getCmp('admissiondate').setValue(rec.data.admissiondate);                            
+        Ext.getCmp('dob').setValue(Ext.Date.format(new Date(rec.data.dob),DEFAULT_DATE_FORMAT));  
+        Ext.getCmp('admissiondate').setValue(Ext.Date.format(new Date(rec.data.admissiondate),DEFAULT_DATE_FORMAT));                            
         Ext.getCmp('religion').setValue(rec.data.religion);                            
         Ext.getCmp('nationality').setValue(rec.data.nationality);                            
         Ext.getCmp('mother_tounge').setValue(rec.data.mother_tounge);                            
@@ -1032,17 +1113,20 @@ function addStudent(sessionid,classid,rec){
         Ext.getCmp('address').setValue(rec.data.address);                            
         Ext.getCmp('stateid').setValue(rec.data.stateid);                            
         Ext.getCmp('cityid').setValue(rec.data.cityid);                            
-        Ext.getCmp('intrvexamdate').setValue(Ext.Date.format(new Date(rec.data.intrvexamdate),DEFAULT_DATE_FORMAT));                            
+        Ext.getCmp('intrvexamdate').setValue(Ext.Date.format(new Date(rec.data.intrvexamdate),'m d Y'));                            
         Ext.getCmp('selectinterstatus').setValue(rec.data.selectinterstatus);                            
         Ext.getCmp('totscore').setValue(rec.data.totscore);                            
-        Ext.getCmp('intrviewdate').setValue(new Date(rec.data.intrviewdate)); //new Date(this.rec.dob)                           
+        Ext.getCmp('intrviewdate').setValue(Ext.Date.format(new Date(rec.data.intrviewdate),'m d Y'));                            
+        //Ext.getCmp('intrviewdate').setValue(new Date(rec.data.intrviewdate));                            
         Ext.getCmp('selectinterstatus').setValue(rec.data.selectinterstatus);                            
         Ext.getCmp('intervcomment').setValue(rec.data.intervcomment);                            
         Ext.getCmp('blood_group').setValue(rec.data.bloodgroup);                            
         Ext.getCmp('admissiontype').setValue(rec.data.admissiontype);                            
         Ext.getCmp('gender').setValue(rec.data.gender);    
         Ext.getCmp('entranceexamid').setValue(rec.data.entranceexamid);    
-        Ext.getCmp('interviewid').setValue(rec.data.interviewid);    
+        Ext.getCmp('interviewid').setValue(rec.data.interviewid); 
+        Ext.getCmp('category').setValue(rec.data.category);       
+        Ext.getCmp('studentid').setValue(rec.data.studentid);    
     }
     win.show();
 }
@@ -1593,7 +1677,7 @@ Ext.define('MyApp.view.addmission.StudentAddmission' ,{
                 style :'color:#17385B;font-weight:bold'
             },
             {
-                header:'Exam Status',
+                header:'Int-Exam',
                 dataIndex:'selectteststatus',
                 width :'9%',
                 style :'color:#17385B;font-weight:bold',
@@ -1602,36 +1686,79 @@ Ext.define('MyApp.view.addmission.StudentAddmission' ,{
                    return "<b>Passed</b>";
                  else if(value=='0')
                    return "<b>Failed</b>";  
-                 else 
-                    return "N/A";
                 }
             },
             {
-                header:'Interview Status',
+                header:'Interview',
                 dataIndex:'selectinterstatus',
-                width :'13%',
+                width :'8%',
                 style :'color:#17385B;font-weight:bold',
                 renderer:function(value){
                  if(value=='1')
                    return "<b>Passed</b>";
                  else if(value=='0')
                    return "<b>Failed</b>";  
-                 else 
-                    return "N/A";
                 }
                 
             },
             {
                 header:'Final Status',
                 dataIndex:'finalstatus',
-                width :'12%',
-                style :'color:#17385B;font-weight:bold'
+                width :'7%',
+                style :'color:#17385B;font-weight:bold',
+                renderer:function(value,metadata,record){
+                 if(record.data.selectteststatus==1 && record.data.selectinterstatus==1)
+                   return "<b>Passed</b>";
+                }
             },{
                 header:'Fee Status',
-                dataIndex:'feestatus',
-                width :'10%',
+                dataIndex:'feepaid',
+                width :'7%',
+                style :'color:#17385B;font-weight:bold',
+                renderer:function(value,metadata,record){
+                 if(value==1)
+                   return "<b>Fee Paid</b>";
+                 else if(value==0)
+                   return "<b>Pending</b>";
+ 
+                }
+            },{
+                header:'Fee Paid',
+                dataIndex:'totamountpaid',
+                width :'7%',
                 style :'color:#17385B;font-weight:bold'
-            }]
+            },{
+                header:'Fee Template',
+                dataIndex:'templateid',
+                width :'7%',
+                hidden:true
+
+            },{
+                header:'studentid',
+                dataIndex:'studentid',
+                width :'7%',
+                hidden:true
+            },{
+                header:'admissiondate',
+                dataIndex:'admissiondate',
+                width :'7%',
+                hidden:true
+            },{
+                header:'intrvexamdate',
+                dataIndex:'intrvexamdate',
+                width :'7%',
+                hidden:true
+            },{
+                header:'intrviewdate',
+                dataIndex:'intrviewdate',
+                width :'7%',
+                hidden:true
+            },{
+                header:'dob',
+                dataIndex:'dob',
+                width :'7%',
+                hidden:true
+            },]
           },{
             xtype:'grid',
             store:'OfflineStudentList',
@@ -1737,13 +1864,40 @@ Ext.define('MyApp.view.addmission.StudentAddmission' ,{
             {
                 header:'Final Status',
                 dataIndex:'finalstatus',
-                width :'12%',
-                style :'color:#17385B;font-weight:bold'
+                width :'%7',
+                style :'color:#17385B;font-weight:bold',
+                renderer:function(value,metadata,record){
+                 if(record.data.selectteststatus=='1' && record.data.selectinterstatus=='1')
+                   return "<b>Fee Paid</b>";
+                 else if(value=='0')
+                   return "<b>Pending</b>";  
+                 else 
+                    return "N/A";
+                }
             },{
                 header:'Fee Status',
-                dataIndex:'feestatus',
-                width :'10%',
+                dataIndex:'feepaid',
+                width :'7%',
+                style :'color:#17385B;font-weight:bold',
+                renderer:function(value,metadata,record){
+                 if(value=='1')
+                   return "<b>Fee Paid</b>";
+                 else if(value=='0')
+                   return "<b>Pending</b>";  
+                 else 
+                    return "N/A";
+                }
+            },{
+                header:'Fee Paid',
+                dataIndex:'totamountpaid',
+                width :'7%',
                 style :'color:#17385B;font-weight:bold'
+            },{
+                header:'Fee Template',
+                dataIndex:'templateid',
+                width :'7%',
+                hidden:true
+
             }
            ],
             layout:'fit'
@@ -1945,7 +2099,7 @@ Ext.define('MyApp.view.addmission.StudentAddmission' ,{
                      if(sessionid!=null && classid !=null)
                      initiateAdmissionOnline(sessionid,classid);
                      else
-                     Ext.Msg.alert('Warning','Please Select Sessions and Class to Proceed');    
+                     Ext.Msg.alert('Warning','Please Select Sessions and Class to initiate the admission process');    
               });
 
             }
@@ -2012,9 +2166,13 @@ Ext.define('MyApp.view.addmission.StudentAddmission' ,{
                 
                 var rec=Ext.getCmp('admissionstudentgrid').getSelectionModel().getSelection()[0];
                 
-                if(rec!=null){
+                if(rec!=null && rec.data.status!='Confirm'){
                     schduleExamInterview(rec);
-                }else{
+                }else if(rec!=null && rec.data.status=='Confirm'){
+                 Ext.getCmp('admsnStudentsch').setDisabled(true);   
+                 Ext.Msg.alert('<font color=red><b>Warning</b></font>','Entrance Exam and Interview can not scheduled after admission has been confirmed');     
+                 }
+                else{
                   Ext.Msg.alert('<font color=red><b>Warning</b></font>','Please select Student from Gird to schedule and send Entrance Exam and Interview Details');  
                 }  
                 
@@ -2060,7 +2218,11 @@ Ext.define('MyApp.view.addmission.StudentAddmission' ,{
                    var sessionid=Ext.getCmp('admisnstudsession').getValue(); 
                    var classid=Ext.getCmp('admsnstudclasscombo').getValue();                     
                    
-                    if(rec!=null)
+                    if(rec!=null && rec.data.status!='Confirm')
+                        Ext.Msg.alert('Warning','Admission not yet confirm for student : <b>'+rec.data.name +'</b>,Please confirm the admission by editing the student and click on confirm admission');        
+                    else if(rec!=null && rec.data.feepaid==1)
+                         Ext.Msg.alert('Warning','Admission Fee already paid for'+rec.data.name);        
+                    else if(rec!=null && rec.data.feepaid==0)     
                          payFee(sessionid,classid,rec);                         
                     else
                          Ext.Msg.alert('Warning','Please Select Student to Generate Admission Fee');        
@@ -2069,7 +2231,7 @@ Ext.define('MyApp.view.addmission.StudentAddmission' ,{
         }
     },{
         xtype:'button',
-        text:'<b>Fees Recipt</b>',
+        text:'<b>Fee Reciept</b>',
         iconCls: 'icon-add',
         disabled: true,
         id: 'admsnStudentfee',        
@@ -2082,7 +2244,7 @@ Ext.define('MyApp.view.addmission.StudentAddmission' ,{
                    var classid=Ext.getCmp('admsnstudclasscombo').getValue();                     
                    
                     if(rec!=null)
-                         generateAdmissionFee(sessionid,classid,rec);                         
+                         generateAdmissionFeeReceipt(sessionid,classid,rec);                         
                     else
                          Ext.Msg.alert('Warning','Please Select Student to Generate Admission Fee');        
                     });

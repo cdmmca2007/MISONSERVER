@@ -1,10 +1,16 @@
 Ext.define('MyApp.view.addmission.AdmissionPaymentReciept', {
     extend: 'Ext.window.Window',
-    alias: 'widget.AdmissionPaymentRecieptwindow',
+    alias: 'widget.admissionpaymentrecipt',
     bodyStyle: 'background:transparent;padding:5px 10px 10px;background:#FFF;font-size:11px',
-    id:'AdmissionPaymentRecieptwindow',
-
+    
     constructor: function(config) {
+        this.panel = {
+            xtype: 'panel',
+            bodyStyle: 'background:transparent;padding:5px 10px 10px;',
+            bodyBorder: false,
+            border: false,
+            tpl:this.getTpl()
+      };
 
         this.callParent([Ext.apply({
             width: '70%',
@@ -25,6 +31,7 @@ Ext.define('MyApp.view.addmission.AdmissionPaymentReciept', {
                         {   
                             text: 'Download PDF',
                             action: 'download',
+                            id: 'download',
                             scope:this,                            
                             handler:function (){                              
                               document.getElementById("downloadrecdata").value=document.getElementById('contentmain').innerHTML;
@@ -32,8 +39,9 @@ Ext.define('MyApp.view.addmission.AdmissionPaymentReciept', {
                               
                             }
                         },{   
-                            text: 'Priny',
+                            text: 'Print',
                             action: 'print',
+                            id:'print',
                             scope:this,                            
                             handler:function (){                              
                             }
@@ -45,7 +53,8 @@ Ext.define('MyApp.view.addmission.AdmissionPaymentReciept', {
                             handler:function(){
                                      this.hide();
                             }
-                        },]
+                        },],
+                    fbar: ['->',{xtype:'btncancel'}]//,
                         },
         
         

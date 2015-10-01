@@ -60,15 +60,7 @@ public class NewStudent {
     private String modifiedby;
     private String admissiontype;
     private int    online;
-    private String interviewid,entranceexamid , category ;
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
+    private String interviewid,entranceexamid;
     
 
     public String getInterviewid() {

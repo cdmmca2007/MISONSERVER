@@ -137,6 +137,9 @@ Ext.define('MyApp.view.misreport.AttendenceReport' ,{
                         series: [{
                             type: 'column',
                             axis: 'left',
+                            style:{
+                               width:'40',
+                            },
                             highlight: true,
                             tips: {
                               trackMouse: true,

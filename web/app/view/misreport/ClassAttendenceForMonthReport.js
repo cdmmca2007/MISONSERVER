@@ -101,6 +101,7 @@ Ext.define('MyApp.view.misreport.ClassAttendenceForMonthReport' ,{
                var month  =Ext.getCmp('attmonthlyccombo').getValue();                                
                 if(month!==null)    
                 {
+                    month=Ext.getCmp('attmonthlyccombo').getRawValue().substring(0,3)+'-' + Ext.Date.format(new Date(),"Y");
                     Ext.getCmp('monattendreportgrid').getStore().load({
                     params:{                            
                              month     :month,
@@ -148,12 +149,15 @@ Ext.define('MyApp.view.misreport.ClassAttendenceForMonthReport' ,{
                             axis: 'left',
                             highlight: true,
                             seriesColor:'blue',
+                            style:{
+                               width:'40',
+                            },
                             tips: {
                               trackMouse: true,
                               width: 120,
                               height: 70,
                               renderer: function(storeItem, item) {
-                               // this.setTitle(storeItem.get('month') + ': ' + storeItem.get('percent') + ' % <br> <font color=green>Total Fee :'+ storeItem.get('tot_amount') +'</font> <br><font color=red>Total Received :'+storeItem.get('tot_received')+'</font>');
+                                this.setTitle(storeItem.get('classname') + ': ' + storeItem.get('percent') + ' % <br> <font color=green>Total Present :'+ storeItem.get('present') +'</font> <br><font color=red>Total Absent :'+storeItem.get('absent')+'</font>');
                               }
                             },
                             label: {
@@ -169,11 +173,11 @@ Ext.define('MyApp.view.misreport.ClassAttendenceForMonthReport' ,{
                             renderer: function(sprite, record, attr, index, store) {
                             var fieldValue = Math.random() * 20 + 10;
                             var value = (record.get('percent') >> 0) % 5;
-                            var color = ['rgb(213, 70, 121)', 
-                                         'rgb(44, 153, 201)', 
-                                         'rgb(146, 6, 157)', 
+                            var color = ['rgb(23, 70, 121)', 
+                                         'rgb(494, 153, 201)', 
+                                         'rgb(16, 6, 157)', 
                                          'rgb(49, 149, 0)', 
-                                         'rgb(249, 153, 0)'][value];
+                                         'rgb(229, 153, 0)'][value];
                             return Ext.apply(attr, {
                                 fill: color
                             });

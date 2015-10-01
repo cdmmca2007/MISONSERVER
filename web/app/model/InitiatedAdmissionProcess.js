@@ -23,7 +23,7 @@ Ext.define('MyApp.model.InitiatedAdmissionProcess', {
         'annualincome','fatherhighestedu','occupation',
         'interviewid','entranceexamid',
         'intrvexamdate' , 'selectteststatus' , 'totscore' , 'intrviewdate' ,
-        'selectinterstatus' ,'intervcomment'
+        'selectinterstatus' ,'intervcomment','feepaid' , 'totalamountpaid' , 'templateid','admissiondate' ,'category'
      ]
 });
 

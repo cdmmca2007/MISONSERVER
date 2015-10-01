@@ -161,7 +161,7 @@ public class MisReportController {
             DbPool.close(conn);
         }
         return ""; 
-     }
+  }
 
 @RequestMapping(value=URLMap.GET_AUDITTRAIL_REPORT, method= RequestMethod.GET)
 @ResponseBody
@@ -178,5 +178,98 @@ public class MisReportController {
         return ""; 
      }
 
-        
+   
+ @RequestMapping(value=URLMap.GET_DAILY_ATTENDENCE_REPORT, method= RequestMethod.GET)
+    @ResponseBody
+    public String getAllClassAttendenceForDaily(
+            @RequestParam("sessionid") String sessionid,
+            @RequestParam("month") String month,
+            @RequestParam("colfield") int colfield
+            
+            ){
+       try{
+            conn = DbPool.getConnection();
+            return misreportDAO.getAllClassAttendenceForDaily(conn,sessionid,month,colfield).toString();
+            
+        }
+       
+        catch(Exception ex){            
+        }finally{
+            DbPool.close(conn);
+        }
+        return ""; 
+  }       
+  @RequestMapping(value=URLMap.GET_LIST_OF_ABSENT_STUDENT, method= RequestMethod.GET)
+  @ResponseBody
+    public String getListofAbsentStudentForDaily(
+            @RequestParam("sessionid") String sessionid,
+            @RequestParam("month") String month,
+            @RequestParam("colfield") int colfield,
+            @RequestParam("batchid") String batchid
+            ){
+       try{
+            conn = DbPool.getConnection();
+            return misreportDAO.getListofAbsentStudentForDaily(conn,batchid,sessionid,month,colfield).toString();
+            
+        }
+       
+        catch(Exception ex){            
+        }finally{
+            DbPool.close(conn);
+        }
+        return ""; 
+     }
+    
+@RequestMapping(value=URLMap.GET_STUDENT_YEARLY_PAYMENT_REPORT, method= RequestMethod.GET)
+@ResponseBody
+    public String getStudentYearlyPaymentReport(
+            @RequestParam("classid") String classid,
+            @RequestParam("sessionid") String sessionid
+            ){
+       try{
+            conn = DbPool.getConnection();
+            return misreportDAO.getStudentYearlyPaymentReport(conn,sessionid,classid).toString();
+       }
+      
+        catch(Exception ex){            
+        }finally{
+            DbPool.close(conn);
+        }
+        return ""; 
+ }
+@RequestMapping(value=URLMap.GET_EXAM_REPORT_ANALYSIS   , method= RequestMethod.GET)
+@ResponseBody
+    public String getExamReportAnalysisData(
+            @RequestParam("examtypeid") String examtypeid,
+            @RequestParam("sessionid") String sessionid
+            ){
+       try{
+            conn = DbPool.getConnection();
+            return misreportDAO.getExamReportAnalysisData(conn,sessionid,examtypeid).toString();
+       }
+      
+        catch(Exception ex){            
+        }finally{
+            DbPool.close(conn);
+        }
+        return ""; 
+  }   
+@RequestMapping(value=URLMap.GET_EXAM_REPORT_ANALYSIS_SUBJECT_WISE  , method= RequestMethod.GET)
+@ResponseBody
+    public String getExamReportAnalysisSubjectWiseData(
+            @RequestParam("examtypeid") String examtypeid,
+            @RequestParam("sessionid") String sessionid,
+            @RequestParam("classid") String classid
+            ){
+       try{
+            conn = DbPool.getConnection();
+            return misreportDAO.getExamReportAnalysisSubjectWiseData(conn,sessionid,examtypeid,classid).toString();
+       }
+      
+        catch(Exception ex){            
+        }finally{
+            DbPool.close(conn);
+        }
+        return ""; 
+  }  
 }

@@ -41,7 +41,7 @@ import org.springframework.stereotype.Repository;
  *
  * @author cd
  */
-@Repository
+@Repository("studentAdmissionDAO")
 public class StudentAdmissionDAO extends AbstractSimpleDao{
 
     JSONUtil jsonUtil = new ExtJsonUtil();
@@ -97,7 +97,7 @@ public class StudentAdmissionDAO extends AbstractSimpleDao{
                             "	asi.pid AS interviewid ,asi.interviewdate AS intrviewdate, asi.status AS selectinterstatus,asi.comment AS intervcomment," +
                             "	ast.pid AS entranceexamid ,ast.testdate AS intrvexamdate, " +
                             "	ast.teststatus AS selectteststatus ,ast.comment ," +
-                            "	ast.markobatained AS totscore " +
+                            "	ast.markobatained AS totscore, asr.feepaid , asr.totamountpaid , asr.templateid , asr.admissiondate " +
                             "FROM 	admission_notfy_parent anp " +
                             "LEFT  JOIN  admission_stud_registration  asr ON anp.formid=asr.formid  " +
                             "LEFT  JOIN  admission_stud_interview     asi ON asi.formid =asr.formid " +
@@ -119,7 +119,7 @@ public class StudentAdmissionDAO extends AbstractSimpleDao{
                             "	classid, createdby, createdon, 	modifiedby, " +
                             "	modifiedon, religion, cityid, stateid, countryid, " +
                             "	gender, bloodgroup, nationality, mother_tounge, " +
-                            "	image_path, passport_no, visadetails, uid, adhar_id, ssn " +
+                            "	image_path, passport_no, visadetails, uid, adhar_id, ssn , category " +
                             "	FROM " +
                             "	admission_stud_registration where formid=?";
 
@@ -139,7 +139,7 @@ public class StudentAdmissionDAO extends AbstractSimpleDao{
 	" asr.religion, "+ 
 	" asr.cityid, 	asr.stateid, 	asr.countryid, 	asr.gender, 	asr.bloodgroup, "+ 
 	" asr.nationality, 	asr.mother_tounge, 	asr.image_path, 	asr.passport_no, "+ 
-	" asr.visadetails, 	asr.uid, 	asr.adhar_id, 	asr.ssn"+ 
+	" asr.visadetails, asr.category,	asr.uid, 	asr.adhar_id, 	asr.ssn"+ 
         " FROM admission_notfy_parent anp LEFT JOIN admission_stud_registration  asr ON anp.formid=asr.formid WHERE anp.formid=? ";
        
        ResultSet rs1=DaoUtil.executeQuery(conn,selectquery,new Object[]{formno});
@@ -154,15 +154,15 @@ public class StudentAdmissionDAO extends AbstractSimpleDao{
                             "	caretakername,parentemailid,parentmobile,alternateemailid,alternatemobile, " +
                             "	classid,createdby,createdon,modifiedby,modifiedon,religion,cityid, " +
                             "	stateid,countryid,userid,admissiondate,gender,blood_group, " +
-                            "	nationality,mother_tounge,image_path,passportno,visadetails,ssn,uid,adharno,admissiontype" +
+                            "	nationality,mother_tounge,image_path,passportno,visadetails,ssn,uid,adharno,admissiontype,category " +
                             "	)" +
                             "	VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,CURRENT_DATE,?,CURRENT_DATE,?,? " +
-                            "	      ,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                            "	      ,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         String classstudentquery="INSERT INTO student_class_map " +
                             "	(student_id,batch_id)" +
                             "	VALUES(?,?)";
         try {
-        if(obj.getSession_id()!=null && obj.getClassid()!=null && (obj.getAdmissionno().equals("")||obj.getAdmissionno()==null) && obj.getStudentid()==null)
+        if(obj.getSession_id()!=null && obj.getClassid()!=null && (obj.getAdmissionno().equals("")||obj.getAdmissionno()==null))
         {
             String batchid=new GetBatch(obj.getClassid(),obj.getSession_id()).BatchId(conn);
             String studentid =new String();
@@ -179,7 +179,7 @@ public class StudentAdmissionDAO extends AbstractSimpleDao{
                                                             obj.getStateid(),"",obj.getParentemailid(),obj.getAdmissiondate(),
                                                             obj.getGender(),obj.getBlood_group(),obj.getNationality(),obj.getMother_tounge(),
                                                             obj.getImage_path(),obj.getPassport_no(),obj.getVisadetail(),obj.getSsn(),obj.getUid(),
-                                                            obj.getAadhar_id(),obj.getAdmissiontype()
+                                                            obj.getAadhar_id(),obj.getAdmissiontype() , obj.getCategory()
                                                           })==1){  
                 
                  if(DaoUtil.executeUpdate(conn,classstudentquery,new Object[]{studentid,batchid})==1){
@@ -234,7 +234,7 @@ public class StudentAdmissionDAO extends AbstractSimpleDao{
                         "         FROM_UNIXTIME(admissiondate/1000,'%d-%m-%Y') as admissiondate,modifiedby/*,createdon,modifiedon*/," +
                         "         religion,cityid,stateid,countryid,userid," +
                         "         addmission_no as admissionno,gender,blood_group,nationality,mother_tounge,image_path,passportno as passport_no, " +
-                        "         visadetails,ssn,uid,adharno as aadhar_id,admissiontype" +                    
+                        "         visadetails,ssn,uid,adharno as aadhar_id,admissiontype , category " +                    
                         "    FROM student_class_map scm " +
                         "    JOIN student s ON scm.student_id=s.studentid" +
                         "   WHERE batch_id= ?" +
@@ -270,7 +270,7 @@ public class StudentAdmissionDAO extends AbstractSimpleDao{
                         "         FROM_UNIXTIME(admissiondate/1000,'%d-%m-%Y') as admissiondate,modifiedby/*,createdon,modifiedon*/," +
                         "         religion,cityid,stateid,countryid,userid ," +
                         "         addmission_no as admissionno,gender,blood_group,nationality,mother_tounge,image_path,passportno as passport_no, " +
-                        "         visadetails,ssn,uid,adharno as aadhar_id,admissiontype" +                                        
+                        "         visadetails,ssn,uid,adharno as aadhar_id,admissiontype , category " +                                        
                         "    FROM student_class_map scm " +
                         "    JOIN student s ON scm.student_id=s.studentid" +
                         "   WHERE scm.batch_id= ? "+
@@ -302,15 +302,15 @@ public class StudentAdmissionDAO extends AbstractSimpleDao{
                                   " parentmobile =  ? , alternateemailid = ? , alternatemobile = ? , classid = ?, "+
                                   " createdby = ? , modifiedby = ? , modifiedon =  CURRENT_DATE, religion = ?, "+
                                   " cityid = ?,stateid = ?,countryid = ?,gender =?,bloodgroup = ?,nationality = ?,"+
-                                  " mother_tounge = ?,passport_no = ?,visadetails = ?,uid = ?,adhar_id =?,ssn = ? , annualincome=? , fatherhighestedu=? , occupation=? "+
+                                  " mother_tounge = ?,passport_no = ?,visadetails = ?,uid = ?,adhar_id =?,ssn = ? , annualincome=? , fatherhighestedu=? , occupation=? , category= ?  "+
                                   " WHERE formid = ?";
              String insertquery="INSERT INTO admission_stud_registration " +
                                 " (pid,formid, fname, mname, lname, dob, address, fathername, mothername, caretakername, " +
                                 " parentemailid, parentmobile, alternateemailid, alternatemobile, classid, createdby, " +
                                 " modifiedby,religion, cityid, stateid, countryid, gender, " +
                                 " bloodgroup, nationality, mother_tounge, image_path, passport_no, visadetails, uid, " +
-                                " adhar_id, ssn,annualincome,fatherhighestedu,occupation)" +
-                                " VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                                " adhar_id, ssn,annualincome,fatherhighestedu,occupation , category)" +
+                                " VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,? , ?)";
              
              ResultSet rs=DaoUtil.executeQuery(conn, selectdata,new Object[]{obj.getFormno()});
               try {
@@ -322,7 +322,7 @@ public class StudentAdmissionDAO extends AbstractSimpleDao{
                                    obj.getCreatedby(),obj.getModifiedby(),obj.getReligion(),obj.getCityid(),obj.getStateid(),
                                    "",obj.getGender(),obj.getBlood_group(),obj.getNationality(),obj.getMother_tounge(),
                                    obj.getParentmobile(),obj.getVisadetail(),obj.getUid(),obj.getAadhar_id(),obj.getSsn(),
-                                   obj.getAnnualincome(),obj.getFatherhighestedu(),obj.getOccupation(),obj.getFormno()
+                                   obj.getAnnualincome(),obj.getFatherhighestedu(),obj.getOccupation(),obj.getCategory() , obj.getFormno()
                         })==1){
                             //send mail to Parent Emailid regarding Interview & Testdate
                             if(obj.getIntrvexamdate()> 0)insertExamDetails(conn,obj);
@@ -342,7 +342,7 @@ public class StudentAdmissionDAO extends AbstractSimpleDao{
                                    obj.getCreatedby(),obj.getModifiedby(),obj.getReligion(),obj.getCityid(),obj.getStateid(),
                                    "",obj.getGender(),obj.getBlood_group(),obj.getNationality(),obj.getMother_tounge(),
                                    obj.getImage_path(),obj.getParentmobile(),obj.getVisadetail(),obj.getUid(),obj.getAadhar_id(),obj.getSsn(),
-                                   obj.getAnnualincome(),obj.getFatherhighestedu(),obj.getOccupation()
+                                   obj.getAnnualincome(),obj.getFatherhighestedu(),obj.getOccupation() , obj.getCategory()
                         })==1){
                            //send mail to Parent Emailid regarding Interview & Testdate
                             if(obj.getIntrvexamdate()> 0)insertExamDetails(conn,obj);
@@ -417,9 +417,12 @@ public class StudentAdmissionDAO extends AbstractSimpleDao{
     }
 
     private void insertExamDetails(Connection conn, NewStudent obj) throws ReadableException {
-
+        try {
         String batchid=new GetBatch(obj.getClassid(),obj.getSession_id()).BatchId(conn);
-        if(obj.getEntranceexamid() ==null || obj.getEntranceexamid().equals("")){
+        String checkdata="SELECT * FROM admission_stud_test        WHERE formid=? OR pid=?";
+        
+        ResultSet rs=DaoUtil.executeQuery(conn, checkdata,new Object[]{obj.getFormno(),obj.getEntranceexamid()});
+        if(!rs.next() && obj.getEntranceexamid() ==null || obj.getEntranceexamid().equals("")){
             
             String insert=" INSERT INTO admission_stud_test (pid,formid, sessionid, batchid, testdate, teststatus, markobatained, COMMENT," +
                           " createdby, modifiedby ,createdon) " +
@@ -440,11 +443,19 @@ public class StudentAdmissionDAO extends AbstractSimpleDao{
             
             }
         }
+        }catch(Exception ex){
+            
+        }
     }
 
     private void insertInterviewDetails(Connection conn, NewStudent obj) throws ReadableException {
+        try { 
         String batchid=new GetBatch(obj.getClassid(),obj.getSession_id()).BatchId(conn);
-        if(obj.getInterviewid() ==null || obj.getInterviewid().equals("")){
+
+        String checkdata="SELECT * FROM admission_stud_interview   WHERE formid=? OR pid=?";
+        ResultSet rs=DaoUtil.executeQuery(conn, checkdata,new Object[]{obj.getFormno(),obj.getInterviewid()});
+        
+        if(!rs.next() && obj.getInterviewid() ==null || obj.getInterviewid().equals("")){
             String insert=" INSERT INTO admission_stud_interview " +
                           " (pid,formid,sessionid,batchid,interviewdate,STATUS,createdby,modifiedby,comment,createdon)" +
                           " VALUES  (?,?,?,?,?,?,?,?,?,CURRENT_DATE)";
@@ -459,6 +470,9 @@ public class StudentAdmissionDAO extends AbstractSimpleDao{
             if(DaoUtil.executeUpdate(conn, update,new Object[]{obj.getIntrviewdate(),obj.getSelectinterstatus(),obj.getIntervcomment(),obj.getModifiedby(),obj.getInterviewid()})==1){
             
             }
+        }
+        }catch(Exception ex){
+        
         }
 
     }
@@ -532,11 +546,7 @@ public class StudentAdmissionDAO extends AbstractSimpleDao{
                         "  JOIN   class c ON c.classid=ss.class_id " +
                         "  WHERE  g.pid=?";
        
-       String feequery="select t.id as templateid , fs.fee_structure_id ,  fs.fee_name AS feename, fs.fee_type , fs.fee_amount as amount " +
-                        "  from templates t " +
-                        "  join template_structure_mapping tsm on tsm.template_id=t.id  "+
-                        "  join feestructure fs                on fs.fee_structure_id=tsm.fee_structure_id " +
-                        "  where t.id= ? ";
+       String feequery="SELECT afp.id AS templateid , fs.fee_structure_id ,  fs.fee_name AS feename, fs.fee_type , fs.fee_amount AS amount  FROM admissionfeepayment afp JOIN feestructure fs  ON fs.fee_structure_id=afp.fee_structure_id  WHERE studentid=? ";
         JSONObject job = new JSONObject();        
         Collection<JSONObject> items = new ArrayList<JSONObject>();
         int totamount=0;
@@ -549,7 +559,7 @@ public class StudentAdmissionDAO extends AbstractSimpleDao{
             
             ResultSet rs=DaoUtil.executeQuery(conn,schooldetail);
             ResultSet rs1=DaoUtil.executeQuery(conn,mainquery,new Object[]{model.get("studentid").toString()});
-            ResultSet rs2=DaoUtil.executeQuery(conn,feequery,new Object[]{model.get("templateid").toString()});
+            ResultSet rs2=DaoUtil.executeQuery(conn,feequery,new Object[]{model.get("studentid").toString()});
             
             while(rs.next()){
                 
@@ -691,6 +701,7 @@ public class StudentAdmissionDAO extends AbstractSimpleDao{
         String feequery = this.sqlQueries.getProperty("ADD_ADMISSION_FEE");
         String feeupdatequery = this.sqlQueries.getProperty("UPDATE_ADMISSION_FEE");
         for(int j=0;j<model.length;j++){
+        model[j].put("id",UUID.randomUUID().toString());   
         if(this.jdbcTemplate.update(feequery, model[j]) > 0) {
             model[j].put("result",1);
             totamt=totamt+Double.parseDouble(model[j].get("fee_amount").toString());
@@ -708,6 +719,9 @@ public class StudentAdmissionDAO extends AbstractSimpleDao{
         }
         } 
         catch (SQLException ex) {
+            model[i].put("result",2);
+            Logger.getLogger(MasterDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }catch (Exception ex) {
             model[i].put("result",2);
             Logger.getLogger(MasterDAO.class.getName()).log(Level.SEVERE, null, ex);
         }

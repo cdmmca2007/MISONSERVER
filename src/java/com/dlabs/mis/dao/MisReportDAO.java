@@ -40,7 +40,7 @@ public class MisReportDAO {
             job = jsonUtil.getJsonObject(rs, count, page,rows, false);
         }
         catch (SQLException ex) {
-            Logger.getLogger(MasterDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MisReportDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return job;
     }
@@ -50,8 +50,6 @@ public class MisReportDAO {
       JSONObject job = new JSONObject();        
       Collection<JSONObject> items = new ArrayList<JSONObject>();
       int count=0;
-      month="Jan-2014";
-      sessionid="00a24b9a-5bb2-4466-b629-f9d91de9e551";
       
       String attshetquery ="SELECT atts.sheet_id as sheet_id ,c.name as classname FROM attendance_sheet atts " +
                             " INNER JOIN sessions s ON s.batch_id=atts.batch_id AND session_id=?" +
@@ -111,7 +109,7 @@ public class MisReportDAO {
         Collection<JSONObject> items = new ArrayList<JSONObject>();
         int count=0;
         
-        String month_name[]={"January","February","March","April","May","June","July","August","September","October","November","December"};
+        String month_name[]={"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
         if(sessionid.equalsIgnoreCase(""))sessionid=null;
         if(classid.equalsIgnoreCase(""))classid=null;
         String mainqueyry=this.getMainquery();
@@ -248,11 +246,11 @@ public class MisReportDAO {
         String selectquery= "SELECT SUM(g.amount) AS tot_amount,SUM(g.paid_amount) AS tot_received ,(SUM(g.amount)  - SUM(g.paid_amount)) AS tot_pending," +
                             "       SUM(g.paid_amount)/SUM(g.amount)*100 AS percent," +
                             "       CASE g.for_month " +
-                            "       WHEN 1 THEN 'January' WHEN 2 THEN 'February' WHEN 3 THEN 'March' " +
-                            "       WHEN 4 THEN 'April' WHEN 5 THEN 'May' WHEN 6 THEN 'June' " +
-                            "       WHEN 7 THEN 'July' WHEN 8 THEN 'August' WHEN 9 THEN 'September' " +
-                            "       WHEN 10 THEN 'October' WHEN 11 THEN 'November' " +
-                            "       WHEN 12 THEN 'December' END AS month " +
+                            "       WHEN 1 THEN 'Jan' WHEN 2 THEN 'Feb' WHEN 3 THEN 'Mar' " +
+                            "       WHEN 4 THEN 'Apr' WHEN 5 THEN 'May' WHEN 6 THEN 'Jun' " +
+                            "       WHEN 7 THEN 'Jul' WHEN 8 THEN 'Aug' WHEN 9 THEN 'Sep' " +
+                            "       WHEN 10 THEN 'Oct' WHEN 11 THEN 'Nov' " +
+                            "       WHEN 12 THEN 'Dec' END AS month " +
                             " FROM generatemonthlyfee g " +
                             "       INNER JOIN sessions  s ON   s.batch_id=g.class_id " +
                             "       INNER JOIN class     c ON   c.classid =s.class_id " +
@@ -277,7 +275,7 @@ public class MisReportDAO {
             job = jsonUtil.getJsonObject(rs, count, 1,15, false);
         }
         catch (SQLException ex) {
-            Logger.getLogger(MasterDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MisReportDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return job;
     }
@@ -312,7 +310,7 @@ public class MisReportDAO {
             job = jsonUtil.getJsonObject(rs, count, 1,15, false);
         }
         catch (SQLException ex) {
-            Logger.getLogger(MasterDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MisReportDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return job;
 
@@ -348,7 +346,7 @@ public class MisReportDAO {
             job = jsonUtil.getJsonObject(rs, count, 1,50, false);
         }
         catch (SQLException ex) {
-            Logger.getLogger(MasterDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MisReportDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return job;
     }
@@ -379,7 +377,7 @@ public class MisReportDAO {
            job.put("rows",items);
         }
         catch (SQLException ex) {
-            Logger.getLogger(MasterDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MisReportDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return job;
         
@@ -400,9 +398,159 @@ public class MisReportDAO {
             job = jsonUtil.getJsonObject(rs, count, 1,50, false);
         }
         catch (SQLException ex) {
-            Logger.getLogger(MasterDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MisReportDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return job;
+    }
+
+    public Object getAllClassAttendenceForDaily(Connection conn, String sessionid, String month, int colfield) throws ReadableException {
+        JSONObject job = null;
+        String selectquery= "";
+        String countquery=  "";
+        
+        if(colfield!=0){
+            countquery="SELECT COUNT(1) AS COUNT FROM (SELECT atts.batch_id ,COUNT(CASE ma.d"+ colfield +" WHEN 'P' THEN 1 END) AS present , COUNT(CASE ma.d"+colfield+" WHEN 'A' THEN 1 END) AS absent ,COUNT(ma.student_id) AS tot  FROM attendance_sheet atts,  monthly_attendance ma  WHERE atts.month =?   AND ma.sheet_id=atts.sheet_id GROUP BY atts.batch_id) dat  JOIN sessions s ON (s.batch_id=dat.batch_id AND s.session_id=?)  JOIN class    c ON c.classid=s.class_id";
+            selectquery="SELECT dat.*,(dat.present/dat.total)*100 AS percent , c.name AS classname FROM (SELECT atts.batch_id ,COUNT(CASE ma.d"+colfield+" WHEN 'P' THEN 1 END) AS present , COUNT(CASE ma.d"+colfield+" WHEN 'A' THEN 1 END) AS absent ,COUNT(ma.student_id) AS total  FROM attendance_sheet atts,  monthly_attendance ma  WHERE atts.month =?   AND ma.sheet_id=atts.sheet_id GROUP BY atts.batch_id) dat  JOIN sessions s ON (s.batch_id=dat.batch_id AND s.session_id=?)  JOIN class    c ON c.classid=s.class_id";
+        }
+        
+        int count =0;        
+        try{
+            ResultSet rs = DaoUtil.executeQuery(conn,countquery,new Object[]{month,sessionid});
+            if(rs.next()) {
+                count = rs.getInt("count");
+            }
+            rs = DaoUtil.executeQuery(conn,selectquery,new Object[]{month,sessionid});
+            job = jsonUtil.getJsonObject(rs, count, 1,50, false);
+        }
+        catch (SQLException ex) {
+            Logger.getLogger(MisReportDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return job;
+    }
+
+    public Object getListofAbsentStudentForDaily(Connection conn, String batchid, String sessionid, String month, int colfield) throws ReadableException {
+
+        JSONObject job = null;
+        String selectquery= "";
+        String countquery=  "";
+        
+        if(colfield!=0){
+            countquery="SELECT COUNT(1) AS count FROM attendance_sheet atts, monthly_attendance ma,student s  WHERE atts.month =?  AND ma.sheet_id=atts.sheet_id   AND atts.batch_id=?  AND s.studentid=ma.student_id AND ma.d"+colfield+"='A'";
+            selectquery="SELECT CONCAT(CONCAT(CONCAT(CONCAT(fname,' '),CASE WHEN mname IS NULL THEN '' ELSE mname END),' '),lname) AS student, s.addmission_no as admissionno  FROM attendance_sheet atts, monthly_attendance ma,student s  WHERE atts.month =?  AND ma.sheet_id=atts.sheet_id   AND atts.batch_id=?  AND s.studentid=ma.student_id AND ma.d"+colfield+"='A'";
+        }
+        
+        int count =0;        
+        try{
+            ResultSet rs = DaoUtil.executeQuery(conn,countquery,new Object[]{month,batchid});
+            if(rs.next()) {
+                count = rs.getInt("count");
+            }
+            rs = DaoUtil.executeQuery(conn,selectquery,new Object[]{month,batchid});
+            job = jsonUtil.getJsonObject(rs, count, 1,50, false);
+        }
+        catch (SQLException ex) {
+            Logger.getLogger(MisReportDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return job;
+        
+        
+    }
+
+    public Object getStudentYearlyPaymentReport(Connection conn, String sessionid, String classid) throws ReadableException {
+        JSONObject job = new JSONObject();
+        int count=0;
+        Collection<JSONObject> items = new ArrayList<JSONObject>();
+        String batchid=new GetBatch(classid, sessionid).BatchId(conn);
+        String selectquery="SELECT gmf.student_id,s.addmission_no  as admissionno ,CONCAT(CONCAT(CONCAT(CONCAT(s.fname,' '),CASE WHEN s.mname IS NULL THEN '' ELSE s.mname END),' '),s.lname) AS studentname,       gmf.for_month, gmf.amount AS amount, CASE WHEN gmf.paid_status=0 THEN 'Pending' WHEN gmf.paid_status=1 THEN 'Paid' END  AS paid_status,gmf.paid_amount AS paid_amount  FROM generatemonthlyfee gmf   JOIN student s ON s.studentid=gmf.student_id    WHERE gmf.class_id=? ORDER BY gmf.student_id , gmf.for_month";
+        String []month=new String[]{"jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec"};
+        try{
+            ResultSet rs= DaoUtil.executeQuery(conn,selectquery,new Object[]{batchid});
+            int i=0;
+            boolean flag=false;
+            String curr_student_id=new String();
+            String prev_student_id=new String();
+            JSONObject obj=new JSONObject();  
+            if(rs!=null) {
+            while(rs.next()) {
+               
+               curr_student_id=rs.getString("student_id");
+               if(!curr_student_id.equals(prev_student_id)){
+                  if(flag) {
+                  items.add(obj);
+                  count++;
+                  } 
+                  obj =new JSONObject();  
+                  obj.put("student_id",curr_student_id);
+                  obj.put("studentname",rs.getString("studentname"));
+                  obj.put("admissionno",rs.getString("admissionno"));
+                  int index=rs.getInt("for_month");
+                  obj.put(month[index-1]+"_totfee",rs.getString("amount"));
+                  obj.put(month[index-1]+"_paidfee",rs.getString("paid_amount"));
+                  obj.put(month[index-1]+"_status",rs.getString("paid_status"));
+                  
+               }else{
+                  if(rs.getObject("for_month")!=null){
+                     int index=rs.getInt("for_month");
+                     obj.put(month[index-1]+"_totfee",rs.getString("amount"));
+                     obj.put(month[index-1]+"_paidfee",rs.getString("paid_amount"));
+                     obj.put(month[index-1]+"_status",rs.getString("paid_status"));
+                     flag=true;
+                  }
+               }
+               prev_student_id=curr_student_id;
+            } 
+            }
+           job.put("totalCount",count);
+           job.put("rows",items);
+        }
+        catch (SQLException ex) {
+            Logger.getLogger(MisReportDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return job;
+    }
+
+    
+    public Object getExamReportAnalysisData(Connection conn, String sessionid, String examtypeid) throws ReadableException {
+        JSONObject job = null;
+        String selectquery= "SELECT c.classid AS classid ,c.name AS classname , dat2.avgpercent AS percent , u.name AS classteacher , dat2.totstudent ,dat2.topper , dat2.low   FROM class c JOIN sessions s ON s.class_id=c.classid JOIN users u ON u.userid=s.class_teacher   JOIN (SELECT dat1.classid AS batchid, SUM(dat1.percent)/COUNT(dat1.studentid) avgpercent , COUNT(dat1.studentid) AS totstudent , MAX(dat1.percent) topper , MIN(dat1.percent) low FROM (SELECT dat.classid , dat.studentid , SUM(maxmark) , SUM(markobtained) , COUNT(subjectid) , (SUM(markobtained)/SUM(maxmark))*100 AS percent   FROM  (SELECT se.classid ,se.studentid,se.markobtained , se.subjectid , ce.maxmark     FROM studentexam se   JOIN classexam ce ON ce.id=se.classexamid  WHERE se.sessionid=?    AND se.examtypeid=?) dat    GROUP BY dat.classid,dat.studentid) dat1 GROUP BY dat1.classid) dat2 ON s.batch_id=dat2.batchid ";
+        String countquery=  "SELECT COUNT(1) AS count   FROM class c JOIN sessions s ON s.class_id=c.classid JOIN users u ON u.userid=s.class_teacher   JOIN (SELECT dat1.classid AS batchid, SUM(dat1.percent)/COUNT(dat1.studentid) avgpercent , COUNT(dat1.studentid) AS totstudent , MAX(dat1.percent) topper , MIN(dat1.percent) low FROM (SELECT dat.classid , dat.studentid , SUM(maxmark) , SUM(markobtained) , COUNT(subjectid) , (SUM(markobtained)/SUM(maxmark))*100 AS percent   FROM  (SELECT se.classid ,se.studentid,se.markobtained , se.subjectid , ce.maxmark     FROM studentexam se   JOIN classexam ce ON ce.id=se.classexamid  WHERE se.sessionid=?    AND se.examtypeid=?) dat    GROUP BY dat.classid,dat.studentid) dat1 GROUP BY dat1.classid) dat2 ON s.batch_id=dat2.batchid";
+        
+        int count =0;        
+        try{
+            ResultSet rs = DaoUtil.executeQuery(conn,countquery,new Object[]{sessionid,examtypeid});
+            if(rs.next()) {
+                count = rs.getInt("count");
+            }
+            rs = DaoUtil.executeQuery(conn,selectquery,new Object[]{sessionid,examtypeid});
+            job = jsonUtil.getJsonObject(rs, count, 1,500, false);
+        }
+        catch (SQLException ex) {
+            Logger.getLogger(MisReportDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return job;
+    }
+
+    public Object getExamReportAnalysisSubjectWiseData(Connection conn, String sessionid, String examtypeid, String classid) throws ReadableException {
+        JSONObject job = null;
+        String selectquery= "SELECT m.value AS subjectname ,u.name AS subjectteacher ,dat2.topperno , dat2.lowno , dat2.outof , dat2.percent      FROM classsubjectteacher cst   JOIN master m ON cst.subjectid=m.id AND m.propertyid=2 AND cst.batchid=?   JOIN users  u ON u.userid=cst.teacherid   JOIN (SELECT dat.subjectid ,MAX(markobtained) topperno, MAX(maxmark) outof, MIN(markobtained) lowno,SUM(dat.markobtained) , SUM(dat.maxmark) ,(SUM(dat.markobtained)/SUM(dat.maxmark))*100 AS percent FROM (SELECT se.studentid,se.markobtained , se.subjectid , ce.maxmark    FROM studentexam se  JOIN classexam ce ON ce.id=se.classexamid  WHERE se.sessionid=?    AND se.examtypeid=?    AND se.classid=?) dat GROUP BY dat.subjectid ) dat2 ON  dat2.subjectid=cst.subjectid  ";
+        String countquery=  "SELECT COUNT(1) AS count      FROM classsubjectteacher cst   JOIN master m ON cst.subjectid=m.id AND m.propertyid=2 AND cst.batchid=?   JOIN users  u ON u.userid=cst.teacherid   JOIN (SELECT dat.subjectid ,MAX(markobtained) topperno, MAX(maxmark) lowno, MIN(markobtained) outof,SUM(dat.markobtained) , SUM(dat.maxmark) ,(SUM(dat.markobtained)/SUM(dat.maxmark))*100 AS percent FROM (SELECT se.studentid,se.markobtained , se.subjectid , ce.maxmark    FROM studentexam se  JOIN classexam ce ON ce.id=se.classexamid  WHERE se.sessionid=?    AND se.examtypeid=?    AND se.classid=?) dat GROUP BY dat.subjectid ) dat2 ON  dat2.subjectid=cst.subjectid ";
+        String batchid=new GetBatch(classid, sessionid).BatchId(conn);
+        int count =0;        
+        try{
+            ResultSet rs = DaoUtil.executeQuery(conn,countquery,new Object[]{batchid,sessionid,examtypeid,batchid});
+            if(rs.next()) {
+                count = rs.getInt("count");
+            }
+            rs = DaoUtil.executeQuery(conn,selectquery,new Object[]{batchid,sessionid,examtypeid,batchid});
+            job = jsonUtil.getJsonObject(rs, count, 1,500, false);
+        }
+        catch (SQLException ex) {
+            Logger.getLogger(MisReportDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return job;        
     }
     
 }

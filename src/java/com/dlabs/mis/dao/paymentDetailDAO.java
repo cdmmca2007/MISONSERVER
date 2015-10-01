@@ -287,7 +287,7 @@ public class paymentDetailDAO {
                 count = rs.getInt("count");
 
             }
-            rs = DaoUtil.executeQuery(conn,dataquery,new Object[]{batchid,obj.getMonthid(),15,0});
+            rs = DaoUtil.executeQuery(conn,dataquery,new Object[]{batchid,obj.getMonthid(),200,0});
             job = jsonUtil.getJsonObject(rs, count, page,rows, false);
         }
         catch (SQLException ex) {

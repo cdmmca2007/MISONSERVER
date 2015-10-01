@@ -98,7 +98,7 @@ function uploadExcelSheet(classid,sessionid){
 
 function uploadExcelSheetData(btn){
     
-     var form = btn.up('window').down('form').getForm();
+     /*var form = btn.up('window').down('form').getForm();
      if(form.isValid()){
            form.submit({
                     url: 'homework/add.do',
@@ -120,7 +120,7 @@ function uploadExcelSheetData(btn){
                         Ext.example.msg('Failure','Unexpected Error Occured,Please Contact Administrator');
                     }
           }); 
-      }
+      }*/
 }
 
 

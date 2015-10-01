@@ -37,10 +37,10 @@ public class StudentDAO {
                             "	caretakername,parentemailid,parentmobile,alternateemailid,alternatemobile, " +
                             "	classid,createdby,createdon,modifiedby,modifiedon,religion,cityid, " +
                             "	stateid,countryid,userid,admissiondate,gender,blood_group, " +
-                            "	nationality,mother_tounge,image_path,passportno,visadetails,ssn,uid,adharno,admissiontype, old_admission_no" +
+                            "	nationality,mother_tounge,image_path,passportno,visadetails,ssn,uid,adharno,admissiontype, old_admission_no , category "  +
                             "	)" +
                             "	VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,CURRENT_DATE,?,CURRENT_DATE,?,? " +
-                            "	      ,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                            "	      ,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         String classstudentquery="INSERT INTO student_class_map " +
                             "	(student_id,batch_id)" +
                             "	VALUES(?,?)";
@@ -59,7 +59,7 @@ public class StudentDAO {
                                                             obj.getStateid(),"",obj.getParentemailid(),obj.getAdmissiondate(),
                                                             obj.getGender(),obj.getBlood_group(),obj.getNationality(),obj.getMother_tounge(),
                                                             obj.getImage_path(),obj.getPassport_no(),obj.getVisadetail(),obj.getSsn(),obj.getUid(),
-                                                            obj.getAadhar_id(),obj.getAdmissiontype(),obj.getAdmissionno()
+                                                            obj.getAadhar_id(),obj.getAdmissiontype(),obj.getAdmissionno() , obj.getCategory()
                                                           })==1){  
                 if(DaoUtil.executeUpdate(conn,classstudentquery,new Object[]{studentid,batchid})==1){
                             User userobj=new User();
@@ -95,7 +95,7 @@ public class StudentDAO {
                                 "	modifiedby = ? , modifiedon = current_date , religion = ? , cityid = ? , stateid = ? , " +
                                 "	countryid = ? , admissiondate = ? , gender = ? , blood_group = ? , " +
                                 "	nationality = ? , mother_tounge = ? , passportno = ? , visadetails = ? , " +
-                                "	ssn = ?, uid = ? , adharno = ? " +
+                                "	ssn = ?, uid = ? , adharno = ? , category= ? " +
                                 " WHERE	addmission_no = ? AND studentid= ?";
            
              if(DaoUtil.executeUpdate(conn,updatequery,new Object[]{
@@ -106,7 +106,7 @@ public class StudentDAO {
                                         obj.getModifiedby(),obj.getReligion(),obj.getCityid(),obj.getStateid(),
                                         "",obj.getAdmissiondate(),obj.getGender(),obj.getBlood_group(),
                                         obj.getNationality(),obj.getMother_tounge(),obj.getPassport_no(),
-                                        obj.getVisadetail(),obj.getSsn(),obj.getUid(),obj.getAadhar_id(),
+                                        obj.getVisadetail(),obj.getSsn(),obj.getUid(),obj.getAadhar_id(),obj.getCategory(),
                                         obj.getAdmissionno(),obj.getStudentid()
                                 })==1){
                  conn.commit();
@@ -140,7 +140,7 @@ public class StudentDAO {
                         "         FROM_UNIXTIME(admissiondate/1000,'%d-%m-%Y') as admissiondate,modifiedby/*,createdon,modifiedon*/," +
                         "         religion,cityid,stateid,countryid,userid ,"+
                         "         addmission_no as admissionno,gender,blood_group,nationality,mother_tounge,image_path,passportno as passport_no, " +
-                        "         visadetails,ssn,uid,adharno as aadhar_id,admissiontype" +
+                        "         visadetails,ssn,uid,adharno as aadhar_id,admissiontype , category " +
                         "    FROM student_class_map scm " +
                         "    JOIN student s ON scm.student_id=s.studentid" +
                         "   WHERE batch_id= ? LIMIT ? OFFSET ? ";

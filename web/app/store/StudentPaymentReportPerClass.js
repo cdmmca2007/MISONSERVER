@@ -1,9 +1,9 @@
-Ext.define('MyApp.store.DepartmentHeadSetting', {
+Ext.define('MyApp.store.StudentPaymentReportPerClass', {
     extend: 'Ext.data.Store',
-    model:'MyApp.model.DepartmentHeadSetting',
+    model:'MyApp.model.StudentPaymentReportPerClass',
     proxy: {
          type: 'ajax',
-         url: 'master/getdeptheadseting.do',
+         url: 'misreport/getsprfc.do',
          reader: {
              type: 'json',
              root: 'rows'

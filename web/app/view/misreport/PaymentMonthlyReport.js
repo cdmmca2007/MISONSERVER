@@ -193,6 +193,9 @@ Ext.define('MyApp.view.misreport.PaymentMonthlyReport' ,{
                                             type: 'column',
                                             axis: 'left',
                                             highlight: true,
+                                            style:{
+                                                width:'40',
+                                             },
                                             tips: {
                                               trackMouse: true,
                                               width: 120,
@@ -211,6 +214,7 @@ Ext.define('MyApp.view.misreport.PaymentMonthlyReport' ,{
                                             },
                                             xField: 'classname',
                                             yField: 'percent',
+                                            
                                             renderer: function(sprite, record, attr, index, store) {
                                                 var fieldValue = Math.random() * 20 + 10;
                                                 var value = (record.get('percent') >> 0) % 5;

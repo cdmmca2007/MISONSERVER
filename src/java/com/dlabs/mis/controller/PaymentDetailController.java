@@ -72,7 +72,7 @@ public class PaymentDetailController {
                 studentid=classid.substring(classid.indexOf(':')+1,classid.length());
                 obj.setClassid(classid.substring(0,classid.indexOf(':')));  
                  conn = DbPool.getConnection();
-                 return paymentdetailDAO.getAllAsJsonStudentWise(conn,obj,studentid,0,15).toString();
+                 return paymentdetailDAO.getAllAsJsonStudentWise(conn,obj,studentid,0,500).toString();
             }
             else {
                 

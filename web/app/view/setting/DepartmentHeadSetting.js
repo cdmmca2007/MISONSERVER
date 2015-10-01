@@ -13,240 +13,67 @@ function addHead(rec){
             closeAction:'destroy',
             top:{
                 image:BASE_URL+'resources/images/createuser.png',
-                formTitle:'Add Department Head Window For:<b>'+SETTING.Users.properties.year+'</b>'
+                formTitle:'Add Department Head Form For:<b>'+SETTING.Users.properties.year+'</b>'
             },
             defaults:{
                 xtype:'textfield',
                 value:'',
-                width:500,
+                width:400
             },
             formItems :[
+            {
+                name : 'pid',
+                hidden:true,
+                id:'pid',
+                //value:SETTING.Users.properties.session_id,
+            },    
             {
                 name : 'sessionid',
                 hidden:true,
                 id:'sessionid',
                 value:SETTING.Users.properties.session_id,
-            },
+            },{
+                xtype:'combobox',
+                fieldLabel :'Select Department',
+                id:'departmentid',
+                name:'departmentid',
+                store:Ext.create('MyApp.store.Master').load({
+                                              params:{propertyId:27} //peorpetty religion id =4
+                                     }),
+                typeAhead: true,
+                queryMode: 'local',
+                emptyText: 'Select Department...',
+                Autoload:true,               
+                valueField :'id',
+                displayField :'value'
+              },
             {
                 xtype:'combobox',
-                fieldLabel :'Principal',
-                id:'principal',
-                name:'principal',
+                fieldLabel :'Head of Department',
+                id:'deptheadid',
+                name:'deptheadid',
                 store:this.teacherStore,
                 typeAhead: true,
                 queryMode: 'local',
-                emptyText: 'Select Principal...',
+                emptyText: 'Select Head of Department...',
                 Autoload:true,               
                 valueField :'id',
                 displayField :'value',
                 height:'5px'
+            },{
+                xtype   : 'textareafield',
+                grow    : true,
+                name : 'comment',
+                fieldLabel: 'Comment',
+                id:'comment'
             },
-            {
-                xtype:'combobox',
-                fieldLabel :'Vice Principal',
-                id:'viceprincipal',
-                name:'viceprincipal',
-                store:this.teacherStore,
-                typeAhead: true,
-                queryMode: 'local',
-                emptyText: 'Select Vice Principal...',
-                Autoload:true,               
-                valueField :'id',
-                displayField :'value',
-                height:'5px'
-            },
-            {
-                xtype:'combobox',
-                fieldLabel :'Head Of Examination',
-                id:'head_of_examination',
-                name:'head_of_examination',
-                store:this.teacherStore,
-                typeAhead: true,
-                queryMode: 'local',
-                emptyText: 'Select Head Of Examination...',
-                Autoload:true,               
-                valueField :'id',
-                displayField :'value',
-                height:'5px'                
-            },
-            {
-                xtype:'combobox',
-                fieldLabel :'School Librarian',
-                id:'librarian',
-                name:'librarian',
-                store:this.teacherStore,
-                typeAhead: true,
-                queryMode: 'local',
-                emptyText: 'Select librarian...',
-                Autoload:true,               
-                valueField :'id',
-                displayField :'value',
-                height:'5px'                
-            },{
-                xtype:'combobox',
-                fieldLabel :'Head Of Science Department',
-                id:'head_science_department',
-                name:'head_science_department',
-                store:this.teacherStore,
-                typeAhead: true,
-                queryMode: 'local',
-                emptyText: 'Select Head Of Science Department',
-                Autoload:true,               
-                valueField :'id',
-                displayField :'value',
-                height:'5px'                
-            },{
-              
-                xtype:'combobox',
-                fieldLabel :'Head Mathematics Department',
-                id:'head_mathematics_department',
-                name:'head_mathematics_department',
-                store:this.teacherStore,
-                typeAhead: true,
-                queryMode: 'local',
-                emptyText: 'Select Head Mathematics Department',
-                Autoload:true,               
-                valueField :'id',
-                displayField :'value',
-                height:'5px'                
-            },{
-                xtype:'combobox',
-                fieldLabel :'Head Commerce Department',
-                id:'head_commerce_department',
-                name:'head_commerce_department',
-                store:this.teacherStore,
-                typeAhead: true,
-                queryMode: 'local',
-                emptyText: 'Select Head Commerce Department',
-                Autoload:true,               
-                valueField :'id',
-                displayField :'value',
-                height:'5px'                
-            },{
-                xtype:'combobox',
-                fieldLabel :'Head Computer Department',
-                id:'head_computer_department',
-                name:'head_computer_department',
-                store:this.teacherStore,
-                typeAhead: true,
-                queryMode: 'local',
-                emptyText: 'Select Head Computer Department',
-                Autoload:true,               
-                valueField :'id',
-                displayField :'value',
-                height:'5px'                
-            },  {
-                xtype:'combobox',
-                fieldLabel :'Head Arts Department',
-                id:'head_arts_department',
-                name:'head_arts_department',
-                store:this.teacherStore,
-                typeAhead: true,
-                queryMode: 'local',
-                emptyText: 'Select Head Arts Department',
-                Autoload:true,               
-                valueField :'id',
-                displayField :'value',
-                height:'5px'                
-            },{
-                xtype:'combobox',
-                fieldLabel :'Head Sports Department',
-                id:'head_sports_department',
-                name:'head_sports_department',
-                store:this.teacherStore,
-                typeAhead: true,
-                queryMode: 'local',
-                emptyText: 'Select Head Sports Department',
-                Autoload:true,               
-                valueField :'id',
-                displayField :'value',
-                height:'5px'                
-            },{
-                xtype:'combobox',
-                fieldLabel :'Head Finance Department',
-                id:'head_finance_department',
-                name:'head_finance_department',
-                store:this.teacherStore,
-                typeAhead: true,
-                queryMode: 'local',
-                emptyText: 'Select Head Finance Department',
-                Autoload:true,               
-                valueField :'id',
-                displayField :'value',
-                height:'5px'                
-            },{
-                xtype:'combobox',
-                fieldLabel :'Head Hostel Department',
-                id:'head_hostel_department',
-                name:'head_hostel_department',
-                store:this.teacherStore,
-                typeAhead: true,
-                queryMode: 'local',
-                emptyText: 'Select Head Hostel Department',
-                Autoload:true,               
-                valueField :'id',
-                displayField :'value',
-                height:'5px'                
-            },{
-                xtype:'combobox',
-                fieldLabel :'Head Admission Department',
-                id:'head_admission_department',
-                name:'head_admission_department',
-                store:this.teacherStore,
-                typeAhead: true,
-                queryMode: 'local',
-                emptyText: 'Select Head Admission Department',
-                Autoload:true,               
-                valueField :'id',
-                displayField :'value',
-                height:'5px'                
-            },{
-                xtype:'combobox',
-                fieldLabel :'Head Transport Department',
-                id:'head_transport_department',
-                name:'head_transport_department',
-                store:this.teacherStore,
-                typeAhead: true,
-                queryMode: 'local',
-                emptyText: 'Select Head Transport Department',
-                Autoload:true,               
-                valueField :'id',
-                displayField :'value',
-                height:'5px'                
-            },{
-                xtype:'combobox',
-                fieldLabel :'Head Notice Management',
-                id:'head_notice_management',
-                name:'head_notice_management',
-                store:this.teacherStore,
-                typeAhead: true,
-                queryMode: 'local',
-                emptyText: 'Select Head Notice Management',
-                Autoload:true,               
-                valueField :'id',
-                displayField :'value',
-                height:'5px'                
-            },{
-                xtype:'combobox',
-                fieldLabel :'Head Administrator',
-                id:'head_administrator',
-                name:'head_administrator',
-                store:this.teacherStore,
-                typeAhead: true,
-                queryMode: 'local',
-                emptyText: 'Select Head Administrator',
-                Autoload:true,               
-                valueField :'id',
-                displayField :'value',
-                height:'5px'                
-            }
             ],
             buttons :[
             {
                 text: rec?'Edit':'Add',
                 action: 'save',
                 scope:this,
-                handler:saveNotice
+                handler:saveDepartmentHead
             },
             {xtype:'btncancel'}
             ]
@@ -255,17 +82,14 @@ function addHead(rec){
     win.show();
 }
 
-function saveNotice(btn){
+function saveDepartmentHead(btn){
     
      var form = btn.up('window').down('form').getForm();
      if(form.isValid()){
             var obj = form.getValues();
             
-            obj.activatedate=new Date(obj.activatedate).getTime();        
-            obj.endactivatedate=new Date(obj.endactivatedate).getTime();        
-            
             Ext.Ajax.request({
-                url:'notification/add.do',
+                url:'master/adddepartmenthead.do',
                 type:'json',
                 headers:{
                     'Content-Type':'application/json'
@@ -273,9 +97,9 @@ function saveNotice(btn){
                 params:Ext.JSON.encode(obj),
                 success: function(res){
                     var rec = eval('('+res.responseText+')');
-                    if(rec.id!=null) {                       
-                    Ext.Msg.alert('Success','Notification added successfully');
-                    Ext.getCmp('notificationgrid').getStore().reload(); 
+                    if(rec.result==1) {                       
+                    Ext.Msg.alert('Success','Department Head added successfully');
+                    Ext.getCmp('departmentheadsetting').getStore().reload(); 
                     }
                     else
                     Ext.Msg.alert('Failure','Unexpected Error Occured , Please Contact Admin');                 
@@ -302,109 +126,46 @@ Ext.define('MyApp.view.setting.DepartmentHeadSetting' ,{
     this.columns=[
     Ext.create('Ext.grid.RowNumberer'),
     {
-        header: '<font color=#17385B><b>Session</b></font>',
-        dataIndex:'sessionname',
-        width    :100
-    },
-
-    {
-        header:'<font color=#17385B><b>Principal</b></font>',
-        dataIndex:'principal',
-        width    :100
-    },
-
-    {
-        header:'<font color=#17385B><b>Vice Principal</b></font>',
-        dataIndex:'vicepricipal',
-        width    :100
-    },{
-        header:'<font color=#17385B><b>Examination Dept</b></font>',
-        dataIndex:'head_of_examination',        
-        width    :100,
-        flex: 1
+        header:'<font color=#17385B><b>Department</b></font>',
+        dataIndex:'departmentid',
+        hidden:true
     },
     {
-        header:'<font color=#17385B><b>Librarian</b></font>',
-        dataIndex:'librarian', 
-        width    :100
-        
+        header:'<font color=#17385B><b>Department</b></font>',
+        dataIndex:'departmentname',
+        width    :'25%'
+    },
+    {
+        header:'<font color=#17385B><b>Department Head</b></font>',
+        dataIndex:'deptheadid',
+        hidden:true,
     },{
-        header:'<font color=#17385B><b>Science Dept</b></font>',
-        dataIndex:'head_science_department', 
-        width    :100,
-        renderer : function(value){
-            	  if(value==='Active') 
-                  return '<font color=green><b>'+value+'</font></b>';
-                  else
-                  return '<font color=red><b>'+value+'</font></b>';    
-        }       
-        
+        header:'<font color=#17385B><b>Department Head</b></font>',
+        dataIndex:'deptheadname',
+        width    :'15%'
     },{
-        header:'<font color=#17385B><b>Mathematics Dept</b></font>',
-        dataIndex:'head_mathematics_department', 
-        width    :100
-        
+        header:'<font color=#17385B><b>From Date</b></font>',
+        dataIndex:'fromdate',
+        width    :'10%'
     },{
-        header:'<font color=#17385B><b>Commerce Dept</b></font>',
-        dataIndex:'head_commerce_department', 
-        width    :100
-        
-    },{
-        header:'<font color=#17385B><b>Computer Dept</b></font>',
-        dataIndex:'head_computer_department',
-        width    :100
-        
-    },{
-        header:'<font color=#17385B><b>Arts Dept</b></font>',
-        dataIndex:'head_arts_department',
-        width    :100
-        
-    },{
-        header:'<font color=#17385B><b>Sports Dept</b></font>',
-        dataIndex:'head_sports_department',
-        width    :100
-        
-    },{
-        header:'<font color=#17385B><b>Finance Dept</b></font>',
-        dataIndex:'head_finance_department',
-        width    :100
-        
-    },{
-        header:'<font color=#17385B><b>Hostel Dept</b></font>',
-        dataIndex:'head_hostel_department',
-        width    :100
-        
-    },{
-        header:'<font color=#17385B><b>Admission Dept</b></font>',
-        dataIndex:'head_admission_department',
-        width    :100
-        
-    },{
-        header:'<font color=#17385B><b>Transport Dept</b></font>',
-        dataIndex:'head_transport_department',
-        width    :100
-        
-    },{
-        header:'<font color=#17385B><b>Notice Management</b></font>',
-        dataIndex:'head_notice_management',
-        width    :100
-        
-    },{
-        header:'<font color=#17385B><b>Administrator</b></font>',
-        dataIndex:'head_administrator',
-        width    :100
-        
+        header:'<font color=#17385B><b>To Date</b></font>',
+        dataIndex:'todate',
+        width    :'10%',
+        renderer:function(value,metadata,record){
+                 if(value===null)
+                   return "<b>Till Date</b>";
+                 else 
+                    return value ;
+        }
     },{
         header:'<font color=#17385B><b>Created By</b></font>',
         dataIndex:'createdby',
-        width    :100
-        
+        width    :'15%'
     },{
-        header:'<font color=#17385B><b>Created On</b></font>',
-        dataIndex:'createdon',
-        width    :100
+        header:'<font color=#17385B><b>Last Modified Date</b></font>',
+        dataIndex:'modifiedon',
+        width    :'15%'
     }
-
     ];
     this.selModel=Ext.create('Ext.selection.CheckboxModel',{
         singleSelect:true,
@@ -430,6 +191,29 @@ Ext.define('MyApp.view.setting.DepartmentHeadSetting' ,{
                 }
             }
         })
+    },{
+        xtype:'combobox',
+        id:'hodsession',
+        emptyText: 'Select Session',   
+        store:Ext.create('MyApp.store.Combo').load({
+                                      params:{propertyId:-1}}),//For Session
+        Autoload:true,
+        queryMode: 'local',
+        displayField: 'value',
+        valueField: 'id',
+        //value:SETTING.Users.properties.session_id,
+        width:100,
+        name:'type',
+        listeners:{
+            select: function(component){
+                var sessionid=Ext.getCmp('hodsession').getValue();
+                Ext.getCmp('departmentheadsetting').getStore().load({
+                     params:{
+                             sessionid   :sessionid///Provide Batch_id,
+                     }
+               });
+            }
+       }
     },{
         iconCls: 'icon-add',
         text: 'Add Head Of Dept',

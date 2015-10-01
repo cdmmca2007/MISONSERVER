@@ -6,8 +6,11 @@ import com.dlabs.mis.model.ContactAdmin;
 import com.dlabs.mis.model.LogBug;
 import com.dlabs.mis.model.Master;
 import com.dlabs.mis.services.AuditTrailService;
+import com.dlabs.session.AuthHandler;
 import com.kjava.base.db.DbPool;
 import java.sql.Connection;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -98,5 +101,35 @@ public class MasterController {
         return obj;
     }
 
-    
+    @RequestMapping(value=URLMap.ADD_DEPARTMENT_HEAD, method= RequestMethod.POST)
+    @ResponseBody
+    public Map<String,Object> addDepartmentHead(HttpServletRequest request,@RequestBody Map<String,Object> model){
+        
+       try{
+           conn = DbPool.getConnection();
+           String id=AuthHandler.getUserId(request);
+           model.put("createdby",id);
+           model.put("modifiedby",id);
+           return masterDAO.addDepartmentHead(conn,model);
+        }
+        catch(Exception ex){
+              
+        }finally{
+            DbPool.close(conn);
+        }
+        return model;
+     }
+    @RequestMapping(value = URLMap.GET_DEPT_HEADLIST, method = RequestMethod.GET)
+    @ResponseBody
+    public String getAllDepartmentHead(@RequestParam("sessionid") String sessionid) {
+        try {
+            conn = DbPool.getConnection();
+            return masterDAO.getAllDepartmentHead(conn, sessionid, 0, 50).toString();
+        } catch (Exception ex) {
+        } finally {
+            DbPool.close(conn);
+        }
+        return "";
+    }
+
 }

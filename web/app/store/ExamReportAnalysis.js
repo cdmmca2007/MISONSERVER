@@ -1,9 +1,9 @@
-Ext.define('MyApp.store.DepartmentHeadSetting', {
+Ext.define('MyApp.store.ExamReportAnalysis', {
     extend: 'Ext.data.Store',
-    model:'MyApp.model.DepartmentHeadSetting',
+    model:'MyApp.model.ExamReportAnalysis',
     proxy: {
          type: 'ajax',
-         url: 'master/getdeptheadseting.do',
+         url: 'misreport/geteras.do',
          reader: {
              type: 'json',
              root: 'rows'
@@ -11,3 +11,5 @@ Ext.define('MyApp.store.DepartmentHeadSetting', {
      },
      autoLoad:false
 });
+
+

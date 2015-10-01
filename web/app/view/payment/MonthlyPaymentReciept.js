@@ -2,6 +2,7 @@ Ext.define('MyApp.view.payment.MonthlyPaymentReciept', {
     extend: 'Ext.window.Window',
     alias: 'widget.templatepreview',
     bodyStyle: 'background:transparent;padding:5px 10px 10px;background:#FFF',
+    
     constructor: function(config) {
 //      this.panel = {
 //            xtype: 'panel',

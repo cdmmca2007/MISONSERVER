@@ -143,6 +143,9 @@ Ext.define('MyApp.view.misreport.PaymentReports' ,{
                             axis: 'left',
                             highlight: true,
                             seriesColor:'blue',
+                            style:{
+                               width:'40',
+                            },
                             tips: {
                               trackMouse: true,
                               width: 120,
