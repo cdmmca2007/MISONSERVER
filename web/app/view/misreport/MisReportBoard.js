@@ -7,7 +7,7 @@ Ext.define('MyApp.view.misreport.MisReportBoard',{
             type : 'column'
     },
     store:'MisReport',
-     
+    id:'misreportboard', 
     initComponent: function(){
     this.items=[{
             id: 'col_11',

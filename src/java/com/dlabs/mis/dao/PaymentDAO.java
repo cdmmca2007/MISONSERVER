@@ -79,7 +79,7 @@ public class PaymentDAO {
         ResultSet rs = null;
         int count = 0;
         try {
-            rs = DaoUtil.executeQuery(conn, "SELECT count(1) as count FROM templates t LEFT JOIN class c ON t.id =c.feetemplate");
+            rs = DaoUtil.executeQuery(conn, "SELECT COUNT(1) as count  FROM templates t   LEFT JOIN sessions s ON t.id =s.template_id AND s.session_id=? AND t.expire=0   LEFT JOIN class c ON c.classid=s.class_id",new Object[]{sessionid});
             if (rs.next()) {
                 count = rs.getInt("count");
             }

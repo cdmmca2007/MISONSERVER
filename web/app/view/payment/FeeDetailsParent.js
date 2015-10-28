@@ -6,6 +6,7 @@ Ext.define('MyApp.view.payment.FeeDetailsParent' ,{
         type:'vbox',
         align:'stretch'
     },
+    id:'feedetailsparent',
     items:[
         {
             xtype:'panel',

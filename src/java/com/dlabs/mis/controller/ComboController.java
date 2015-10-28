@@ -126,5 +126,32 @@ public class ComboController {
         }
         return "";
      }
-    
+    @RequestMapping(value=URLMap.FINE_COMBO, method= RequestMethod.GET)
+    @ResponseBody
+    public String getFineCombo(@RequestParam("sessionid") String sessionid){
+       try{
+            conn = DbPool.getConnection();
+            return comboDAO.getFineCombo(conn,sessionid,0,150).toString();
+        }
+        catch(Exception ex){
+
+        }finally{
+            DbPool.close(conn);
+        }
+        return "";
+    }
+    @RequestMapping(value=URLMap.FINE_RULE_COMBO, method= RequestMethod.GET)
+    @ResponseBody
+    public String getFineRuleCombo(@RequestParam("finetypeid") String finetpyeid){
+       try{
+            conn = DbPool.getConnection();
+            return comboDAO.getFineRuleCombo(conn,finetpyeid ,0,150).toString();
+        }
+        catch(Exception ex){
+
+        }finally{
+            DbPool.close(conn);
+        }
+        return "";
+     }
 }

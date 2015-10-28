@@ -49,6 +49,7 @@ Ext.define('MyApp.view.school.SchoolAdmin',{
     title:'School Aministration',
     closable:true,
     cls:'school',
+    id:'schooladmin',
     store :'SchoolAdmin',
     layout:{
         type:'vbox',

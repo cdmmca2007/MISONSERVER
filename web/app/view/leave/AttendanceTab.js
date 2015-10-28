@@ -7,6 +7,7 @@ Ext.define('MyApp.view.leave.AttendanceTab' ,{
     layout:{
         type:'border'
     },
+    id:'attandancegridpanel',
     constructor : function(config){
         var items =[{
             xtype:'grid',

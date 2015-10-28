@@ -243,5 +243,27 @@ public interface URLMap {
     String GET_STUDENT_YEARLY_PAYMENT_REPORT="misreport/getsprfc.do";
     String GET_EXAM_REPORT_ANALYSIS="misreport/geteras.do";
     String GET_EXAM_REPORT_ANALYSIS_SUBJECT_WISE="misreport/geterassubjectwise.do";
+    
+    String ADD_FINE="finediscount/addfine.do";
+    String ADD_FINE_RULE="finediscount/addfinerule.do";    
+    String GET_FINE="finediscount/getFineList.do";
+    String DELETE_FINE="finediscount/delFine.do";
+    
+    String ADD_DISCOUNT="finediscount/adddis.do";
+    String ADD_DISCOUNT_RULE="finediscount/adddisrule.do";    
+    String GET_DISCOUNT="finediscount/getDiscountList.do";
+    String DELETE_DISCOUNT="finediscount/delDis.do";
+    
+    String FINE_COMBO="fine/getFineCombo.do";
+    String FINE_RULE_COMBO="fine/getFineRuleCombo.do";
+    
+    String ADD_FINE_TO_STUDENT_MON_FEE="payment/addfinetostudmonfee.do";
+    String ADD_DISCOUNT_TO_STUDENT_MON_FEE="payment/adddistostudmonfee.do";
+    String GET_DISCOUNT_FOR_STUDENT="payment/getDiscountForStud.do";
+    
+    
+    
+    
+    
 }
 

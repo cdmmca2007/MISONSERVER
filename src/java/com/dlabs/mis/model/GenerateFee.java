@@ -23,6 +23,42 @@ String due_date	        ;
 String templateid	;
 boolean  markpaid       ;
 String fee_structure_id ;
+float  paid_amount	;
+String received_from    ;
+String relationtype     ;
+String paid_by          ;
+
+    public String getPaid_by() {
+        return paid_by;
+    }
+
+    public void setPaid_by(String paid_by) {
+        this.paid_by = paid_by;
+    }
+
+    public float getPaid_amount() {
+        return paid_amount;
+    }
+
+    public void setPaid_amount(float paid_amount) {
+        this.paid_amount = paid_amount;
+    }
+
+    public String getReceived_from() {
+        return received_from;
+    }
+
+    public void setReceived_from(String received_from) {
+        this.received_from = received_from;
+    }
+
+    public String getRelationtype() {
+        return relationtype;
+    }
+
+    public void setRelationtype(String relationtype) {
+        this.relationtype = relationtype;
+    }
 
     public int getMonth() {
         return month;

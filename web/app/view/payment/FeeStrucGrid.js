@@ -19,7 +19,6 @@ Ext.define('MyApp.view.payment.FeeStrucGrid' ,{
         }
     },
     store:'FeeStructure',
-    
     initComponent: function() {
     this.columns=[
     Ext.create('Ext.grid.RowNumberer'),{
@@ -61,7 +60,13 @@ Ext.define('MyApp.view.payment.FeeStrucGrid' ,{
         width :'20%'
     }];
    this.selModel=Ext.create('Ext.selection.CheckboxModel',{
-        singleSelect:true
+        singleSelect:true,
+        listeners:{
+                selectionchange:function(sm){
+                   Ext.getCmp('editfeestrucbtn').setDisabled((sm.getCount()==0));
+                   Ext.getCmp('delfeesstrucbtn').setDisabled((sm.getCount()==0));
+            }
+        }
     });
     this.bbar = Ext.create('Ext.PagingToolbar', {
         store:this.store,
@@ -76,39 +81,59 @@ Ext.define('MyApp.view.payment.FeeStrucGrid' ,{
         handler: function(btn){
             this.addFeeStructure();
         }
-    },this.iconEdit = Ext.create('Ext.Button',{
+    },{
         iconCls: 'icon-edit',
         text: 'Edit',
+        id:'editfeestrucbtn',
         scope:this,
         disabled: true,
         handler: function(btn){
              this.addFeeStructure(this.getSelectionModel().getSelection()[0]);
         }
-    }), {
+    }, {
         iconCls: 'icon-delete',
         text: 'Delete',
         disabled: true,
-        itemId: 'delete'
+        id: 'delfeesstrucbtn'
     },{
         iconCls: 'icon-add',
         id:'fine_rule_btn',
-        text: 'Fine Rule',
+        text: '<b>Define Fine Rule</b>',
         scope:this,
         handler: function(btn){
-           // this.addFeeStructure();
+
+            var app1=app.getController('Dashboard')
+            
+            Ext.StoreManager.lookup('Fine').load({
+                params:{sessionid:SETTING.Users.properties.session_id
+                }
+            });
+            var Tab = Ext.create('MyApp.view.payment.FineRule');
+            app1.getDashboard().add(Tab);
+            app1.getDashboard().setActiveTab(Tab); 
+            
         }
-    },{        iconCls: 'icon-add',
-        text: 'Discount Rule',
+    },{
+        iconCls: 'icon-add',
+        id:'discount_rule_btn',
+        text: '<b>Define Discount Rule</b>',
         scope:this,
-        id:'discnt_rule_btn',
         handler: function(btn){
-            //this.addFeeStructure();
+
+            var app1=app.getController('Dashboard')
+            Ext.StoreManager.lookup('Discount').load({
+                params:{sessionid:null
+                }
+            });
+            var Tab = Ext.create('MyApp.view.payment.DiscountRule');
+            app1.getDashboard().add(Tab);
+            app1.getDashboard().setActiveTab(Tab); 
         }
     },'->',this.addToTemplate = Ext.create('Ext.Button',{
         iconCls: 'icon-add',
-        text: 'Add To Template',
+        text: '<b>Add To Template</b>',
        // disabled: true,
-        itemId: 'delete',
+        itemId: 'addtotemplate',
         scope:this,
         handler:this.addToTemplate
     })
@@ -120,7 +145,7 @@ Ext.define('MyApp.view.payment.FeeStrucGrid' ,{
         this.callParent(arguments);
     },
     selectionchange : function(sm, selected,eOpts){
-        if(sm.getCount()){            
+        if(sm.getCount()){   
         }
     },
     addFeeStructure : function(rec){

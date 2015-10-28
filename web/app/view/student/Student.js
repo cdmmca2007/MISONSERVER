@@ -1229,7 +1229,8 @@ Ext.define('MyApp.view.student.Student' ,{
         }
     },{
         xtype:'button',
-        text:'Add Fees',
+        text:'Mark Previledged Student',
+        toolTip :'Mark current student as previledge student(i.e : SC/ST/OBC/Handicaped/Company Specific)',
         iconCls: 'icon-add',
         listeners:{
             render: function(component){

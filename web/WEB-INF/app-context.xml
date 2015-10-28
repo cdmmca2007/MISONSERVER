@@ -43,15 +43,15 @@
   </bean>
   <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
 
-      <!--property name="host" value="localhost" />
+      <property name="host" value="mail.schoolomanager.in" />
 	<property name="port" value="25" />
 	<property name="username" value="schooladmin@schoolomanager.in" />
-	<property name="password" value="developerslab" /-->
+	<property name="password" value="developerslab" />
 
-        <property name="host" value="smtp.gmail.com" />
+        <!--property name="host" value="smtp.gmail.com" />
 	<property name="port" value="587" />
 	<property name="username" value="cdmse12@gmail.com" />
-	<property name="password" value="deochandra"/>
+	<property name="password" value="deochandra"/-->
  
 	<property name="javaMailProperties">
 	   <props>

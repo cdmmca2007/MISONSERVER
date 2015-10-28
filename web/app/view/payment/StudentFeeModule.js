@@ -1,3 +1,4 @@
+ var currRow;
  /*AjaxRowExpander = function(config, previewURL){
     AjaxRowExpander.superclass.constructor.call(this, config, previewURL);
     this.previewURL = previewURL;
@@ -31,7 +32,6 @@ Ext.extend(AjaxRowExpander, Ext.grid.RowExpander, {
         }
     }
 });
- 
 */
 
 function showFeeStructureDetails(rec){
@@ -46,8 +46,298 @@ function showFeeStructureDetails(rec){
        app1.getDashboard().add(Tab);
        app1.getDashboard().setActiveTab(Tab);  
  }
+
+function addFineToStudent(rec) {
+    
+    var win = Ext.getCmp('addfine_win');
+    if(!win){
+        win=Ext.create('Ext.app.view.component.AppWindow', {
+            title:rec?'Remove Fine Form':'Add Fine Form',
+            id:rec?'removefinetostud_win':'addfinetostud_win',
+            width:500,
+            closeAction:'destroy',
+            top:{
+                image:BASE_URL+'resources/images/portal-icon/fee_struc.jpg',
+                formTitle:'Add Fine'
+            },
+            defaults:{
+                xtype:'textfield',
+                value:'',
+                width:400
+            },
+            url:'ppppp',
+            formItems :[
+            {
+                name : 'sessionid',                
+                id:'sessionid',
+                hidden:true,
+                value:SETTING.Users.properties.session_id
+            },  
+            {
+                name : 'monthly_fee_id',                
+                id:'monthly_fee_id',
+                hidden:true,
+                value:rec?rec.data.monthly_fee_id:null
+            }, 
+            
+            {
+                xtype:'combobox',
+                fieldLabel :'Select Fine Type',
+                id:'finetype',
+                name:'finetype',                
+                store:Ext.create('MyApp.store.FineListCombo').load({
+                                      params:{sessionid:SETTING.Users.properties.session_id}}),
+                typeAhead: true,
+                queryMode: 'local',
+                emptyText: 'Select a Fine Type .... ',
+                Autoload:true,
+                valueField :'id',
+                displayField :'value',
+                listeners:{
+                    select: function(component){
+                       
+                       var finetypeid=Ext.getCmp("finetype").getValue();
+                       if(finetypeid!=null){
+                           Ext.getCmp('fineid').getStore().load({
+                                params:{
+                                        finetypeid:finetypeid
+                                }
+                           });
+                           
+                       }
+                       
+                       
+                    }
+               }
+            },{
+                xtype:'combobox',
+                fieldLabel :'Select Fine Rule',
+                id:'fineid',
+                name:'fineid',                
+                store:'FineRuleComboStore',
+                typeAhead: true,
+                queryMode: 'local',
+                emptyText: 'Select a Fine Rule .... ',
+                Autoload:true,
+                valueField :'id',
+                displayField :'value',
+                listeners:{
+                    select: function(component){
+                       
+                    }
+               },/*renderer:function(value){
+                     value=value.substring(0,value.indexOf(':'));
+                     return '<b>'+value+'</b>';
+            }*/
+            }
+            ],
+            buttons :[
+            {
+                text: 'Add',
+                action: 'save',
+                scope:this,
+                handler:saveFineToStudent
+            },
+            {xtype:'btncancel'}
+            ]
+        });
+    }
+    win.show();
+    
+}
+function saveFineToStudent(btn) {
+    
+       var form = btn.up('window').down('form').getForm();
+        if(form.isValid()){
+            var obj = form.getValues();
+                       
+            Ext.Ajax.request({
+                url:'payment/addfinetostudmonfee.do',
+                type:'json',
+                headers:{
+                    'Content-Type':'application/json'
+                },
+                params:Ext.JSON.encode(obj),
+                success: function(res){
+                Ext.Msg.alert('Success','Fine added to select student successfully');
+                var rec=Ext.getCmp('StudentFeeModulegrid').getSelectionModel().getSelection()[0];                       
+                var response = eval('('+res.responseText+')');
+                if(rec!=null && response.fineamount!=null){
+                  var record = Ext.getCmp('StudentFeeModulegrid').getStore().getAt(currRow);
+                  record.set("fineamount",response.fineamount);
+                }
+                }
+            });
+        }
+    
+}
  
+function addDiscountToStudent(rec) {
+    
+    var subjectstore = Ext.StoreManager.lookup('StudentDiscount');
+    var classid=rec.data.batch_id;
+    var win;
+    if(!win){
+        win=Ext.create('Ext.window.Window', {
+            title:'Add Discount for :<b><font color=red>'+rec.data.studentname+'</font></b>',
+            id:'addSubjects',
+            width:600,
+            height:300,
+            closeAction:'destroy',
+            top:{
+                image:BASE_URL+'resources/images/createuser.png',
+                formTitle:'Discount option for :<b><font color=red>'+rec.data.studentname+'</font></b>'
+            },
+            defaults:{
+                xtype:'textfield',
+                value:'',
+                width:580
+            },
+            url:'ppppp',
+            items :[
+              {
+                  xtype: 'fieldcontainer',
+                  combineErrors: true,
+                  layout: 'hbox',
+                  items: [
+                       {
+                        xtype:Ext.create('MyApp.view.payment.StudentDiscount'),                        
+                        store:Ext.StoreManager.lookup('StudentDiscount').load({
+                                      params:{classid:Ext.getCmp("classcombo").getValue(),
+                                              sessionid:SETTING.Users.properties.session_id,
+                                              studentid:rec.data.student_id        
+                                }
+                        })
+                  }]
+              } 
+            ],
+            buttons :[
+            {
+                text: 'Save',
+                action: 'save',
+                scope:this,
+                listeners:{
+                render: function(component){
+                component.getEl().on('click', function(){                                        
+                    saveDiscountToStudent(rec);
+                 });
+                }
+              }
+                    
+            },
+            {xtype:'btncancel'}
+            ]
+        });
+    }
+    win.show();
+}
  
+function markFeePaid(obj){
+     var win = Ext.getCmp('addfine_win');
+    if(!win){
+        win=Ext.create('Ext.app.view.component.AppWindow', {
+            title:'Fee Payment Confirmation',
+            id:'fee_payment_confirmation',
+            width:500,
+            closeAction:'destroy',
+            top:{
+                image:BASE_URL+'resources/images/portal-icon/fee_struc.jpg',
+                formTitle:'Fee Payment Confirmation For '+obj.studentname
+            },
+            defaults:{
+                xtype:'textfield',
+                value:'',
+                width:400
+            },
+            formItems :[
+            
+            {
+                name : 'paid_by',                
+                id:'paid_by',
+                hidden:true,
+                value:SETTING.Users.userId
+            },
+            {
+                name : 'monthly_fee_id',                
+                id:'monthly_fee_id',
+                hidden:true,
+                value:obj?obj.monthly_fee_id:null
+            }, {
+                 fieldLabel :'Total Payable Amount',
+                name : 'payable_amount',                
+                id:'payable_amount',
+                readOnly:true,
+                value:parseFloat((obj.amount?parseFloat(obj.amount):parseFloat(0)) + (obj.fineamount?parseFloat(obj.fineamount):parseFloat(0)) - (obj.discountamount?parseFloat(obj.discountamount):parseFloat(0)))
+            },{
+                fieldLabel :'Total Paid Amount',
+                name : 'paid_amount',                
+                id:'paid_amount',
+                value:parseFloat((obj.amount?parseFloat(obj.amount):parseFloat(0)) + (obj.fineamount?parseFloat(obj.fineamount):parseFloat(0)) - (obj.discountamount?parseFloat(obj.discountamount):parseFloat(0)))
+            },{
+                fieldLabel :'Payment Recieved From',
+                name : 'received_from',                
+                id:'received_from'
+            },  
+            {
+                xtype:'combobox',
+                fieldLabel :'Select Relation with Student',
+                id:'relationtype',
+                name:'relationtype',                
+                store:Ext.create('MyApp.store.Master').load({
+                                      params:{propertyId:55}}),
+                typeAhead: true,
+                queryMode: 'local',
+                emptyText: 'Select a Relation Type .... ',
+                Autoload:true,
+                valueField :'id',
+                displayField :'value',
+                listeners:{
+                    select: function(component){
+                    }
+               }
+            }
+            ],
+            buttons :[
+            {
+                text: 'Pay',
+                action: 'save',
+                scope:this,
+                handler:markFeePaidConfirm
+            },
+            {xtype:'btncancel'}
+            ]
+        });
+    }
+    win.show();
+    
+}
+
+function markFeePaidConfirm(btn){
+    
+    var form = btn.up('window').down('form').getForm();
+        if(form.isValid()){
+            var obj = form.getValues();
+            Ext.Ajax.request({
+                url:'markpaidfee/pay.do',
+                type:'json',
+                headers:{
+                    'Content-Type':'application/json'
+                },
+                params:Ext.JSON.encode(obj),
+                success: function(res){
+                    
+                     var rec = eval('('+res.responseText+')');
+                     if(rec.markpaid==1)
+                         Ext.Msg.alert('Success','Fee Marked successfully');
+                     else
+                         Ext.Msg.alert('failer','Fee Marked failed');
+                 //   app.getController('Class').getClassStore().add(rec);
+                }
+            });
+      }
+     
+}
+
  Ext.define('MyApp.view.payment.StudentFeeModule' ,{
     extend: 'Ext.grid.Panel',
     closable:true,
@@ -79,19 +369,23 @@ function showFeeStructureDetails(rec){
         header: 'mothly_fee_id',
         dataIndex:'mothly_fee_id',       
         hidden :true
+    },{
+        header: 'studentid',
+        dataIndex:'student_id',       
+        hidden :true
     },
     {
         header: 'Class Name',
         dataIndex:'classname',
         style :'color:#17385B;font-weight:bold',
-        width:'15%'
+        width:'15%',
+        hidden:true,
     },
-
     {
         header:'Student Name',
         dataIndex:'studentname',
         style :'color:#17385B;font-weight:bold',
-        width:'15%',
+        width:'10%',
         renderer:function(value){
             return '<b>'+value+'</b>';
         }
@@ -101,34 +395,55 @@ function showFeeStructureDetails(rec){
         header:'Fee Teamplate',
         dataIndex:'template',
         style :'color:#17385B;font-weight:bold',
-        width:'15%'
+        width:'15%',
+        hidden:true
     },{
         header:'Month',
         dataIndex:'for_month',
         style :'color:#17385B;font-weight:bold',
-        width:'15%'
-    },
-    {
-        header:'Paid Status',
-        dataIndex:'paid_status',
+        width:'7%'
+    },{
+        header:'Due Date',
+        dataIndex:'due_date',
         style :'color:#17385B;font-weight:bold',
-        width:'15%',
-        renderer:function(value){
-            return '<b>'+value+'</b>';
-        }
+        width:'7%'
     },
+    
     {
-        header:'Total Amount',
+        header:'Total Fee',
         dataIndex:'amount',
         style :'color:#17385B;font-weight:bold',
-        width:'15%'
+        width:'6%'
+    },{
+        header:'Fine Amount',
+        dataIndex:'fineamount',
+        style :'color:#17385B;font-weight:bold',
+        width:'7%'
+    },{
+        header:'Discount',
+        dataIndex:'discountamount',
+        style :'color:#17385B;font-weight:bold',
+        width:'6%'
+    },{
+        header:'Payable Amount',
+        dataIndex:'payamount',
+        style :'color:#17385B;font-weight:bold',
+        width:'9%',
+        renderer : function(value,metadata,record){
+            value=parseFloat((record.data.amount?parseFloat(record.data.amount):parseFloat(0)) + (record.data.fineamount?parseFloat(record.data.fineamount):parseFloat(0)) - (record.data.discountamount?parseFloat(record.data.discountamount):parseFloat(0)));
+            return value;  
+          }                   
+    },{
+        header:'Paid Amount',
+        dataIndex:'paid_amount',
+        style :'color:#17385B;font-weight:bold',
+        width:'7%'
     },{ 
         header:'Mark Paid',
         dataIndex:'markpaid',
         xtype:'checkcolumn',
         style :'color:#17385B;font-weight:bold;align:center',
-        width:'10%',
-        
+        width:'7%',
         stopSelection: false,
         listeners :{
             checkchange: function(box, rowIndex,checked,eOpts ){
@@ -136,8 +451,11 @@ function showFeeStructureDetails(rec){
             if(obj!=null){
             Ext.Msg.confirm("Alert","Are you sure want mark fee paid for Student :<b>"+obj.studentname+'</b>', function(btn){
             if(btn=='yes'){
-                if(checked){                
-                Ext.Ajax.request({
+                if(checked){
+                
+                markFeePaid(obj);    
+                        
+               /* Ext.Ajax.request({
                 url:'markpaidfee/pay.do',
                 type:'json',
                 headers:{
@@ -153,19 +471,46 @@ function showFeeStructureDetails(rec){
                          Ext.Msg.alert('failer','Fee Marked failed');
                  //   app.getController('Class').getClassStore().add(rec);
                 }
-                });
-                } else{
-                    alert('Failed');
-                }
+                });*/
+                } 
                 
             }
             });
             } 
           }
         }
+    },{
+        header:'Paid Status',
+        dataIndex:'paid_status',
+        style :'color:#17385B;font-weight:bold',
+        width:'9%',
+        renderer:function(value){
+            return '<b>'+value+'</b>';
+        }
+    },{
+        header:'Paid Date',
+        dataIndex:'paid_on',
+        style :'color:#17385B;font-weight:bold',
+        width:'10%'
         
+    },{
+        header:'Paid By',
+        dataIndex:'paymentreceicvedfrom',
+        style :'color:#17385B;font-weight:bold',
+        width:'10%',
+        renderer:function(value){
+            if(value==null)
+            return '<b>'+'N/A'+'</b>';
+            else
+            return '<b>'+value+'</b>';    
+        }
     }
     ];
+    this.listeners={
+        cellclick: function(grid, td, cellIndex, record, tr, rowIndex, e, eOpts) {
+            currRow=rowIndex;
+        }
+    };
     this.selModel=Ext.create('Ext.selection.CheckboxModel',{
         singleSelect:true
     });
@@ -389,6 +734,37 @@ function showFeeStructureDetails(rec){
                     showFeeStructureDetails(rec);
                     }
                     });
+
+            }
+        }
+    },{
+        xtype:'button',
+        text:'Add Fine',
+        iconCls: 'icon-add',
+        listeners:{
+            render: function(component){
+                component.getEl().on('click', function(){
+                    var rec=Ext.getCmp('StudentFeeModulegrid').getSelectionModel().getSelection()[0];                       
+                    if(rec!=null){                       
+                        addFineToStudent(rec);
+                    }
+                    });
+
+            }
+        }
+    },,{
+        xtype:'button',
+        text:'Add Discount',
+        iconCls: 'icon-add',
+        listeners:{
+            render: function(component){
+                component.getEl().on('click', function(){
+                    var rec=Ext.getCmp('StudentFeeModulegrid').getSelectionModel().getSelection()[0];                       
+                       
+                    if(rec!=null){
+                        addDiscountToStudent(rec);
+                    }
+                 });
 
             }
         }

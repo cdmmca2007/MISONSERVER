@@ -99,7 +99,21 @@ public class ComboDAO {
             dataQuery ="SELECT DISTINCT SUBSTR(NAME,1,LENGTH(NAME)-2) as id,SUBSTR(NAME,1,LENGTH(NAME)-2) as value FROM class";
             parameter=true;
         }    
+        if(propertyid==21)///
+        {
+            countQuery="SELECT count(1) as count FROM feefine WHERE deleted=0 AND sessionid=?";
+            dataQuery ="SELECT finetypeid AS id , finename as value FROM feefine WHERE deleted=0 AND sessionid=?";
+            parameter=true;
+        }
+        if(propertyid==22)///
+        {
+            countQuery="SELECT count(1) as count  FROM feefine ff  JOIN finetemplate ft ON ft.finetypeid=ff.finetypeid AND ft.deleted=0  AND  ft.finetypeid=?";
+            dataQuery ="SELECT ft.fineid as id, CASE WHEN ft.finetypecategory='88cb77d4-8259-41c9-953d-bafeaf070762'   THEN CONCAT('If Fee payment Late by ',ft.fromdate) WHEN ft.finetypecategory='b2611c13-1395-4e6e-98ae-d349ec991813'        THEN CONCAT(CONCAT(CONCAT(CONCAT('If Payment Made between ',ft.fromdate),' To '),ft.todate),' of Month')               END AS finerule as value FROM feefine ff  JOIN finetemplate ft ON ft.finetypeid=ff.finetypeid AND ft.deleted=0  AND  ft.finetypeid=?";
+            parameter=true;
+        }
         
+        
+
         try {
             if(parameter)
             rs = DaoUtil.executeQuery(conn,countQuery);
@@ -289,4 +303,51 @@ public class ComboDAO {
         }
         return job;
     }
+
+    public Object getFineCombo(Connection conn, String sessionsid, int page, int rows) throws ReadableException {
+
+        JSONObject job = null;
+        ResultSet rs = null;
+        int count = 0;
+        String countQuery=null ,dataQuery =null;
+
+        countQuery="SELECT COUNT(1) AS count  FROM feefine WHERE sessionid=? AND deleted=0";
+        dataQuery ="SELECT finetypeid AS id, finename  AS value FROM feefine WHERE sessionid=? AND deleted=0";
+        
+        try {
+            rs = DaoUtil.executeQuery(conn,countQuery,new Object[]{sessionsid});
+            if (rs.next()) {
+                count = rs.getInt("count");
+                rs = DaoUtil.executeQuery(conn,dataQuery,new Object[]{sessionsid});
+            }
+            job = new ExtJsonUtil().getJsonObject(rs, count, page,rows, false);
+        } catch (SQLException ex) {
+            Logger.getLogger(ComboDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return job;
+        
+    }
+
+    public Object getFineRuleCombo(Connection conn, String finetpyeid, int page, int rows) throws ReadableException {
+       
+        JSONObject job = null;
+        ResultSet rs = null;
+        int count = 0;
+        String countQuery=null,dataQuery =null;
+        countQuery="SELECT COUNT(1) AS count FROM finetemplate ft WHERE ft.finetypeid=? AND ft.deleted=0";
+        dataQuery ="SELECT dat.id , CONCAT(CONCAT(CONCAT(CONCAT(dat.finerule,':'),dat.finechargecategory),':'),fineamountpercent) AS value FROM (SELECT ft.fineid AS id , CASE WHEN ft.finetypecategory='88cb77d4-8259-41c9-953d-bafeaf070762' THEN CONCAT('If Fee payment Late by ',ft.fromdate) WHEN ft.finetypecategory='b2611c13-1395-4e6e-98ae-d349ec991813'                   THEN CONCAT(CONCAT(CONCAT(CONCAT('If Payment Made between ',ft.fromdate),' To '),ft.todate),' of Month')        END AS finerule        ,CASE  WHEN finechargecategory=0 THEN 'Fixed Amount' WHEN  finechargecategory=1 THEN 'Percent' END AS finechargecategory,       fineamountpercent  FROM finetemplate ft WHERE ft.finetypeid=? AND ft.deleted=0) dat ";
+        
+        try {
+            rs = DaoUtil.executeQuery(conn,countQuery,new Object[]{finetpyeid});
+            if (rs.next()) {
+                count = rs.getInt("count");
+                rs = DaoUtil.executeQuery(conn,dataQuery,new Object[]{finetpyeid});
+            }
+            job = new ExtJsonUtil().getJsonObject(rs, count, page,rows, false);
+        } catch (SQLException ex) {
+            Logger.getLogger(ComboDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return job;
+    }
+    
 }

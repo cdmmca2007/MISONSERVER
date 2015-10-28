@@ -78,6 +78,7 @@ Ext.define('MyApp.view.payment.PaymentHistory' ,{
     extend: 'Ext.grid.Panel',
     closable:true,
     title: 'Paid Payment Details',
+    id:'paymenthistory',
     layout:'fit',
     viewConfig:{
         forceFit:true,

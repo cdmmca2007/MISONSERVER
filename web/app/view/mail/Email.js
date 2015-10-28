@@ -49,6 +49,7 @@ Ext.define('MyApp.view.mail.Email' ,{
     alias: 'widget.maillist',
     closable:true,
     title: 'Email Template',
+    id:'emailtemplate',
     layout:{
         type:'vbox',
         align:'stretch'

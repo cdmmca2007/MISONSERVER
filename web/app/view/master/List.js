@@ -7,6 +7,7 @@ Ext.define('MyApp.view.master.List' ,{
         type:'hbox',
         align:'stretch'
     },
+    id:'masterlist',
     constructor : function(){
       
         this.callParent(arguments);

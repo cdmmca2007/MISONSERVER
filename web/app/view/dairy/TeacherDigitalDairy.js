@@ -235,7 +235,7 @@ Ext.define('MyApp.view.dairy.TeacherDigitalDairy' ,{
             
         }); 
         
-        this.columns=[
+    this.columns=[
     Ext.create('Ext.grid.RowNumberer'),
     
     {

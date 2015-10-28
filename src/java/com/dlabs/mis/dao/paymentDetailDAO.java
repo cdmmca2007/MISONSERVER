@@ -271,7 +271,7 @@ public class paymentDetailDAO {
         
         String dataquery="SELECT g.monthly_fee_id,g.school_id,g.class_id,c.name classname,g.student_id,CONCAT(CONCAT(CONCAT(CONCAT(s.fname,' '),case when s.mname is null then '' else s.mname end),' '),s.lname) AS studentname, " +
                         "       CASE g.for_month WHEN 1 THEN 'January' WHEN 2 THEN 'February' WHEN 3 THEN 'March' WHEN 4 THEN 'April' WHEN 5 THEN 'May' WHEN 6 THEN 'June' WHEN 7 THEN 'July' WHEN 8 THEN 'August' WHEN 9 THEN 'September' WHEN 10 THEN 'October' WHEN 11 THEN 'November' WHEN 12 THEN 'December' END AS for_month," +
-                        "       g.for_year,g.amount,FROM_UNIXTIME(g.due_date/1000,'%d-%m-%Y') as due_date,g.templateid,t.name AS template,CASE g.paid_status WHEN 0 THEN NULL WHEN 1 THEN TRUE END AS markpaid,CASE g.paid_status WHEN 0 THEN 'Payment Pending' WHEN 1 THEN 'Payment Received' END AS paid_status,g.paid_on,g.paid_by,g.paid_amount,g.comment,g.for_month as month " +
+                        "       g.for_year,g.amount,FROM_UNIXTIME(g.due_date/1000,'%d-%m-%Y') as due_date,g.templateid,t.name AS template,CASE g.paid_status WHEN 0 THEN NULL WHEN 1 THEN TRUE END AS markpaid,CASE g.paid_status WHEN 0 THEN 'Payment Pending' WHEN 1 THEN 'Payment Received' END AS paid_status,FROM_UNIXTIME(g.paid_on/1000,'%d-%m-%Y') as paid_on,g.paid_by,g.paid_amount,g.comment,g.for_month as month ,fineid, fineamount, discountid, discountamount, paid_amount, paymentreceicvedfrom, releationwithstud " +
                         "  FROM class c, templates t , student s ,generatemonthlyfee g ,sessions ss " +
                         " WHERE ss.batch_id=g.class_id " +
                         "   AND ss.class_id = c.classid  " +
@@ -472,7 +472,7 @@ public class paymentDetailDAO {
            
           dataquery="SELECT g.monthly_fee_id,g.school_id,g.class_id,c.name classname,g.student_id,CONCAT(CONCAT(CONCAT(CONCAT(s.fname,' '),case when s.mname is null then '' else s.mname end),' '),s.lname) AS studentname, " +
                     "       CASE g.for_month WHEN 1 THEN 'January' WHEN 2 THEN 'February' WHEN 3 THEN 'March' WHEN 4 THEN 'April' WHEN 5 THEN 'May' WHEN 6 THEN 'June' WHEN 7 THEN 'July' WHEN 8 THEN 'August' WHEN 9 THEN 'September' WHEN 10 THEN 'October' WHEN 11 THEN 'November' WHEN 12 THEN 'December' END AS for_month," +
-                    "       g.for_year,g.amount,FROM_UNIXTIME(g.due_date/1000,'%d-%m-%Y') as  due_date,g.templateid,t.name AS template,CASE g.paid_status WHEN 0 THEN NULL WHEN 1 THEN TRUE END AS markpaid,CASE g.paid_status WHEN 0 THEN 'Payment Pending' WHEN 1 THEN 'Payment Received' END AS paid_status,g.paid_on,g.paid_by,g.paid_amount,g.comment,g.for_month AS MONTH " +
+                    "       g.for_year,g.amount,FROM_UNIXTIME(g.due_date/1000,'%d-%m-%Y') as  due_date,g.templateid,t.name AS template,CASE g.paid_status WHEN 0 THEN NULL WHEN 1 THEN TRUE END AS markpaid,CASE g.paid_status WHEN 0 THEN 'Payment Pending' WHEN 1 THEN 'Payment Received' END AS paid_status,g.paid_on,g.paid_by,g.paid_amount,g.comment,g.for_month AS month , fineid, fineamount, discountid, discountamount, paid_amount, paymentreceicvedfrom, releationwithstud  " +
                     "  FROM class c, templates t , student s ,generatemonthlyfee g , sessions ss " +
                     " WHERE ss.batch_id=g.class_id " +
                     "   AND ss.class_id   = c.classid " +
@@ -498,7 +498,7 @@ public class paymentDetailDAO {
                         
           dataquery="SELECT g.monthly_fee_id,g.school_id,g.class_id,c.name classname,g.student_id,CONCAT(CONCAT(CONCAT(CONCAT(s.fname,' '),case when s.mname is null then '' else s.mname end),' '),s.lname) AS studentname, " +
                     "       CASE g.for_month WHEN 1 THEN 'January' WHEN 2 THEN 'February' WHEN 3 THEN 'March' WHEN 4 THEN 'April' WHEN 5 THEN 'May' WHEN 6 THEN 'June' WHEN 7 THEN 'July' WHEN 8 THEN 'August' WHEN 9 THEN 'September' WHEN 10 THEN 'October' WHEN 11 THEN 'November' WHEN 12 THEN 'December' END AS for_month, " +
-                    "       g.for_year,g.amount,FROM_UNIXTIME(g.due_date/1000,'%d-%m-%Y') as  due_date,g.templateid,t.name AS template,CASE g.paid_status WHEN 0 THEN NULL WHEN 1 THEN TRUE END AS markpaid,CASE g.paid_status WHEN 0 THEN 'Payment Pending' WHEN 1 THEN 'Payment Received' END AS paid_status,g.paid_on,g.paid_by,g.paid_amount,g.comment,g.for_month AS MONTH " +
+                    "       g.for_year,g.amount,FROM_UNIXTIME(g.due_date/1000,'%d-%m-%Y') as  due_date,g.templateid,t.name AS template,CASE g.paid_status WHEN 0 THEN NULL WHEN 1 THEN TRUE END AS markpaid,CASE g.paid_status WHEN 0 THEN 'Payment Pending' WHEN 1 THEN 'Payment Received' END AS paid_status,g.paid_on,g.paid_by,g.paid_amount,g.comment,g.for_month AS month , fineid, fineamount, discountid, discountamount, paid_amount, paymentreceicvedfrom, releationwithstud  " +
                     "  FROM class c, templates t , student s ,generatemonthlyfee g  , sessions ss " +
                     " WHERE ss.batch_id=g.class_id " +
                     "   AND ss.class_id = c.classid  " +

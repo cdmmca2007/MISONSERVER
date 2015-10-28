@@ -13,12 +13,13 @@ Ext.define('MyApp.view.payment.FeeTemplateGrid' ,{
     features: [Ext.create('Ext.grid.feature.Grouping', {
             groupHeaderTpl: '{columnName}: {name} ({rows.length} Item{[values.rows.length > 1 ? "s" : ""]})',
             hideGroupedHeader: true,
+            startCollapsed: true,
             id:'feetemplategridgrouping'
         })
     ],
     store:'Templates',
     initComponent: function() {
-        this.columns=[
+    this.columns=[
     Ext.create('Ext.grid.RowNumberer'),
     {
         header: 'Template Name',
@@ -30,9 +31,9 @@ Ext.define('MyApp.view.payment.FeeTemplateGrid' ,{
         dataIndex:'classname',
         flex:1,
         style :'color:#17385B;font-weight:bold',
-        renderer: function(value){
+        /*renderer: function(value){
             return value?value:'Not Assigned';
-        }
+        }*/
     },{
         menuDisabled: true,
         sortable: false,

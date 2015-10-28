@@ -3,6 +3,7 @@ Ext.define('MyApp.view.promotestudent.PromoteStudentModule' ,{
     closable:true,
     title: 'Promote Student Module',
     alias: 'widget.promotestudentmodule',    
+    id:'promotestudentmodule',
     closable:true,
     //id :'psmgrid',
     //features: [{ftype:'grouping'}],

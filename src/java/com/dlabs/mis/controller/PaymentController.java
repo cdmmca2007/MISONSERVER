@@ -100,7 +100,7 @@ public class PaymentController {
     public String getTemplates(@RequestParam("sessionid") String sessionid){
        try{
             conn = DbPool.getConnection();
-           return paymentDAO.getTemplatesAsJson(conn,sessionid,0,15).toString();
+           return paymentDAO.getTemplatesAsJson(conn,sessionid,0,100).toString();
         }
        
         catch(Exception ex){

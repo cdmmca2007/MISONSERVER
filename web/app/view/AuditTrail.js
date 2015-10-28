@@ -6,6 +6,7 @@ Ext.define('MyApp.view.AuditTrail' ,{
     viewConfig:{
         forceFit:true
     },
+    id:'audittrialgrid',
     store:'AuditTrail',
     constructor: function(config){
         

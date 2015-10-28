@@ -27,7 +27,6 @@ function addNotice(rec){
                 value:'',
                 width:300
             },
-            url:'ppppp',
             formItems :[
             {
                 name : 'sessionid',
@@ -49,13 +48,15 @@ function addNotice(rec){
             {
                 name : 'title',
                 fieldLabel: 'Notice Title',
-                id:'title'
+                id:'title',
+                value:rec?rec.data.title:null
             },{
                 xtype   : 'textareafield',
                 grow    : true,
                 name : 'description',
                 fieldLabel: 'Description',
-                id:'description'
+                id:'description',
+                value:rec?rec.data.description:null
             },{
                 xtype:'combobox',
                 fieldLabel :'Recipient',
@@ -65,7 +66,7 @@ function addNotice(rec){
                                       params:{propertyId:11}}),
                 typeAhead: true,
                 queryMode: 'local',
-                emptyText: 'Select Status',
+                emptyText: 'Select Recipient',
                 Autoload:true,               
                 valueField :'id',
                 displayField :'value'
@@ -166,7 +167,7 @@ Ext.define('MyApp.view.notice.Notification' ,{
         hidden   :true
     },
     {
-        header: '<font color=#17385B><b>Title</b></font>',
+        header: '<font color=#17385B><b>New Title</b></font>',
         dataIndex:'title',
         width    :100
     },
@@ -182,7 +183,7 @@ Ext.define('MyApp.view.notice.Notification' ,{
         dataIndex:'recipient',
         width    :100
     },{
-        header:'<font color=#17385B><b>Valid From By</b></font>',
+        header:'<font color=#17385B><b>Valid From</b></font>',
         dataIndex:'activatedate',        
         width    :100,
         flex: 1
@@ -217,7 +218,7 @@ Ext.define('MyApp.view.notice.Notification' ,{
     this.selModel=Ext.create('Ext.selection.CheckboxModel',{
         singleSelect:true,
         listeners:{
-                selectionchange:function(){
+                selectionchange:function(sm){
                 Ext.getCmp('noticeEdit').setDisabled((sm.getCount()==0));
                 Ext.getCmp('noticeDelete').setDisabled((sm.getCount()==0));
                 }
@@ -256,7 +257,7 @@ Ext.define('MyApp.view.notice.Notification' ,{
         scope:this,
         handler: function(component){
                     var rec=Ext.getCmp('notificationgrid').getSelectionModel().getSelection()[0];
-                    //addClasses(rec);
+                    if(rec!=null) addNotice(rec);
         }
     }, {
         iconCls: 'icon-delete',

@@ -1549,6 +1549,7 @@ Ext.define('MyApp.view.addmission.StudentAddmission' ,{
     alias: 'widget.admissionstudentlist',
     closable:true,
     title: 'Student Admission Management',
+    id:'admissionstudentlist',
     layout:'fit',    
     viewConfig:{
                     forceFit:true,

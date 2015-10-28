@@ -3,9 +3,9 @@ Ext.define('MyApp.controller.Dashboard', {
     extend: 'Ext.app.Controller',
     requires:['Ext.calendar.data.EventMappings'],
     stores: ['Users','Property','Master','Templates','TemplateDetails','FeeStructure','Class','Student','Teacher','Email','Period','Timetable','Combo','UserRoles','RolesPermissionGroup','RolesPermission','FeeDetailsParent','StudentFeeModule','StudentFeeModule','ClassCombo','StudentMonthlyFee','ClassSubject','ClassExam','StudentMarkEntry','Route','TransportPlace','TransportVehicle','Notification','CreatedFeeForClass','StudentFeePayment','PaymentFeeName','StudentDairy','MonthlyProgress','DigitalDairy','HomeWork','StudentHomeWorkStatus','ClassCombo1','SchoolAdmin','PromoteStudentModule',
-        'MonthlyAttendance','AttendanceSheet','InitiatedAdmissionProcess','NewStudent','OfflineStudentList','ExistingStudentList','PSMStudent','ClassSubjectTeacher','Tutorial','AttendenceRequestToAdmin','Session','BookList','BookDetail','BookTransaction','MisReport','TeacherQualification','TeacherExp','ClassSubjectCombo','ClassAttendenceReport','Alert','PaymentReportPerClass','MonthlyPaymentReport','ClassAttendenceForMonthReport','ClassReport','Hostel','HostelRoom','HostelRoomAllocation','MyWorkList','AdmissionSetting','DepartmentHeadSetting','ReplyOnStudentDairy','ChartStore','AuditTrail','AccountSetting','RoomCombo','StudentReportCardComparison','StudentReportCardComparisonSecChart','OnlineExamDetail','QuestionList','StudentEmailSMS','OnlineSchExamDetail','OnlineExamUserPass','OnlineExamUserPassResult' ,'BookRequesterList','BookedHistory','PayAdmissionFee' , 'DailyAttendenceReportForAllClass','ListOfAbsentStudent','StudentPaymentReportPerClass','ExamReportAnalysis','ExamReportAnalysisSubjectWise'],
+        'MonthlyAttendance','AttendanceSheet','InitiatedAdmissionProcess','NewStudent','OfflineStudentList','ExistingStudentList','PSMStudent','ClassSubjectTeacher','Tutorial','AttendenceRequestToAdmin','Session','BookList','BookDetail','BookTransaction','MisReport','TeacherQualification','TeacherExp','ClassSubjectCombo','ClassAttendenceReport','Alert','PaymentReportPerClass','MonthlyPaymentReport','ClassAttendenceForMonthReport','ClassReport','Hostel','HostelRoom','HostelRoomAllocation','MyWorkList','AdmissionSetting','DepartmentHeadSetting','ReplyOnStudentDairy','ChartStore','AuditTrail','AccountSetting','RoomCombo','StudentReportCardComparison','StudentReportCardComparisonSecChart','OnlineExamDetail','QuestionList','StudentEmailSMS','OnlineSchExamDetail','OnlineExamUserPass','OnlineExamUserPassResult' ,'BookRequesterList','BookedHistory','PayAdmissionFee' , 'DailyAttendenceReportForAllClass','ListOfAbsentStudent','StudentPaymentReportPerClass','ExamReportAnalysis','ExamReportAnalysisSubjectWise','Fine','Discount','FineRuleComboStore','FineListCombo','StudentDiscount'],
     models: ['Users','Student','Master','Templates','TemplateDetails','FeeStructure','Class','Teacher','Email','Period','Timetable','Combo','UserRoles','RolesPermissionGroup','RolesPermission','FeeDetailsParent','StudentMonthlyFee','ClassExam','StudentMarkEntry','Route','TransportPlace','TransportVehicle','Notification','CreatedFeeForClass','StudentFeePayment','PaymentFeeName','StudentDairy','MonthlyProgress','DigitalDairy','HomeWork','StudentHomeWorkStatus','SchoolAdmin','PromoteStudentModule',
-        'MonthlyAttendance','AttendanceSheet','InitiatedAdmissionProcess','NewStudent','OfflineStudentList','ExistingStudentList','PSMStudent','ClassSubjectTeacher','Tutorial','AttendenceRequestToAdmin','Session','BookDetail','BookTransaction','MisReport','TeacherQualification','TeacherExp','ClassAttendenceReport','Alert','PaymentReportPerClass','Report','ClassReport','Hostel','HostelRoom','HostelRoomAllocation','MyWorkList','AdmissionSetting','DepartmentHeadSetting','ReplyOnStudentDairy','AuditTrail','AccountSetting','StudentReportCardComparisonSecChart','OnlineExamDetail','QuestionList','StudentEmailSMS','OnlineSchExamDetail','OnlineExamUserPass','OnlineExamUserPassResult' , 'BookRequesterList','BookedHistory','PayAdmissionFee','StudentPaymentReportPerClass','ExamReportAnalysis','ExamReportAnalysisSubjectWise'],
+        'MonthlyAttendance','AttendanceSheet','InitiatedAdmissionProcess','NewStudent','OfflineStudentList','ExistingStudentList','PSMStudent','ClassSubjectTeacher','Tutorial','AttendenceRequestToAdmin','Session','BookDetail','BookTransaction','MisReport','TeacherQualification','TeacherExp','ClassAttendenceReport','Alert','PaymentReportPerClass','Report','ClassReport','Hostel','HostelRoom','HostelRoomAllocation','MyWorkList','AdmissionSetting','DepartmentHeadSetting','ReplyOnStudentDairy','AuditTrail','AccountSetting','StudentReportCardComparisonSecChart','OnlineExamDetail','QuestionList','StudentEmailSMS','OnlineSchExamDetail','OnlineExamUserPass','OnlineExamUserPassResult' , 'BookRequesterList','BookedHistory','PayAdmissionFee','StudentPaymentReportPerClass','ExamReportAnalysis','ExamReportAnalysisSubjectWise','Fine','Discount','StudentDiscount'],
     controllers:['Users','Master','Permission','Class','Student','Teacher','PaymentStatus','Email','Period','Timetable','StudentFeeModule','EditStudentMonthlyFee','Subject','ClassExam','StudentMarkEntry','Route','TransportPlace','Notification','StudentFeePayment','StudentDairy','MonthlyProgress','DigitalDairy','HomeWork','StudentHomeWorkStatus','PromoteStudentModule','InitiatedAdmissionProcess','NewStudent','ClassSubjectTeacher','Tutorial','AttendenceRequestToAdmin','Session'/*,'BookDetail','BookTransaction'*/],
     refs :[{
             ref:'dashboard',
@@ -671,26 +671,45 @@ Ext.define('MyApp.controller.Dashboard', {
     
     managePermission: function(){
         var tab = Ext.getCmp('tab_permissionPanel');
-        if(!tab){
+        if(tab==null){
             tab = Ext.create('MyApp.view.permission.PermissionPanel',{
             id:'tab_permissionPanel'
         });
-        }
         this.getDashboard().add(tab);
         this.getDashboard().setActiveTab(tab);
+        }else{
+        this.getDashboard().setActiveTab(tab);
+        }
     },
     showUsers: function(){
-        var users = Ext.create('MyApp.view.user.UserList');
-        this.getDashboard().add(users);
-        this.getDashboard().setActiveTab(users);
-        app.getController('Users').init();
+        
+       var users=Ext.getCmp("userList"); 
+       if(users==null) {
+            users=Ext.create('MyApp.view.user.UserList');
+            this.getDashboard().add(users);
+            this.getDashboard().setActiveTab(users);
+            app.getController('Users').init();
+           
+       }else{
+           this.getDashboard().setActiveTab(users);
+       }
     },
     showAttendance: function(){
-        var tab = Ext.create('MyApp.view.leave.AttendanceTab');
-        this.getDashboard().add(tab);
-        this.getDashboard().setActiveTab(tab);
+        
+        var obj=Ext.getCmp("attandancegridpanel"); 
+        if(obj==null){
+        var obj = Ext.create('MyApp.view.leave.AttendanceTab');
+        this.getDashboard().add(obj);
+        this.getDashboard().setActiveTab(obj);            
+            
+        }
+        else
+        {
+        this.getDashboard().setActiveTab(obj);                
+        }
     },
     showMasterGrid : function(){
+        
         var me = this;
         this.getPropertyStore().load({
             callback: function(store){
@@ -702,30 +721,59 @@ Ext.define('MyApp.controller.Dashboard', {
                 })
             }
         });
+        
+        var masterTab=Ext.getCmp("masterlist"); 
+        if(masterTab==null){
         var masterTab = Ext.create('MyApp.view.master.List');
         this.getDashboard().add(masterTab);
         this.getDashboard().setActiveTab(masterTab);
-        //app.getController('Master').init();
+        }
+        else
+        {
+        this.getDashboard().setActiveTab(masterTab);    
+        }
     },
     showAuditTrail : function(){
-        this.getAuditTrailStore().load();
-        var Tab = Ext.create('MyApp.view.AuditTrail');
-        this.getDashboard().add(Tab);
-        this.getDashboard().setActiveTab(Tab);
-        //app.getController('Master').init();
+        var obj=Ext.getCmp("audittrialgrid"); 
+        
+        if(obj==null){
+        this.getAuditTrailStore().load();    
+        var obj = Ext.create('MyApp.view.AuditTrail');
+        this.getDashboard().add(obj);
+        this.getDashboard().setActiveTab(obj);
+        }
+        else
+        {
+        this.getDashboard().setActiveTab(obj);    
+        }
     },
     showStudents: function(){
+        
+        
+        var obj=Ext.getCmp("studentgrid"); 
         this.getStudentStore().loadPage(1);
-        var Tab = Ext.create('MyApp.view.student.Student');
-        this.getDashboard().add(Tab);
-        this.getDashboard().setActiveTab(Tab);
-        //app.getController('Master').init();
+        if(obj==null){
+        var obj = Ext.create('MyApp.view.student.Student');
+        this.getDashboard().add(obj);
+        this.getDashboard().setActiveTab(obj);
+        }
+        else
+        {
+        this.getDashboard().setActiveTab(obj);    
+        }
     },
     showFeeStructure :function(){
-        var Tab = Ext.create('MyApp.view.payment.FeeStrucGrid');
-        this.getDashboard().add(Tab);
-        this.getDashboard().setActiveTab(Tab);
-        
+
+        var obj=Ext.getCmp("feestructure"); 
+        if(obj==null){
+            var obj = Ext.create('MyApp.view.payment.FeeStrucGrid');
+            this.getDashboard().add(obj);
+            this.getDashboard().setActiveTab(obj); 
+        }
+        else
+        {
+            this.getDashboard().setActiveTab(obj); 
+        }
     },
     showFeeTemplate :function(){
         var me=this;
@@ -752,38 +800,74 @@ Ext.define('MyApp.controller.Dashboard', {
         this.getDashboard().setActiveTab(tab);
     },
     showClasses : function(){
+       
+        var obj=Ext.getCmp("classgrid"); 
+        if(obj==null){
         this.getClassStore().load({
                          params:{sessionid:SETTING.Users.properties.session_id
                          }
-                 });                
-        var Tab = Ext.create('MyApp.view.class.Class');
-        this.getDashboard().add(Tab);
-        this.getDashboard().setActiveTab(Tab);
-        //app.getController('Master').init();
+                 });             
+        var obj = Ext.create('MyApp.view.class.Class');
+        this.getDashboard().add(obj);
+        this.getDashboard().setActiveTab(obj);
+        }
+        else
+        {
+            this.getDashboard().setActiveTab(obj);
+        }
     },
     showEmailTpl : function(){
        
+        
+        var obj=Ext.getCmp("emailtemplate"); 
+        if(obj==null){
         this.getEmailStore().load();
-        var Tab = Ext.create('MyApp.view.mail.Email');
-        this.getDashboard().add(Tab);
-        this.getDashboard().setActiveTab(Tab);
-        //app.getController('Master').init();
+        var obj = Ext.create('MyApp.view.mail.Email');
+        this.getDashboard().add(obj);
+        this.getDashboard().setActiveTab(obj);
+        }
+        else
+        {
+        this.getDashboard().setActiveTab(obj);    
+        }
     },
    showPaymentHistory : function(){
-        var Tab = Ext.create('MyApp.view.payment.PaymentHistory');
-        this.getDashboard().add(Tab);
-        this.getDashboard().setActiveTab(Tab);
+        var obj=Ext.getCmp("paymenthistory"); 
+        if(obj==null){
+                var obj = Ext.create('MyApp.view.payment.PaymentHistory');
+                this.getDashboard().add(obj);
+                this.getDashboard().setActiveTab(obj);
+        }
+        else
+        {
+            this.getDashboard().setActiveTab(obj);
+        }
+
     },
    showSchoolAdmin : function(){
       //  this.getSchoolAdminStore().load();
-        var Tab = Ext.create('MyApp.view.school.SchoolAdmin');
-        this.getDashboard().add(Tab);
-        this.getDashboard().setActiveTab(Tab);
+        var obj=Ext.getCmp("schooladmin"); 
+        if(obj==null){
+                var obj = Ext.create('MyApp.view.school.SchoolAdmin');
+                this.getDashboard().add(obj);
+                this.getDashboard().setActiveTab(obj);
+        }
+        else
+        {
+            this.getDashboard().setActiveTab(obj);
+        }
     },
    showFeeDetails : function(){
-        var Tab = Ext.create('MyApp.view.payment.FeeDetails');
-        this.getDashboard().add(Tab);
-        this.getDashboard().setActiveTab(Tab);
+       var obj=Ext.getCmp("tab_feeDatailGrid"); 
+        if(obj==null){
+        var obj = Ext.create('MyApp.view.payment.FeeDetails');
+        this.getDashboard().add(obj);
+        this.getDashboard().setActiveTab(obj);
+        }
+        else
+        {
+        this.getDashboard().setActiveTab(obj);    
+        }
    },
    showDigitalDairy : function(){
         //Need modification
@@ -794,23 +878,38 @@ Ext.define('MyApp.controller.Dashboard', {
          * */
        //if(user is teacher then)
        //if(user is parent  then)
-        var Tab = Ext.create('MyApp.view.dairy.TeacherDigitalDairy');
-        this.getDashboard().add(Tab);
-        this.getDashboard().setActiveTab(Tab);
+       var obj=Ext.getCmp("teacherdairygrid"); 
+        if(obj==null){
+                var Tab = Ext.create('MyApp.view.dairy.TeacherDigitalDairy');
+                this.getDashboard().add(Tab);
+                this.getDashboard().setActiveTab(Tab);
+        }
+        else
+        {
+            this.getDashboard().setActiveTab(Tab);
+        }
+
    },
    showFeeDetailsParent : function(){
     /*    this.getStudentFeePaymentStore().load({
                             params:{'userid':null
                     }});*/
-
-              this.getStudentFeePaymentStore().load({
+        var obj=Ext.getCmp("feedetailsparent"); 
+        if(obj==null){
+                this.getStudentFeePaymentStore().load({
                             params:{'userid':SETTING.Users.userId,
                                     'sessionid':SETTING.Users.properties.session_id
                                     
-                    }});       
-        var Tab = Ext.create('MyApp.view.payment.FeeDetailsParent');
-        this.getDashboard().add(Tab);
-        this.getDashboard().setActiveTab(Tab);
+                    }});              
+                var obj = Ext.create('MyApp.view.payment.FeeDetailsParent');
+                this.getDashboard().add(obj);
+                this.getDashboard().setActiveTab(obj);
+        }
+        else
+        {
+            this.getDashboard().setActiveTab(obj);
+        }
+        
    },
    showTeachers : function(){
         
@@ -823,24 +922,39 @@ Ext.define('MyApp.controller.Dashboard', {
         this.getDashboard().setActiveTab(Tab);*/
    },
    showPeriod :function(){
-       this.getPeriodStore().load();
-       var userProfile = Ext.create('MyApp.view.timetable.Period');
-       this.getDashboard().add(userProfile);
-       this.getDashboard().setActiveTab(userProfile);
+       
+       var obj=Ext.getCmp("periodgrid"); 
+        if(obj==null){
+            this.getPeriodStore().load();
+            var obj = Ext.create('MyApp.view.timetable.Period');
+            this.getDashboard().add(obj);
+            this.getDashboard().setActiveTab(obj);
+        }
+        else
+        {
+             this.getDashboard().setActiveTab(obj);
+            
+        }
+
 
    },
    createTimeTable:function(){
-     
-       this.getTimetableStore().load();
-       var userProfile = Ext.create('MyApp.view.timetable.Timetable',{p_sessionid:null,p_classid:null});
-       this.getDashboard().add(userProfile);
-       this.getDashboard().setActiveTab(userProfile);
-       
+       var obj=Ext.getCmp("timetablegrid"); 
+        if(obj==null){
+            this.getTimetableStore().load();
+            var obj = Ext.create('MyApp.view.timetable.Timetable',{p_sessionid:null,p_classid:null});
+            this.getDashboard().add(obj);
+            this.getDashboard().setActiveTab(obj);
+        }
+        else
+        {
+            this.getDashboard().setActiveTab(obj);
+        }
    },
 
    showTutorial : function(){
-     var tab  = Ext.getCmp('tab_qmsdocuments');
-            if(!tab){
+     var tab  = Ext.getCmp('tut_documents');
+      if(tab==null){
                 tab = Ext.create('Ext.app.view.portlet.FolderPortlet',{
                 id:'tut_documents',
                 store:Ext.create('MyApp.store.Tutorial').load({
@@ -850,8 +964,9 @@ Ext.define('MyApp.controller.Dashboard', {
                          }
                  })
             });
+             this.getDashboard().add(tab);
        }
-      this.getDashboard().add(tab);
+     
       this.getDashboard().setActiveTab(tab);
         
     },
@@ -863,9 +978,14 @@ Ext.define('MyApp.controller.Dashboard', {
                                     'month':0
                                     
                     }}); 
-       var userProfile = Ext.create('MyApp.view.payment.StudentFeeModule');
-       this.getDashboard().add(userProfile);
-       this.getDashboard().setActiveTab(userProfile);
+       var obj=Ext.getCmp("StudentFeeModulegrid");
+       if(obj==null) {
+       var obj = Ext.create('MyApp.view.payment.StudentFeeModule');
+       this.getDashboard().add(obj);
+       this.getDashboard().setActiveTab(obj);
+       }else{
+         this.getDashboard().setActiveTab(obj);  
+       }
        
    },        
    showFeeGeneration :function(){
@@ -874,9 +994,17 @@ Ext.define('MyApp.controller.Dashboard', {
                                     'sessionid':null,
                                     'month':-1
                     }});
-       var userProfile = Ext.create('MyApp.view.payment.GenerateMonthlyFee');
-       this.getDashboard().add(userProfile);
-       this.getDashboard().setActiveTab(userProfile);
+       var obj=Ext.getCmp("GenerateMonthlyFee"); 
+        if(obj==null){
+                var obj = Ext.create('MyApp.view.payment.GenerateMonthlyFee');
+                this.getDashboard().add(obj);
+                this.getDashboard().setActiveTab(obj);
+        }
+        else
+        {
+            this.getDashboard().setActiveTab(obj);
+        }
+                
 
        /*var tab = tabPanel.getItem('ai'+id);
 			if(tab){
@@ -898,75 +1026,140 @@ Ext.define('MyApp.controller.Dashboard', {
    },        
    CreateExam :function(){
      
-       //this.getStudentFeeModuleStore().load(); 
-       var userProfile = Ext.create('MyApp.view.class.ClassExam');
-       this.getDashboard().add(userProfile);
-       this.getDashboard().setActiveTab(userProfile);
+      var obj=Ext.getCmp("classexamgrid"); 
+      if(obj==null){
+       var obj = Ext.create('MyApp.view.class.ClassExam');
+       this.getDashboard().add(obj);
+       this.getDashboard().setActiveTab(obj);
+        }
+        else
+        {
+       this.getDashboard().setActiveTab(obj);            
+        }
+
        
    },         
    markEntry:function(){
      
-       this.getStudentMarkEntryStore().load({
+       
+                
+        var obj=Ext.getCmp("studentmarkentry"); 
+        if(obj==null){
+            this.getStudentMarkEntryStore().load({
                             params:{'classid':null,
                                     'sessionid':null,
                                     'examtypeidid':null,
                                     'studentid':null,
                                     'subjectid':null
-                    }});
-       var userProfile = Ext.create('MyApp.view.student.StudentMarkEntry');
-       this.getDashboard().add(userProfile);
-       this.getDashboard().setActiveTab(userProfile);
+            }});
+            var obj = Ext.create('MyApp.view.student.StudentMarkEntry');
+            this.getDashboard().add(obj);
+            this.getDashboard().setActiveTab(obj);
+        }
+        else
+        {
+             this.getDashboard().setActiveTab(obj);
+        }
+                
        
    },        
    gradeSetting :function(){
      
-       this.getStudentFeeModuleStore().load(); 
-       var userProfile = Ext.create('MyApp.view.payment.StudentFeeModule');
-       this.getDashboard().add(userProfile);
-       this.getDashboard().setActiveTab(userProfile);
+      
        
    },  
    showReportCardToParent :function(){    
-     var userProfile = Ext.create('MyApp.view.parent.ReportCardToParent');
-     this.getDashboard().add(userProfile);
-     this.getDashboard().setActiveTab(userProfile);
+     var obj=Ext.getCmp("reportcardtoparent"); 
+        if(obj==null){
+                var obj = Ext.create('MyApp.view.parent.ReportCardToParent');
+                this.getDashboard().add(obj);
+                this.getDashboard().setActiveTab(obj);
+        }
+        else
+        {
+            this.getDashboard().setActiveTab(obj);
+        }
+       
        
    },
    showTransport :function(){   
      this.getRouteStore().load({
                             params:{'routeid':null
                     }});   
-     var userProfile = Ext.create('MyApp.view.transport.Transport');
-     this.getDashboard().add(userProfile);
-     this.getDashboard().setActiveTab(userProfile);
+     var obj=Ext.getCmp("transportgrid"); 
+        if(obj==null){
+                var obj = Ext.create('MyApp.view.transport.Transport');
+                this.getDashboard().add(obj);
+                this.getDashboard().setActiveTab(obj);
+        }
+        else
+        {
+            this.getDashboard().setActiveTab(obj);
+        }
+           
        
    },        
    showNotification :function(){
      this.getNotificationStore().load(); 
-     var userProfile = Ext.create('MyApp.view.notice.Notification');
-     this.getDashboard().add(userProfile);
-     this.getDashboard().setActiveTab(userProfile);
+     var noticetab=Ext.getCmp("notificationgrid"); 
+        if(noticetab==null){
+            var noticetab = Ext.create('MyApp.view.notice.Notification');
+            this.getDashboard().add(noticetab);
+            this.getDashboard().setActiveTab(noticetab);
+            
+            
+        }
+        else
+        {
+            this.getDashboard().setActiveTab(noticetab);
+            
+        }
+
    },      
    showHomeWork :function(){
      this.getNotificationStore().load(); 
-     var userProfile = Ext.create('MyApp.view.homework.HomeWork');
-     this.getDashboard().add(userProfile);
-     this.getDashboard().setActiveTab(userProfile);       
+     var obj=Ext.getCmp("homeworkgrid"); 
+        if(obj==null){
+                var obj = Ext.create('MyApp.view.homework.HomeWork');
+                this.getDashboard().add(obj);
+                this.getDashboard().setActiveTab(obj);       
+        }
+        else
+        {
+            this.getDashboard().setActiveTab(obj);       
+        }
+
    },  
    callfolder:function(batchid){
        alert(batchid);
    },
           
    showPromoteStudentModule:function(){
-     var userProfile = Ext.create('MyApp.view.promotestudent.PromoteStudentModule');
-     this.getDashboard().add(userProfile);
-     this.getDashboard().setActiveTab(userProfile);       
+     var obj=Ext.getCmp("promotestudentmodule"); 
+        if(obj==null){
+                    var obj = Ext.create('MyApp.view.promotestudent.PromoteStudentModule');
+                    this.getDashboard().add(obj);
+                    this.getDashboard().setActiveTab(obj);       
+        }
+        else
+        {
+                    this.getDashboard().setActiveTab(obj);                   
+        }
+  
    },
    showAddmission:function(){
      this.getInitiatedAdmissionProcessStore().load();
-     var userProfile = Ext.create('MyApp.view.addmission.StudentAddmission');
-     this.getDashboard().add(userProfile);
-     this.getDashboard().setActiveTab(userProfile);       
+     var obj=Ext.getCmp("admissionstudentlist"); 
+        if(obj==null){
+                var obj = Ext.create('MyApp.view.addmission.StudentAddmission');
+                this.getDashboard().add(obj);
+                this.getDashboard().setActiveTab(obj);       
+        }
+        else
+        {
+            this.getDashboard().setActiveTab(obj);       
+        }
+
    },  
    showLibrary:function(){
      this.getBookListStore().load({
@@ -974,10 +1167,18 @@ Ext.define('MyApp.controller.Dashboard', {
                                columnname  :null,
                                columnvalue :null
                         }
-                        });;   
-     var userProfile = Ext.create('MyApp.view.library.Library');
-     this.getDashboard().add(userProfile);
-     this.getDashboard().setActiveTab(userProfile);
+                        });   
+     var obj=Ext.getCmp("librarygrid"); 
+        if(obj==null){
+                var obj = Ext.create('MyApp.view.library.Library');
+                this.getDashboard().add(obj);
+                this.getDashboard().setActiveTab(obj);
+        }
+        else
+        {
+            this.getDashboard().setActiveTab(obj);
+        }
+                   
    }, 
    showAlumni:function(){
        Ext.Msg.alert("This functionality is in development phase");
@@ -986,25 +1187,47 @@ Ext.define('MyApp.controller.Dashboard', {
      this.getOnlineExamDetailStore().load({
                             params:{'classid':null
                     }});
-     var userProfile = Ext.create('MyApp.view.elearning.ElearningAdmin');
-     this.getDashboard().add(userProfile);
-     this.getDashboard().setActiveTab(userProfile);       
-
+     var obj=Ext.getCmp("elearningsetup"); 
+        if(obj==null){
+                    var obj = Ext.create('MyApp.view.elearning.ElearningAdmin');
+                    this.getDashboard().add(obj);
+                    this.getDashboard().setActiveTab(obj);       
+        }
+        else
+        {
+            this.getDashboard().setActiveTab(obj);       
+        }
    },  
    showOnlineExamScheduleAdmin:function(){
      this.getOnlineSchExamDetailStore().load();
-     var userProfile = Ext.create('MyApp.view.elearning.ElearningScheduleExam');
-     this.getDashboard().add(userProfile);
-     this.getDashboard().setActiveTab(userProfile);       
+     var obj=Ext.getCmp("elearninschexam"); 
+        if(obj==null){
+                var obj = Ext.create('MyApp.view.elearning.ElearningScheduleExam');
+                this.getDashboard().add(obj);
+                this.getDashboard().setActiveTab(obj);       
+        }
+        else
+        {
+            this.getDashboard().setActiveTab(obj);       
+        }
+
        
    },
    showStudentOnlineExam:function(){
      /*this.getOnlineExamDetailStore().load({
                             params:{'classid':null
                     }});*/
-     var userProfile = Ext.create('MyApp.view.elearning.ElearningTeacher');
-     this.getDashboard().add(userProfile);
-     this.getDashboard().setActiveTab(userProfile);       
+     var obj=Ext.getCmp("elearningsetup"); 
+        if(obj==null){
+                    var obj = Ext.create('MyApp.view.elearning.ElearningTeacher');
+                    this.getDashboard().add(obj);
+                    this.getDashboard().setActiveTab(obj);       
+        }
+        else
+        {
+            this.getDashboard().setActiveTab(obj);       
+        }
+  
 
    },          
    onLogIssueClick:function(){
@@ -1141,34 +1364,74 @@ Ext.define('MyApp.controller.Dashboard', {
                              sessionid :SETTING.Users.properties.session_id        
                      }
                });
-     var userProfile = Ext.create('MyApp.view.leave.AttendenceRequestToAdmin');
-     this.getDashboard().add(userProfile);
-     this.getDashboard().setActiveTab(userProfile);       
+     var obj=Ext.getCmp("artmgrid"); 
+        if(obj==null){
+                var obj = Ext.create('MyApp.view.leave.AttendenceRequestToAdmin');
+                this.getDashboard().add(obj);
+                this.getDashboard().setActiveTab(obj);       
+        }
+        else
+        {
+            this.getDashboard().setActiveTab(obj);       
+        }
+          
    },  
    showSession :function(){
        
      this.getSessionStore().load();
-     var userProfile = Ext.create('MyApp.view.session.Session');
-     this.getDashboard().add(userProfile);
-     this.getDashboard().setActiveTab(userProfile);       
+     var obj=Ext.getCmp("sessiongrid"); 
+        if(obj==null){
+                var obj = Ext.create('MyApp.view.session.Session');
+                this.getDashboard().add(obj);
+                this.getDashboard().setActiveTab(obj);       
+        }
+        else
+        {
+                this.getDashboard().setActiveTab(obj);                   
+        }
+
    },   
    showReport  :function(){
      //this.getMisReportStore().load();
-     var userProfile = Ext.create('MyApp.view.misreport.MisReportBoard');
-     this.getDashboard().add(userProfile);
-     this.getDashboard().setActiveTab(userProfile);       
+     var obj=Ext.getCmp("misreportboard"); 
+        if(obj==null){
+                var obj = Ext.create('MyApp.view.misreport.MisReportBoard');
+                this.getDashboard().add(obj);
+                this.getDashboard().setActiveTab(obj);       
+        }
+        else
+        {
+                this.getDashboard().setActiveTab(obj);       
+        }
+
    },     
    showHostel  :function(){
      this.getHostelStore().load();
-     var userProfile = Ext.create('MyApp.view.hostel.Hostel');
-     this.getDashboard().add(userProfile);
-     this.getDashboard().setActiveTab(userProfile);       
+     var obj=Ext.getCmp("hostelgrid"); 
+        if(obj==null){
+                var obj = Ext.create('MyApp.view.hostel.Hostel');
+                this.getDashboard().add(obj);
+                this.getDashboard().setActiveTab(obj);       
+        }
+        else
+        {
+                this.getDashboard().setActiveTab(obj);                   
+        }
+
    },             
    showEmailSMSSetting:function(){
      this.getHostelStore().load();
-     var userProfile = Ext.create('MyApp.view.emailsms.EmailSms');
-     this.getDashboard().add(userProfile);
-     this.getDashboard().setActiveTab(userProfile);       
+     var obj=Ext.getCmp("emailsmsgrid"); 
+        if(obj==null){
+                var obj = Ext.create('MyApp.view.emailsms.EmailSms');
+                this.getDashboard().add(obj);
+                this.getDashboard().setActiveTab(obj);       
+        }
+        else
+        {
+            this.getDashboard().setActiveTab(obj);       
+        }
+
    },                     
    inProgress : function(){
         Ext.Msg.alert("This functionality is in development phase");
@@ -2542,9 +2805,17 @@ function changePassword(btn) {
 
 function showReports(){
        var app1=app.getController('Dashboard')
-       var Tab = Ext.create('MyApp.view.misreport.MisReportBoard');
-       app1.getDashboard().add(Tab);
-       app1.getDashboard().setActiveTab(Tab);  
+       var obj=Ext.getCmp("misreportboard"); 
+        if(obj==null){
+                var obj = Ext.create('MyApp.view.misreport.MisReportBoard');
+                app1.getDashboard().add(obj);
+                app1.getDashboard().setActiveTab(obj);  
+        }
+        else
+        {
+            app1.getDashboard().setActiveTab(obj);  
+        }
+
    }     
 
 
@@ -2552,9 +2823,17 @@ function showMoreNotification(){
 
     Ext.StoreMgr.lookup('Notification').load();  
     var app1=app.getController('Dashboard');
-    var Tab = Ext.create('MyApp.view.notice.Notification');
-    app1.getDashboard().add(Tab);
-    app1.getDashboard().setActiveTab(Tab);         
+    var obj=Ext.getCmp("notificationgrid"); 
+        if(obj==null){
+                var obj = Ext.create('MyApp.view.notice.Notification');
+                app1.getDashboard().add(obj);
+                app1.getDashboard().setActiveTab(obj);         
+        }
+        else
+        {
+            app1.getDashboard().setActiveTab(obj);         
+        }
+
     
 }
 

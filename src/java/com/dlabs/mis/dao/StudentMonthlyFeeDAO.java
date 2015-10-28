@@ -130,10 +130,10 @@ public class StudentMonthlyFeeDAO {
 
     public GenerateFee markPaid(Connection conn, GenerateFee obj) throws ReadableException  {
         
-        String updatequery="UPDATE generatemonthlyfee SET paid_status=? , paid_on=? , paid_by= ? , paid_amount=? WHERE monthly_fee_id=?";
+        String updatequery="UPDATE generatemonthlyfee SET paid_status=? , paid_on=? , paid_by= ? , paid_amount=? , paymentreceicvedfrom=? , releationwithstud=? WHERE monthly_fee_id=?";
         int flag=0;
         try {
-        if(DaoUtil.executeUpdate(conn, updatequery , new Object[]{1,new Date().getTime(),"11111111",obj.getAmount(),obj.getMonthly_fee_id()})==1){ 
+        if(DaoUtil.executeUpdate(conn, updatequery , new Object[]{1,new Date().getTime(),obj.getPaid_by(),obj.getPaid_amount(),obj.getReceived_from(),obj.getRelationtype() ,obj.getMonthly_fee_id()})==1){ 
              conn.commit();
              flag=1;        
              obj.setMarkpaid(true);
