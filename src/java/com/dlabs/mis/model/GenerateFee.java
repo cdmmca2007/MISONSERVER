@@ -27,6 +27,26 @@ float  paid_amount	;
 String received_from    ;
 String relationtype     ;
 String paid_by          ;
+String payment_mode     ;
+String cheque_dd_number ;
+
+    public String getPayment_mode() {
+        return payment_mode;
+    }
+
+    public void setPayment_mode(String payment_mode) {
+        this.payment_mode = payment_mode;
+    }
+
+    public String getCheque_dd_number() {
+        return cheque_dd_number;
+    }
+
+    public void setCheque_dd_number(String cheque_dd_number) {
+        this.cheque_dd_number = cheque_dd_number;
+    }
+
+
 
     public String getPaid_by() {
         return paid_by;

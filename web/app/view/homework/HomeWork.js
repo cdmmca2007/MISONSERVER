@@ -111,7 +111,7 @@ function addHomework(rec,classid,sessionid){
             closeAction:'destroy',
             top:{
                 image:BASE_URL+'resources/images/portal-icon/homework.png',
-                formTitle:'Create New  Homework For Class'
+                formTitle:'Create New Homework For Class'
             },
             defaults:{
                 xtype:'textfield',
@@ -136,8 +136,12 @@ function addHomework(rec,classid,sessionid){
                 fieldLabel :'Subject',
                 id:'hwsubject',
                 name:'hwsubject',
-                store:Ext.create('MyApp.store.Master').load({
-                                      params:{propertyId:2}}),
+                store:Ext.create('MyApp.store.ClassSubjectCombo').load({
+                                      params:{  propertyId:1,///Get Subject list teacher tought
+                                                classid   :Ext.getCmp('hwclasscombo').getValue(),
+                                                teacherid :SETTING.Users.userId,
+                                                sessionid :SETTING.Users.properties.session_id
+                         }}),
                 typeAhead: true,
                 queryMode: 'local',
                 emptyText: 'Select Subject',
@@ -396,17 +400,7 @@ Ext.define('MyApp.view.homework.HomeWork' ,{
                              teacherid :SETTING.Users.userId
                      }
                });
-               /* if(sessionid!=null && classid!=null && month!=null)    
-                {
-                     Ext.getCmp('StudentFeeModulegrid').getStore().load({
-                     params:{                             
-                             classid   :classid ,
-                             sessionid :sessionid,
-                             month     :month
-                     }
-                     });
-                }    
-               */
+               
             }
        }
     },{

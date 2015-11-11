@@ -10,5 +10,6 @@ Ext.define('MyApp.store.Users', {
              root: 'rows',
              totalProperty: 'totalCount'
          }
-     }
+     },
+     autoLoad:false
 });

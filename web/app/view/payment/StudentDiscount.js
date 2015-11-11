@@ -3,7 +3,7 @@ Ext.define('MyApp.view.payment.StudentDiscount' ,{
     closable:false,
     id:'studentdiscountgrid',
     layout:'fit',
-    width :580,
+    width :680,
     height:280,
     alias: 'widget.studentdiscountgrid',
     scrollable:true,
@@ -13,7 +13,7 @@ Ext.define('MyApp.view.payment.StudentDiscount' ,{
     },    
     store:'StudentDiscount',
     initComponent: function() {
-
+    discountamount=0;
     this.columns=[
     Ext.create('Ext.grid.RowNumberer'),
     {// discountname , fee_name , discountmodetext , discount
@@ -25,11 +25,11 @@ Ext.define('MyApp.view.payment.StudentDiscount' ,{
     {
         header:'Fee Name',
         dataIndex:'fee_name',
-        width :'15%',
+        width :'20%',
         style :'color:#17385B;font-weight:bold'
     },
     {
-        header:'Fixed Amount/Percent',
+        header:'Fixed/Percent',
         dataIndex:'discountmodetext',
         width :'15%',
         style :'color:#17385B;font-weight:bold'
@@ -38,9 +38,9 @@ Ext.define('MyApp.view.payment.StudentDiscount' ,{
         header:'Amount/Percent',
         dataIndex:'discount',
         style :'color:#17385B;font-weight:bold',
-        width :'15%',
+        width :'20%'
     },{ 
-        header:'Discount Amount/Percent',
+        header:'Add Discount',
         dataIndex:'include',
         xtype:'checkcolumn',
         style :'color:#17385B;font-weight:bold',
@@ -48,6 +48,13 @@ Ext.define('MyApp.view.payment.StudentDiscount' ,{
         width :'15%',
         listeners :{
             checkchange: function(box, rowIndex,checked,eOpts ){
+                var obj =Ext.StoreMgr.lookup('StudentDiscount').getAt(rowIndex).data;
+                if(checked) {
+                discountamount=parseFloat(discountamount)+parseFloat(obj.discount);
+                }else{
+                discountamount=parseFloat(discountamount)-parseFloat(obj.discount);    
+                }
+                
             }
         }    
     }

@@ -3,9 +3,9 @@ Ext.define('MyApp.controller.Dashboard', {
     extend: 'Ext.app.Controller',
     requires:['Ext.calendar.data.EventMappings'],
     stores: ['Users','Property','Master','Templates','TemplateDetails','FeeStructure','Class','Student','Teacher','Email','Period','Timetable','Combo','UserRoles','RolesPermissionGroup','RolesPermission','FeeDetailsParent','StudentFeeModule','StudentFeeModule','ClassCombo','StudentMonthlyFee','ClassSubject','ClassExam','StudentMarkEntry','Route','TransportPlace','TransportVehicle','Notification','CreatedFeeForClass','StudentFeePayment','PaymentFeeName','StudentDairy','MonthlyProgress','DigitalDairy','HomeWork','StudentHomeWorkStatus','ClassCombo1','SchoolAdmin','PromoteStudentModule',
-        'MonthlyAttendance','AttendanceSheet','InitiatedAdmissionProcess','NewStudent','OfflineStudentList','ExistingStudentList','PSMStudent','ClassSubjectTeacher','Tutorial','AttendenceRequestToAdmin','Session','BookList','BookDetail','BookTransaction','MisReport','TeacherQualification','TeacherExp','ClassSubjectCombo','ClassAttendenceReport','Alert','PaymentReportPerClass','MonthlyPaymentReport','ClassAttendenceForMonthReport','ClassReport','Hostel','HostelRoom','HostelRoomAllocation','MyWorkList','AdmissionSetting','DepartmentHeadSetting','ReplyOnStudentDairy','ChartStore','AuditTrail','AccountSetting','RoomCombo','StudentReportCardComparison','StudentReportCardComparisonSecChart','OnlineExamDetail','QuestionList','StudentEmailSMS','OnlineSchExamDetail','OnlineExamUserPass','OnlineExamUserPassResult' ,'BookRequesterList','BookedHistory','PayAdmissionFee' , 'DailyAttendenceReportForAllClass','ListOfAbsentStudent','StudentPaymentReportPerClass','ExamReportAnalysis','ExamReportAnalysisSubjectWise','Fine','Discount','FineRuleComboStore','FineListCombo','StudentDiscount'],
+        'MonthlyAttendance','AttendanceSheet','InitiatedAdmissionProcess','NewStudent','OfflineStudentList','ExistingStudentList','PSMStudent','ClassSubjectTeacher','Tutorial','AttendenceRequestToAdmin','Session','BookList','BookDetail','BookTransaction','MisReport','TeacherQualification','TeacherExp','ClassSubjectCombo','ClassAttendenceReport','Alert','PaymentReportPerClass','MonthlyPaymentReport','ClassAttendenceForMonthReport','ClassReport','Hostel','HostelRoom','HostelRoomAllocation','MyWorkList','AdmissionSetting','DepartmentHeadSetting','ReplyOnStudentDairy','ChartStore','AuditTrail','AccountSetting','RoomCombo','StudentReportCardComparison','StudentReportCardComparisonSecChart','OnlineExamDetail','QuestionList','StudentEmailSMS','OnlineSchExamDetail','OnlineExamUserPass','OnlineExamUserPassResult' ,'BookRequesterList','BookedHistory','PayAdmissionFee' , 'DailyAttendenceReportForAllClass','ListOfAbsentStudent','StudentPaymentReportPerClass','ExamReportAnalysis','ExamReportAnalysisSubjectWise','Fine','Discount','FineRuleComboStore','FineListCombo','StudentDiscount','FeeStructureCombo','ReportColumnCondition','ReportColumnDetails','CustomReportDetailsStore','ReportColumnForCondtion'],
     models: ['Users','Student','Master','Templates','TemplateDetails','FeeStructure','Class','Teacher','Email','Period','Timetable','Combo','UserRoles','RolesPermissionGroup','RolesPermission','FeeDetailsParent','StudentMonthlyFee','ClassExam','StudentMarkEntry','Route','TransportPlace','TransportVehicle','Notification','CreatedFeeForClass','StudentFeePayment','PaymentFeeName','StudentDairy','MonthlyProgress','DigitalDairy','HomeWork','StudentHomeWorkStatus','SchoolAdmin','PromoteStudentModule',
-        'MonthlyAttendance','AttendanceSheet','InitiatedAdmissionProcess','NewStudent','OfflineStudentList','ExistingStudentList','PSMStudent','ClassSubjectTeacher','Tutorial','AttendenceRequestToAdmin','Session','BookDetail','BookTransaction','MisReport','TeacherQualification','TeacherExp','ClassAttendenceReport','Alert','PaymentReportPerClass','Report','ClassReport','Hostel','HostelRoom','HostelRoomAllocation','MyWorkList','AdmissionSetting','DepartmentHeadSetting','ReplyOnStudentDairy','AuditTrail','AccountSetting','StudentReportCardComparisonSecChart','OnlineExamDetail','QuestionList','StudentEmailSMS','OnlineSchExamDetail','OnlineExamUserPass','OnlineExamUserPassResult' , 'BookRequesterList','BookedHistory','PayAdmissionFee','StudentPaymentReportPerClass','ExamReportAnalysis','ExamReportAnalysisSubjectWise','Fine','Discount','StudentDiscount'],
+        'MonthlyAttendance','AttendanceSheet','InitiatedAdmissionProcess','NewStudent','OfflineStudentList','ExistingStudentList','PSMStudent','ClassSubjectTeacher','Tutorial','AttendenceRequestToAdmin','Session','BookDetail','BookTransaction','MisReport','TeacherQualification','TeacherExp','ClassAttendenceReport','Alert','PaymentReportPerClass','Report','ClassReport','Hostel','HostelRoom','HostelRoomAllocation','MyWorkList','AdmissionSetting','DepartmentHeadSetting','ReplyOnStudentDairy','AuditTrail','AccountSetting','StudentReportCardComparisonSecChart','OnlineExamDetail','QuestionList','StudentEmailSMS','OnlineSchExamDetail','OnlineExamUserPass','OnlineExamUserPassResult' , 'BookRequesterList','BookedHistory','PayAdmissionFee','StudentPaymentReportPerClass','ExamReportAnalysis','ExamReportAnalysisSubjectWise','Fine','Discount','StudentDiscount','ReportColumnCondition','ReportColumnDetails','CustomReportDetailsModel'],
     controllers:['Users','Master','Permission','Class','Student','Teacher','PaymentStatus','Email','Period','Timetable','StudentFeeModule','EditStudentMonthlyFee','Subject','ClassExam','StudentMarkEntry','Route','TransportPlace','Notification','StudentFeePayment','StudentDairy','MonthlyProgress','DigitalDairy','HomeWork','StudentHomeWorkStatus','PromoteStudentModule','InitiatedAdmissionProcess','NewStudent','ClassSubjectTeacher','Tutorial','AttendenceRequestToAdmin','Session'/*,'BookDetail','BookTransaction'*/],
     refs :[{
             ref:'dashboard',
@@ -912,14 +912,20 @@ Ext.define('MyApp.controller.Dashboard', {
         
    },
    showTeachers : function(){
-        
-      /*  var userProfile = Ext.create('Ext.app.view.user.TeacherUserProfile');
-        this.getDashboard().add(userProfile);
-        this.getDashboard().setActiveTab(userProfile);
-      */  
-        /*var Tab = Ext.create('MyApp.view.teacher.Teacher');
-        this.getDashboard().add(Tab);
-        this.getDashboard().setActiveTab(Tab);*/
+
+       this.getUsersStore().load({
+                         params:{roleId:3
+                         }
+       });
+       
+       var obj=Ext.getCmp("teacherList"); 
+       if(obj==null) {
+           var obj = Ext.create('MyApp.view.teacher.Teacher');
+           this.getDashboard().add(obj);
+           this.getDashboard().setActiveTab(obj);
+       }else{
+            this.getDashboard().setActiveTab(obj);
+       }
    },
    showPeriod :function(){
        

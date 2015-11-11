@@ -75,7 +75,7 @@ public class MasterDAO extends AbstractSimpleDao{
         
     }
     
-     public JSONObject getAllMasterAsJson(Connection conn, int propertyid, int page,int rows) throws ReadableException {
+    public JSONObject getAllMasterAsJson(Connection conn, int propertyid, int page,int rows) throws ReadableException {
         JSONObject job = null;
         ResultSet rs = null;
         int count = 0;

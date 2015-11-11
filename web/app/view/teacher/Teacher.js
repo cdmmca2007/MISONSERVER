@@ -1,137 +1,111 @@
-Ext.define('Ext.app.view.teacher.Teacher', {
-    extend:'Ext.panel.Panel',    
-    items:[
-        {
-            xtype:'panel',
-            title:this.userName       
-        }
-    ],
-    initComponent : function(){
-        this.items = [
-            {
-                title:this.userName,
-                style:'padding:10px',
-                layout:{
-                    type:'vbox',
-                    align:'stretch'
-                },
-                items:[
-                    {
-                        xtype:'panel',
-                        layout:{   
-                            type:'hbox'
-                        },
-                        items:[
-                            {
-                                flex:1,
-                                layout:'hbox',
-                                height:130,
-                                items:[
-                                    {
-                                        xtype:'image',
-                                        height:100,
-                                        width:80,
-                                        margin:10,
-                                        border:1,
-                                        style: {
-                                            borderColor: 'black',
-                                            borderStyle: 'solid'
-                                        },
-                                        src:BASE_URL+'/resources/images/kamlesh.jpg'
-                                    },this.usersDetails = Ext.create('Ext.container.Container',{                                     
-                                       style:'padding-top:10px',
-                                       html:"<table><tr> <td class='label-for'>Name:</td><td class='label'> Kamlesh Kumar SAH</td></tr>"+
-                                            "<tr> <td class='label-for'>Gender:</td><td class='label'> Male</td></tr>"+
-                                            "<tr><td class='label-for'>Date Of Birth:</td><td class='label'>14 Nov 1984</td></tr>"+
-                                            "<tr> <td class='label-for'>Class Teacher:</td><td class='label'>8th</td></tr>"+
-                                            "<tr> <td class='label-for'>Nationality:</td><td class='label'>Indian</td></tr>"+
-                                            "<tr> <td class='label-for'>Religion:</span><td class='label'>Hindu</td></tr>"+
-                                            "<tr> <td class='label-for'>Age:</td><td class='label'>28</td></tr></table>"
-                                    })
-                                ]
-                            },{
-                                flex:1,
-                                html:"<div> <span class='label-for'>Father's Name:</span><span class='label'> Kamlesh Kumar SAH</span></div>"+
-                                    "<div> <span class='label-for'>Mother's Name:</span><span class='label'> Male</span></div>"+
-                                    "<div> <span class='label-for'>Contact:</span><span class='label'>8987678765</span></div>"+
-                                    "<hr/>"+
-                                    "<div>Addres</div>"+
-                                    "<div> <span class='label-for'>Street:</span><span class='label'>Vishrantwadi</span></div>"+
-                                    "<div> <span class='label-for'>City:</span><span class='label'>Pune</span></div>"+
-                                    "<div> <span class='label-for'>District:</span><span class='label'>Pune</span></div>"+
-                                    "<div> <span class='label-for'>State:</span><span class='label'>Maharashtra</span></div>"+
-                                    "<div> <span class='label-for'>ZIP Code:</span><span class='label'>898765</span></div>"
-                            }
-                        ]
-                                               
-                    },{
-                        xtype:'container',
-                        layout:'column',
-                        defaults:{
-                            columnWidth:.33
-                        },
-                        items:[
-                            {
-                                xtype:'portlet',
-                                title:'Todays Schedule',
-                                style:'margin:5px',
-                                html:'<table><tr>'+
-//    '<td>{title}</td>'+
-//    '<td class="attendance-{mon}">&nbsp</td>'+
-//    '<td class="attendance-{tue}">&nbsp</td>'+
-//    '<td class="attendance-{wed}">&nbsp</td>'+
-//    '<td class="attendance-{thu}">&nbsp</td>'+
-//    '<td class="attendance-{fri}">&nbsp</td>'+
-//    '<td class="attendance-{sat}">&nbsp</td>'+
-//    '<td class="attendance-{sun}">&nbsp</td>'+
-//    '</tr></table>',
-
-    '<td>&nbsp;</td>'+
-    '<td>Mon</td><td>Tue</td><td>Wed</td>'+
-    '<td>Thu</td><td>Fri</td><td>Sat</td><td>Sun</td>'+
-    '</tr>'+
-    '<tr>'+
-    '<td>Current Week</td>'+
-    '<td class="attendance-Y">&nbsp</td>'+
-    '<td class="attendance-Y">&nbsp</td>'+
-    '<td class="attendance-Y">&nbsp</td>'+
-    '<td class="attendance-N">&nbsp</td>'+
-    '<td class="attendance-Y">&nbsp</td>'+
-    '<td class="attendance-H">&nbsp</td>'+
-    '<td class="attendance-H">&nbsp</td>'+
-    '</tr></table>'                               
-                            },{
-                                xtype:'portlet',
-                                title:'Qualification',
-                                html:'test',
-                                style:'margin:5px'
-                            },{
-                                xtype:'portlet',
-                                title:'Skill Set',
-                                html:'test',
-                                style:'margin:5px'
-                            }
-                            
-                        ]
-                    }
-                ]
-            }
+Ext.define('MyApp.view.teacher.Teacher' ,{
+    extend: 'Ext.grid.Panel',
+    alias: 'widget.teacherlist',
+    id:'teacherList',
+    closable:true,
+    title: 'Teacher Administration',
+    store:'Users',
+    initComponent: function() {
+    	var me =this;
+        this.columns = [
+             Ext.create('Ext.grid.RowNumberer'),
+           // {header: 'User ID',  dataIndex: 'userid',  flex: 1,hidden : true},
+            {header: 'Name',  dataIndex: 'name',  flex: 1,
+            style :'color:#17385B;font-weight:bold'},
+            {header: 'Login Id',  dataIndex: 'userName',  flex: 1,hidden:true,
+            style :'color:#17385B;font-weight:bold'},
+            {header: 'Role', dataIndex: 'role', flex: 1,
+            style :'color:#17385B;font-weight:bold'},
+            {header: 'DOB',  dataIndex: 'dob',  flex: 1,
+            style :'color:#17385B;font-weight:bold',
+            	renderer : function(value){
+            		return Ext.Date.format(new Date(value),DEFAULT_DATE_FORMAT);
+            }},
+            {header: 'Email',  dataIndex: 'emailId',  flex: 1,
+            style :'color:#17385B;font-weight:bold'},
+            {header: 'Contact No',  dataIndex: 'contactNo',  flex: 1,
+            style :'color:#17385B;font-weight:bold'},
+            {header: 'Adress',  dataIndex: 'address',  flex: 1,
+            style :'color:#17385B;font-weight:bold'},
+            {header: 'City',  dataIndex: 'city',  flex: 1,
+            style :'color:#17385B;font-weight:bold'},
         ];
+        this.tbar=[{
+                        iconCls: 'icon-edit',
+                        text: 'View Details',
+                        id:'viewDetails',
+                        scope:this,
+                        handler: function(component){
+                                    var rec=Ext.getCmp('teacherList').getSelectionModel().getSelection()[0];
+                                    if(rec!=null){
+                                        
+                                    }
+                        }
+                    },
+                    {
+                        iconCls: 'icon-edit',
+                        text: 'Teacher Activity',
+                        id:'teacheractivity',
+                        scope:this,
+                        handler: function(component){
+                                    var rec=Ext.getCmp('teacherList').getSelectionModel().getSelection()[0];
+                                    if(rec!=null){
+                                        
+                                    }
+                        }
+                    },{
+                        iconCls: 'icon-edit',
+                        text: 'Class Performance',
+                        id:'classperformance',
+                        scope:this,
+                        handler: function(component){
+                                    var rec=Ext.getCmp('teacherList').getSelectionModel().getSelection()[0];
+                                    if(rec!=null){
+                                        
+                                    }
+                        }
+                    },{
+                        iconCls: 'icon-edit',
+                        text: 'Assign-Task',
+                        id:'assigntask',
+                        scope:this,
+                        handler: function(component){
+                                    var rec=Ext.getCmp('teacherList').getSelectionModel().getSelection()[0];
+                                    if(rec!=null){
+                                        
+                                    }
+                        }
+                    }
+                    
+                   
+        ];
+        this.selModel = Ext.create('Ext.selection.CheckboxModel',{
+            singleSelect:true,
+            listeners:{
+                selectionchange : function(sm){
+                    app.getController('Users').userSelectionChange(me,sm);
+                } 
+            }
+        });
+        this.bbar = Ext.create('Ext.PagingToolbar', {
+            store: this.store,
+            pageSize:500,
+            displayInfo: true,
+            displayMsg: 'Displaying users {0} - {1} of {2}',
+            emptyMsg: "No user to display"
+        }),
+
         this.callParent(arguments);
-    },
-    onRender: function(){
-        
-        this.callParent(arguments);
-        this.userRecords = {
-            name:'kamlesh'
-        };
-        var tpl=new Ext.Template("<div> Name:{name}</div>",
-        "<div>Age:</div>",
-        "<div>Date Of Birth</div>"
-    );
-        console.log(this.usersDetails);
-        //tpl.overwrite(this.usersDetails.body,this.userRecords)
+//        this.store.on('beforeload',function(s){
+//            s.getProxy().extraParams = {
+//                combo1:'value',
+//                combo2:'value2'
+//                
+//            }          
+//        },this);
+       // this.store.loadPage(1);
     }
 });
-
-
+    
+    
+    

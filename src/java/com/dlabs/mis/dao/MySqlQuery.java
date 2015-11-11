@@ -37,17 +37,7 @@ public class MySqlQuery {
                 + " u.gender, u.city, u.dob  ";
         return getQuery(fields,FROM_QUERY,page,row,orderBy);
     }
-     public static String[] getAllDoctorQuery(int page,int row, String orderBy,java.lang.String ss){
-        String s = getSearchStringQuery(ss, new Object[]{"fname","lname"});
-        String FROM_QUERY = " from doctor d left join configmaster m1 on d.specialisation=m1.masterid " +
-                " left join configmaster m2 on d.category=m2.masterid left join configmaster m3 on d.type=m3.masterid ";
-        if(!s.isEmpty()){
-            FROM_QUERY +=" where "+s;
-        }
-        String fields = "d.id, sal, fname, lname, emailid,dob," +
-                "contactno , area , city, m1.value as speciality, m2.value as category,m3.value as type , doa ";
-        return getQuery(fields,FROM_QUERY,page,row,orderBy);
-    }
+    
     public static String getUserDetail(int userid)
     {
         
@@ -68,24 +58,7 @@ public class MySqlQuery {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
-    public static String[] getApplicantInsertQuery(String name , String email ,String add ,String city,String state,String contact,String edu,int ctc,String comments) {
-        String query[]=new String[2];
-        query[0] ="INSERT INTO jobapplicant(fname,emailid,address,city,state,contactno,education,currentctc,placed,migrationflag,createddate,comment,jobid) "
-                + "VALUES('"+name+"','"+email+"','"+add+"','"+city+"','"+state+"','"+contact+"','"+edu+"',"+ctc+",0,0,now(),'"+comments+"',101)";
-       // query[1] ="INSERT INTO RESUMES(applicantid , path , uploadedon) values(?,?,now())";
-        query[1] ="select max(applicantid) from jobapplicant";
-        return query;
-    }
-    public static String getResumeInsertQuery(int applicantid , String filename){
-      return "INSERT INTO RESUMES(applicantid , path , uploadedon) values("+applicantid+",'"+filename+"',now())";
-    }
-
-    public static String getApplicantInsertQueryFromCsv(){
-        return "insert into jobapplicant(fname,emailid,address,contactno,education,currentctc,placed,experiance,migrationflag,createddate,location,employer,skillset,resumetitle,roles,industry,dob,jobcategory)"
-                + "values(?,?,?,?,?,?,0,?,3,?,?,?,?,?,?,?,?,?)";
-    }
-
-     public static String[] getUserDeleteQuery() {
+    public static String[] getUserDeleteQuery() {
        String query[]=new String[2];
             query[0]="delete from users where userid=?";
             query[1]="delete from userlogin where userid=?";
@@ -150,82 +123,7 @@ public class MySqlQuery {
 
         return "Delete from " + tablename + " where " + colname + " =?";
     }
-   
-   /*--------------------------ExcelSheet File Management :Start------------------------------------------*/
-     public static String[] getExcelSheetUploadQuery(int page,int row,String orderBy){
-         String FROM_QUERY = "From ExcelSheetUpload " ;
-         String fields = "UploadId ,fileName,UploadOn,UploadedBy";
-
-        return getQuery(fields,FROM_QUERY,page,row,orderBy);
-     }
-     public static String getExcelSheetUploadQuery(){
-
-         String Query = "insert into ExcelSheetUpload(fileName,UploadOn,UploadedBy) values()";
-
-        return Query;
-     }
-   /*--------------------------ExcelSheet File Management :End------------------------------------------*/
-
-
-  
-
-     /*--------------------------Combo Box Entry Query :End------------------------------------------*/
-    public static String getComboBoxQuery(int x){
-
-        return "Select value from configmaster where configid="+x+"";
-    }
-    public static String getStateQuery(int x){
-
-        return "Select stateid,name from states where countryid="+x+"";
-    }
-    public static String[] getCityQuery(int x){
-
-        String query[]=new String[2];
-        query[0]="Select cityid,name from cities where stateid="+x+"";
-        query[1]="select count(*) as count from cities where stateid="+x+"";
-        return query;
-    }
-    public static String getCompanyListQuery(){
-        String query=null;
-        query ="select distinct clientid , clientname from client";
-        return query;
-    }
-    public static String getExperience(){
-        String query=null;
-        query ="select value from configmaster where configid=6 and value is not null order by value";
-        return query;
-
-    }
-    public static String getClientJobQuery(String name){
-        String query=null;
-        query ="select requirementid , jobtitle from clientjob where clientid="+name+"";
-        return query;
-
-    }
-
-    public static String getApplicantInterviewDetail(int applicantid){
-     String query=null;
-     query  ="select C.clientname , J.jobtitle , S.interviewdate , S.timing , S.status from callschedule S, client C, clientjob J "
-             + "where S.applicantid="+applicantid+" and C.clientid=S.clinetid and S.requirementid = J.requirementid;";
-     return query;
-    }
-
-    public static String getApplicantFeedbackDetail(int applicantid){
-     String query=null;
-     query  ="select * from callfeedback where applicantid="+applicantid+"";
-     return query;
- }
-
-    public static String[] getAllSearch(int page, int rows, String searchField, String searchString,String orderBy) {
-
-        String fields = " S.scheduleid, concat(concat(A.fname ,' ') ,A.lname) as applicantname,C.clientname as companyname,CJ.jobtitle as requirementid,concat(concat(U.fname ,' ') ,U.lname) as username,"
-                + "S.interviewdate,S.timing,S.comment,S.status,case S.result when 1 then 'Placed' when 0 then 'Rejected' end as result,S.intertviewer as interviewer,S.venue,S.interviewtype,S.modifyon,S.emailreminder,S.modifyby";
-        String FROM_QUERY = "from callschedule S,jobapplicant A,client C,clientjob CJ,Users U where S.applicantid=A.applicantid and S.clinetid in (select clientid from client where clientname like '%"+searchString+"%') and S.userid=U.userid and S.requirementid=CJ.requirementid";
-        return getQuery(fields,FROM_QUERY,page,rows,orderBy);
-
-    }
-
- 
+    
 }
 
  

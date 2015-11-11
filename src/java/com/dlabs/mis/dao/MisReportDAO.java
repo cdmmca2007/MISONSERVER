@@ -4,6 +4,7 @@
  */
 package com.dlabs.mis.dao;
 
+import com.dlab.spring.web.dao.AbstractSimpleDao;
 import com.kjava.base.ReadableException;
 import com.kjava.base.db.DaoUtil;
 import com.kjava.base.util.ExtJsonUtil;
@@ -13,15 +14,18 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.json.simple.JSONObject;
+import org.springframework.stereotype.Repository;
 
 /**
  *
  * @author cd
  */
-public class MisReportDAO {
+@Repository("misreportDAO")
+public class MisReportDAO extends AbstractSimpleDao{
    
     JSONUtil jsonUtil = new ExtJsonUtil();
 
@@ -552,5 +556,144 @@ public class MisReportDAO {
 
         return job;        
     }
+
+    public Object getColumnListForModule(Connection conn, String moduleid , String reportid) throws ReadableException {
+
+        JSONObject job = null;
+        String selectquery= "SELECT rcm.moduleid , rcm.id,rcm.columnid , rcm.columnname , rcr.included as includeme FROM report_customreport rcr RIGHT JOIN report_modulecolumnmap rcm ON rcr.columnid=rcm.id AND rcr.reportid=? WHERE rcm.showtouser=1 AND rcm.moduleid=? ORDER BY rcm.columnid";
+        String countquery=  "SELECT COUNT(1) as count FROM report_customreport rcr RIGHT JOIN report_modulecolumnmap rcm ON rcr.columnid=rcm.id AND rcr.reportid=? WHERE rcm.showtouser=1 AND rcm.moduleid=?  ORDER BY rcm.columnid ";
+        int count =0;        
+        try{
+            ResultSet rs = DaoUtil.executeQuery(conn,countquery,new Object[]{reportid,moduleid});
+            if(rs.next()) {
+                count = rs.getInt("count");
+            }
+            rs = DaoUtil.executeQuery(conn,selectquery,new Object[]{reportid,moduleid});
+            job = jsonUtil.getJsonObject(rs, count, 1,500, false);
+        }
+        catch (SQLException ex) {
+            Logger.getLogger(MisReportDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return job;                
+    }
+
+    public Map<String, Object> addCustomReport(Connection conn, Map<String, Object> model) throws ReadableException {
+        //logger.debug("Paaram:"+model);
+        String query="";
+        if(conn!=null && model!=null)    {
+        
+        if(model.get("reportid")==null || model.get("reportid").toString().equals(""))    
+           query = this.sqlQueries.getProperty("ADD_CUSTOM_REPORT"); 
+        else
+            query = this.sqlQueries.getProperty("EDIT_CUSTOM_REPORT");  
+
+        if(this.jdbcTemplate.update(query, model) > 0) {
+            model.put("result", 1);
+        }else
+            model.put("result", 0);
+  
+        }
+        return model;
+    }
+
+    public Object getCustomReportList(Connection conn) throws ReadableException {
+
+        JSONObject job = null;
+        String selectquery= this.sqlQueries.getProperty("GET_CUSTOM_REPORT"); 
+        String countquery=  this.sqlQueries.getProperty("GET_CUSTOM_REPORT_COUNT"); 
+        int count =0;        
+        try{
+            ResultSet rs = DaoUtil.executeQuery(conn,countquery);
+            if(rs.next()) {
+                count = rs.getInt("count");
+            }
+            rs = DaoUtil.executeQuery(conn,selectquery);
+            job = jsonUtil.getJsonObject(rs, count, 1,500, false);
+        }
+        catch (SQLException ex) {
+            Logger.getLogger(MisReportDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return job;                
+        
+        
+    }
+
+    public Map<String, Object>[] addColumnInCustomReport(Connection conn, Map<String, Object>[] model) throws ReadableException 
+    {
+        
+        if(conn!=null && model!=null)    {
+
+         for(int i=0;i<model.length;i++){
+            boolean exist=checkColumnExistence(conn,model[i]);
+             if(exist && Integer.parseInt(model[i].get("includeme").toString())==0){
+                 String deleteQuery=this.sqlQueries.getProperty("DELETE_COLUMN_IN_REPORT");
+                 if(this.jdbcTemplate.update(deleteQuery, model[i]) > 0) 
+                        model[i].put("result", 1);
+                else
+                        model[i].put("result", 0);
+             }else if(!exist && Integer.parseInt(model[i].get("includeme").toString())==1){
+                String insertQuery=this.sqlQueries.getProperty("INSERT_COLUMN_IN_REPORT");
+                 if(this.jdbcTemplate.update(insertQuery, model[i]) > 0) 
+                        model[i].put("result", 1);
+                else
+                        model[i].put("result", 0);
+             }
+         }
+     }   
+        return model;
+    }    
     
+    private boolean checkColumnExistence(Connection conn,Map<String, Object> map) throws ReadableException {
+
+        String countquery=  this.sqlQueries.getProperty("CHECK_COLUMN_IN_REPORT"); 
+        int count =0; 
+        
+        try{
+            ResultSet rs = DaoUtil.executeQuery(conn,countquery,new Object[]{map.get("reportid"),map.get("id")});
+            if(rs.next()) {
+                count = rs.getInt("count");
+            }
+        }
+        catch (SQLException ex) {
+            Logger.getLogger(MisReportDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        if(count==1)
+        return true;          
+        else
+        return false;              
+    }     
+
+    public Map<String, Object> addColumnConditionInCustomReport(Connection conn, Map<String, Object> model) {
+        
+        String query="";
+        if(conn!=null && model!=null)    {
+        
+        if(model.get("conditionid")==null || model.get("conditionid").toString().equals(""))    
+           query = this.sqlQueries.getProperty("ADD_REPORT_CONDITION"); 
+        else
+            query = this.sqlQueries.getProperty("EDIT_REPORT_CONDITION");  
+
+        if(this.jdbcTemplate.update(query, model) > 0) {
+            model.put("result", 1);
+        }else
+            model.put("result", 0);
+        }
+        return model;
+        
+    }
 }
+
+   
+/**
+ * 
+ * SELECT mrc.conditionid , mcm.columnname ,  m.value AS vcondition  ,  m1.value AS vvalue
+  FROM report_modulereportcondition mrc 
+  JOIN report_modulecolumnmap mcm ON mcm.id=mrc.columnid 
+  JOIN MASTER m ON m.id=mrc.operation
+  JOIN MASTER m1 ON m1.id=mrc.value
+ * 
+ */
+

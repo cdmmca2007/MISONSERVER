@@ -153,5 +153,36 @@ public class ComboController {
             DbPool.close(conn);
         }
         return "";
-     }
+    }
+    @RequestMapping(value=URLMap.GET_SUBJECT_FOR_CLASS, method= RequestMethod.GET)
+    @ResponseBody
+    public String getSubjectComboForClass(@RequestParam("classid") String classid,
+                                          @RequestParam("sessionid") String sessionid
+            ){
+       try{
+            conn = DbPool.getConnection();
+            return comboDAO.getSubjectComboForClass(conn,sessionid,classid,0,150).toString();
+        }
+        catch(Exception ex){
+
+        }finally{
+            DbPool.close(conn);
+        }
+        return "";
+    }
+    @RequestMapping(value=URLMap.GET_COLUMN_LIST_FOR_COMBO, method= RequestMethod.GET)
+    @ResponseBody
+    public String getColumnComboForCondition(@RequestParam("moduleid") String moduleid
+            ){
+       try{
+            conn = DbPool.getConnection();
+            return comboDAO.getColumnComboForCondition(conn,moduleid,0,150).toString();
+        }
+        catch(Exception ex){
+
+        }finally{
+            DbPool.close(conn);
+        }
+        return "";
+    }
 }

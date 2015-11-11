@@ -97,6 +97,14 @@ function addDiscount(rec){
                              teacherid :SETTING.Users.userId
                      }
                });
+               Ext.getCmp('feecategory').getStore().load({
+                     params:{
+                             classid   :classid,
+                             sessionid :SETTING.Users.properties.session_id
+                     }
+               });
+               var data={'id':0,value:'Monthly Fee'};
+               Ext.getCmp('feecategory').getStore().add([{id: '0', label: 'Complete Monthly Fee'}]);
             }
              }
             },{
@@ -160,8 +168,7 @@ function addDiscount(rec){
                 fieldLabel :'Fee Category',
                 id:'feecategory',
                 name:'feecategory',
-                store:Ext.create('MyApp.store.Master').load({
-                                      params:{propertyId:53}}),
+                store:'FeeStructureCombo',
                 typeAhead: true,
                 queryMode: 'local',
                 emptyText: 'Select a Fee Category..',

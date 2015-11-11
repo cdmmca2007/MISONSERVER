@@ -172,17 +172,15 @@ public class  FineDiscountController{
             DbPool.close(conn);
         }
         return model;
-    } 
     
-    @RequestMapping(value=URLMap.GET_DISCOUNT_FOR_STUDENT, method= RequestMethod.GET)
+    }
+    @RequestMapping(value=URLMap.ADD_DISCOUNT_TO_STUD_MON_FEE, method= RequestMethod.POST)
     @ResponseBody
-    public Map<String,Object> getDiscountListForStudent(HttpServletRequest request,@RequestBody Map<String,Object> model){
+    public Map<String,Object>[] addDiscountToStudMonthlyFee(HttpServletRequest request,@RequestBody Map<String,Object>[] model){
         
        try{
            conn = DbPool.getConnection();
-           String id=AuthHandler.getUserId(request);
-           model.put("modifiedby",id);
-           return fineDiscountDAO.getDiscountListForStudent(conn,model);
+           return fineDiscountDAO.addDiscountToStudMonthlyFee(conn,model);
         }
 
         catch(Exception ex){
@@ -191,6 +189,33 @@ public class  FineDiscountController{
             DbPool.close(conn);
         }
         return model;
+    }
+    //payment/adddiscounttostudmonfee.do
+    
+    @RequestMapping(value=URLMap.GET_DISCOUNT_FOR_STUDENT, method= RequestMethod.GET)
+    @ResponseBody
+    public Map<String,Object> getDiscountListForStudent(HttpServletRequest request,@RequestParam("sessionid") String sessionid, 
+            @RequestParam("classid") String classid, 
+            @RequestParam("studentid") String studentid 
+            ){
+       Map<String,Object> model=new HashMap<String, Object>(); 
+       try{
+           
+           conn = DbPool.getConnection();
+           model.put("sessionid",sessionid);
+           model.put("classid",classid);
+           model.put("studentid",studentid);
+           String id=AuthHandler.getUserId(request);
+           model.put("modifiedby",id);
+           return fineDiscountDAO.getDiscountListForStudent(conn,model,0,250);
+        }
+
+        catch(Exception ex){
+              
+        }finally{
+            DbPool.close(conn);
+        }
+       return model;
     }
     
 }

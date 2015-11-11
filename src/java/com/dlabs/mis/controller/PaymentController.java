@@ -156,4 +156,21 @@ public class PaymentController {
         }
         return result;
     }
+    @RequestMapping(value=URLMap.GET_FEE_STRUC_COMBO, method= RequestMethod.GET)
+    @ResponseBody
+    public String getFeeStrucForCombo(@RequestParam("sessionid") String sessionid,
+                                      @RequestParam("classid")   String classid
+    ){
+       try{
+            conn = DbPool.getConnection();
+           return paymentDAO.getFeeStrucForCombo(conn,sessionid,classid,0,100).toString();
+        }
+       
+        catch(Exception ex){
+            
+        }finally{
+            DbPool.close(conn);
+        }
+        return ""; 
+     }
 }

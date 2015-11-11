@@ -181,7 +181,7 @@ function addDiscountToStudent(rec) {
         win=Ext.create('Ext.window.Window', {
             title:'Add Discount for :<b><font color=red>'+rec.data.studentname+'</font></b>',
             id:'addSubjects',
-            width:600,
+            width:700,
             height:300,
             closeAction:'destroy',
             top:{
@@ -191,7 +191,7 @@ function addDiscountToStudent(rec) {
             defaults:{
                 xtype:'textfield',
                 value:'',
-                width:580
+                width:680
             },
             url:'ppppp',
             items :[
@@ -216,20 +216,53 @@ function addDiscountToStudent(rec) {
                 text: 'Save',
                 action: 'save',
                 scope:this,
-                listeners:{
-                render: function(component){
-                component.getEl().on('click', function(){                                        
-                    saveDiscountToStudent(rec);
-                 });
-                }
-              }
-                    
+                handler:saveDiscountToStudent
             },
             {xtype:'btncancel'}
             ]
         });
     }
     win.show();
+}
+ 
+function saveDiscountToStudent(btn) {
+    
+
+      var rec=Ext.getCmp('StudentFeeModulegrid').getSelectionModel().getSelection()[0];                       
+      var records = Ext.StoreManager.lookup('StudentDiscount').getRange();
+      var data = [];
+            Ext.each(records, function(rec1){
+                rec1.data.monthly_fee_id=rec.data.monthly_fee_id;
+                rec1.data.createdby =SETTING.Users.userId;   
+                if(rec1.data.include)
+                    rec1.data.include=1;
+                else
+                    rec1.data.include=0;
+                
+                data.push(rec1.data);
+            });
+   
+            Ext.Ajax.request({
+                url:'payment/adddiscounttostudmonfee.do',
+                type:'json',
+                scope:this,
+                headers:{
+                    'Content-Type':'application/json'  
+                },
+                params:Ext.JSON.encode(data),
+                success: function(res){
+                Ext.Msg.alert('Success','Discount added to selected student successfully');
+                var rec=Ext.getCmp('StudentFeeModulegrid').getSelectionModel().getSelection()[0];                       
+                var response = eval('('+res.responseText+')');
+                if(rec!=null && response.fineamount!=null){
+                  var record = Ext.getCmp('StudentFeeModulegrid').getStore().getAt(currRow);
+                  record.set("discountamount",discountamount);
+                }
+                }
+            });
+            var record = Ext.getCmp('StudentFeeModulegrid').getStore().getAt(currRow);
+            record.set("discountamount",discountamount);
+  
 }
  
 function markFeePaid(obj){
@@ -295,7 +328,35 @@ function markFeePaid(obj){
                     select: function(component){
                     }
                }
-            }
+            },{
+                xtype:'combobox',
+                fieldLabel :'Payment Mode',
+                id:'payment_mode',
+                name:'payment_mode',                
+                store:Ext.create('MyApp.store.Master').load({
+                                      params:{propertyId:57}}),
+                typeAhead: true,
+                queryMode: 'local',
+                emptyText: 'Select a Payment Mode.... ',
+                Autoload:true,
+                valueField :'id',
+                displayField :'value',
+                listeners:{
+                    select: function(component){
+                    var paymentmode  =Ext.getCmp('payment_mode').getValue();
+                    if(paymentmode=='05282e85-b84d-4087-a8bb-730fdd467252'){
+                        Ext.getCmp("cheque_dd_number").hide();
+                    }else{
+                        Ext.getCmp("cheque_dd_number").show();
+                    }
+                 }
+               }
+            },{
+                fieldLabel :'Cheque/Demand Draft',
+                name : 'cheque_dd_number',                
+                id:'cheque_dd_number',
+                hidden:true
+            },
             ],
             buttons :[
             {
@@ -418,12 +479,22 @@ function markFeePaidConfirm(btn){
         header:'Fine Amount',
         dataIndex:'fineamount',
         style :'color:#17385B;font-weight:bold',
-        width:'7%'
+        width:'7%',
+        renderer : function(value,metadata,record){
+            if(value)
+            return value;  
+                
+        } 
     },{
         header:'Discount',
         dataIndex:'discountamount',
         style :'color:#17385B;font-weight:bold',
-        width:'6%'
+        width:'6%',
+        renderer : function(value){
+            if(value)
+            return value;  
+                
+        } 
     },{
         header:'Payable Amount',
         dataIndex:'payamount',
@@ -432,7 +503,7 @@ function markFeePaidConfirm(btn){
         renderer : function(value,metadata,record){
             value=parseFloat((record.data.amount?parseFloat(record.data.amount):parseFloat(0)) + (record.data.fineamount?parseFloat(record.data.fineamount):parseFloat(0)) - (record.data.discountamount?parseFloat(record.data.discountamount):parseFloat(0)));
             return value;  
-          }                   
+        }                   
     },{
         header:'Paid Amount',
         dataIndex:'paid_amount',

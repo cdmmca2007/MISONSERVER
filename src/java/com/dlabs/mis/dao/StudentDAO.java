@@ -83,9 +83,11 @@ public class StudentDAO {
                             if(rs_1.next()){
                             obj.setAdmissionno(rs_1.getString("addmission_no"));
                             }
-                            ///conn.commit();
+                            
                  } 
+                
             } 
+            conn.commit();
             }
           else if(obj.getSession_id()!=null && obj.getClassid()!=null && obj.getStudentid()!=null){
                
@@ -134,16 +136,7 @@ public class StudentDAO {
                 count = rs.getInt("count");
 
             }
-            String query=" SELECT scm.roll_no as rollno,studentid,CONCAT(CONCAT(CONCAT(CONCAT(fname,' '),case when mname is null then '' else mname end),' '),lname) as name,fname,lname,mname,FROM_UNIXTIME(dob/1000,'%d-%m-%Y') as dob,address,fathername,mothername," +
-                        "         caretakername,parentemailid,parentmobile,alternateemailid," +
-                        "         alternatemobile,classid,schoolid,createdby," +
-                        "         FROM_UNIXTIME(admissiondate/1000,'%d-%m-%Y') as admissiondate,modifiedby/*,createdon,modifiedon*/," +
-                        "         religion,cityid,stateid,countryid,userid ,"+
-                        "         addmission_no as admissionno,gender,blood_group,nationality,mother_tounge,image_path,passportno as passport_no, " +
-                        "         visadetails,ssn,uid,adharno as aadhar_id,admissiontype , category " +
-                        "    FROM student_class_map scm " +
-                        "    JOIN student s ON scm.student_id=s.studentid" +
-                        "   WHERE batch_id= ? LIMIT ? OFFSET ? ";
+            String query=" SELECT scm.roll_no AS rollno,studentid,CONCAT(CONCAT(CONCAT(CONCAT(fname,' '),CASE WHEN mname IS NULL THEN '' ELSE mname END),' '),lname) AS NAME,		 fname,	 lname,	 mname,	 FROM_UNIXTIME(dob/1000,'%d-%m-%Y') AS dob,	 address,	 fathername,	 mothername,        caretakername, parentemailid, parentmobile, alternateemailid,         alternatemobile, classid, schoolid, createdby,  FROM_UNIXTIME(admissiondate/1000,'%d-%m-%Y') AS admissiondate,		 modifiedby,              religion,m.value AS religiontxt,cityid,stateid,		 countryid, userid ,addmission_no AS admissionno, gender, blood_group, nationality, m1.value AS  nationalitytxt,		 mother_tounge, image_path,passportno AS passport_no, visadetails,ssn,	 uid, adharno AS aadhar_id, admissiontype , m4.value AS admissiontypetext, category ,		 m2.value AS categorytext , 		 m3.value AS previledged_student    FROM student_class_map scm     JOIN student s ON scm.student_id=s.studentid    LEFT JOIN master m  ON m.id=s.religion             AND m.propertyid=4    LEFT JOIN master m1 ON m1.id=s.religion            AND m1.propertyid=16    LEFT JOIN master m2 ON m2.id=s.category            AND m2.propertyid=47  LEFT JOIN master m3 ON m3.id=s.previledged_student AND m3.propertyid=52    LEFT JOIN master m4 ON m4.id=s.admissiontype       AND m4.propertyid=17  WHERE batch_id= ? LIMIT ? OFFSET ? ";
             rs = DaoUtil.executeQuery(conn,query,new Object[]{batch_id,page.getLimit(),page.getStart()});
             job = jsonUtil.getJsonObject(rs, count,page.getLimit(), page.getStart(), false);
         }

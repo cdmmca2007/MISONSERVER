@@ -137,6 +137,7 @@ public class UserController extends AbstractUserController {
     @ResponseBody
     public String getAllUser(HttpServletRequest req) throws ReadableException {
         String res = "{}";
+        String roleId="";
          try {
            conn = DbPool.getConnection();
            Paging page =Paging.getInstance(req);
@@ -146,9 +147,16 @@ public class UserController extends AbstractUserController {
 //        if (request.getParameter("rows") != null) {
 //            rows = Integer.parseInt(request.getParameter("rows"));
 //        }
-        //String ss = RequestHandler.getSearchString(request);
         //String orderBy = RequestHandler.getOrderBy(request);
-        res = userDAO.getAllAsJson(conn, page).toString();
+           
+        if(req.getParameter("roleId")!=null)   {
+           roleId= req.getParameter("roleId");
+           res = userDAO.getAllAsJsonForRole(conn, page,roleId).toString();
+        }   
+        else {
+            res = userDAO.getAllAsJson(conn, page).toString();
+        }
+        
         }
        catch (Exception ex) {
         throw new ReadableException(ex.getCause(),ex.getMessage(),"UserController", "getAllUser");

@@ -189,7 +189,7 @@ Ext.define('MyApp.view.misreport.DailyAttendenceReportForAllClass' ,{
                 name : 'activatedate',
                 fieldLabel: 'Select Date',
                 id:'selecteddate',
-                format: 'm d Y',
+                format: 'm-d-Y',
                 altFormats: 'm-d-Y|m.d.Y',
                 listeners:{
                   select: function(component){

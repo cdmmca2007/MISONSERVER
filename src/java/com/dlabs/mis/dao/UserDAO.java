@@ -640,5 +640,28 @@ public class UserDAO  {
         }
         return job;
     }
+
+    public Object getAllAsJsonForRole(Connection conn, Paging page, String roleId) throws ReadableException {
+
+        JSONObject job = null;
+        String query[] =new String[2];
+        query[0]="SELECT COUNT(1) AS count FROM users u  INNER JOIN roles ON u.roleid=roles.id  AND u.roleid <= ? INNER JOIN userlogin ON u.userid = userlogin.userid AND userlogin.status=1";
+        query[1]="SELECT userlogin.username AS userName, u.userid AS userId,'' AS  sal, u.name,u.emailid AS emailId,u.contactno AS contactNo, u.address ,roles.name AS role, u.roleid AS roleId, u.gender, u.city, u.dob  FROM users u  INNER JOIN roles ON u.roleid=roles.id  AND u.roleid <= ? INNER JOIN userlogin ON u.userid = userlogin.userid AND userlogin.status=1 ";
+        ResultSet rs = null;
+        try {
+            rs = DaoUtil.executeQuery(conn, query[0],new Object[]{roleId});
+            if (rs.next()) {
+                count = rs.getInt("count");
+            }
+            rs = DaoUtil.executeQuery(conn, query[1],new Object[]{roleId});
+            job = jsonUtil.getJsonObject(rs, count, page.getStart(),page.getLimit(), false);
+        } catch (SQLException ex) {
+           LOG.error(ex);
+        }
+        return job;
+
+        
+        
+    }
     
 }

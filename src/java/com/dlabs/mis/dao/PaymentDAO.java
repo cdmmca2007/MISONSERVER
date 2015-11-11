@@ -11,6 +11,7 @@ import com.dlabs.mis.model.FeeStructure;
 import com.dlabs.util.StringUtil;
 import com.kjava.base.ReadableException;
 import com.kjava.base.db.DaoUtil;
+import com.kjava.base.util.ExtJsonUtil;
 import com.kjava.base.util.JSONUtil;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -147,5 +148,32 @@ public class PaymentDAO {
             TemplateDetail obj = details[i];
             DaoUtil.executeUpdate(conn, query, new Object[]{obj.getId(), obj.getReferenceId(), obj.getType()});
         }
+    }
+
+    public Object getFeeStrucForCombo(Connection conn, String sessionid, String classid, int page, int rows) throws ReadableException {
+
+        JSONObject job = null;
+        ResultSet rs = null;
+        int count = 0;
+        String countQuery=null ,dataQuery =null;
+        String batchid=new GetBatch(classid , sessionid).BatchId(conn);
+        
+
+        countQuery="SELECT COUNT(1) AS count FROM feestructure fs  JOIN template_structure_mapping tsm ON tsm.fee_structure_id=fs.fee_structure_id   JOIN sessions s ON   s.template_id     =tsm.template_id AND s.batch_id=?";
+        dataQuery ="SELECT fs.fee_structure_id AS id  , fs.fee_name AS value FROM feestructure fs  JOIN template_structure_mapping tsm ON tsm.fee_structure_id=fs.fee_structure_id   JOIN sessions s ON   s.template_id     =tsm.template_id AND s.batch_id=?";
+        
+        try {
+            rs = DaoUtil.executeQuery(conn,countQuery,new Object[]{batchid});
+            if (rs.next()) {
+                count = rs.getInt("count");
+                rs = DaoUtil.executeQuery(conn,dataQuery,new Object[]{batchid});
+            }
+            job = new ExtJsonUtil().getJsonObject(rs, count, page,rows, false);
+        } catch (SQLException ex) {
+            Logger.getLogger(ComboDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return job;
+        
+        
     }
 }

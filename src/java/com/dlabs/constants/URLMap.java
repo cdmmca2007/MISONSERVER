@@ -260,10 +260,24 @@ public interface URLMap {
     String ADD_FINE_TO_STUDENT_MON_FEE="payment/addfinetostudmonfee.do";
     String ADD_DISCOUNT_TO_STUDENT_MON_FEE="payment/adddistostudmonfee.do";
     String GET_DISCOUNT_FOR_STUDENT="payment/getDiscountForStud.do";
+    String GET_FEE_STRUC_COMBO="payment/getFeeStrucForCombo.do";
+    String ADD_DISCOUNT_TO_STUD_MON_FEE="payment/adddiscounttostudmonfee.do";
+    String GET_SUBJECT_FOR_CLASS="homework/getClassSubjectCombo.do";
     
     
     
     
+    String ADD_CUSTOM_REPORT="misreport/addcustomreport.do";
+    String GET_CUSTOM_REPORT="misreport/getcustrep.do";
+    String GET_COLUMN_LIST_FOR_MODULE="misreport/getColumnForReports.do";
+    String ADD_COLUMN_IN_REPORT="misreport/addcolumnforreport.do";
+    
+    
+    String GET_CONDITION_LIST_FOR_REPORT="misreport/getConditionForReport.do";
+    String GET_COLUMN_LIST_FOR_COMBO="misreport/getColumnForCondition.do";
+ 
+    
+    String ADD_REPORT_CONDITION="misreport/addcustomreportcondition.do";
     
 }
 

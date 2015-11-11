@@ -4,14 +4,14 @@ Ext.define('MyApp.view.user.UserProfile', {
     items:[
         {
             xtype:'panel',
-            title:this.userName
+            title:'jkhjk'//this.userName
         }
     ],
     initComponent : function(){
 
         this.items = [
             {
-                title:this.userName,
+                title:'ff',//this.userName,
                 style:'padding:10px',
                 layout:{
                     type:'vbox',

@@ -16,13 +16,16 @@ import com.dlabs.mis.dao.MasterDAO;
 import com.dlabs.mis.dao.MisReportDAO;
 import com.dlabs.mis.dao.PaymentDAO;
 import com.dlabs.mis.model.*;
+import com.dlabs.session.AuthHandler;
 
 import com.kjava.base.db.DbPool;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -272,4 +275,84 @@ public class MisReportController {
         }
         return ""; 
   }  
+//For Custom Report    
+@RequestMapping(value=URLMap.GET_COLUMN_LIST_FOR_MODULE  , method= RequestMethod.GET)
+@ResponseBody
+    public String getColumnListForModule(
+            @RequestParam("moduleid") String moduleid,
+            @RequestParam("reportid") String reportid
+            ){
+       try{
+            conn = DbPool.getConnection();
+            return misreportDAO.getColumnListForModule(conn,moduleid,reportid).toString();
+       }
+      
+        catch(Exception ex){            
+        }finally{
+            DbPool.close(conn);
+        }
+        return ""; 
+  }
+  @RequestMapping(value=URLMap.ADD_CUSTOM_REPORT, method= RequestMethod.POST)
+  @ResponseBody
+  public Map<String,Object> addCustomReport(HttpServletRequest request,@RequestBody Map<String,Object> model){
+        
+       try{
+           conn = DbPool.getConnection();
+           String id=AuthHandler.getUserId(request);
+           return misreportDAO.addCustomReport(conn,model);
+        }
+        catch(Exception ex){
+              
+        }finally{
+            DbPool.close(conn);
+        }
+        return model;
+   }  
+  
+@RequestMapping(value=URLMap.GET_CUSTOM_REPORT  , method= RequestMethod.GET)
+@ResponseBody
+    public String getCustomReportList(){
+       try{
+            conn = DbPool.getConnection();
+            return misreportDAO.getCustomReportList(conn).toString();
+       }
+      
+        catch(Exception ex){            
+        }finally{
+            DbPool.close(conn);
+        }
+        return ""; 
+  } 
+    
+  @RequestMapping(value=URLMap.ADD_COLUMN_IN_REPORT, method= RequestMethod.POST)
+  @ResponseBody
+  public Map<String,Object>[] addColumnInCustomReport(HttpServletRequest request,@RequestBody Map<String,Object>[] model){
+        
+       try{
+           conn = DbPool.getConnection();
+           return misreportDAO.addColumnInCustomReport(conn,model);
+        }
+        catch(Exception ex){
+              
+        }finally{
+            DbPool.close(conn);
+        }
+        return model;
+   }   
+  @RequestMapping(value=URLMap.ADD_REPORT_CONDITION, method= RequestMethod.POST)
+  @ResponseBody
+  public Map<String,Object> addColumnConditionInCustomReport(HttpServletRequest request,@RequestBody Map<String,Object> model){
+        
+       try{
+           conn = DbPool.getConnection();
+           return misreportDAO.addColumnConditionInCustomReport(conn,model);
+        }
+        catch(Exception ex){
+              
+        }finally{
+            DbPool.close(conn);
+        }
+        return model;
+   } 
 }

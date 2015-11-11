@@ -350,4 +350,51 @@ public class ComboDAO {
         return job;
     }
     
+    public Object getSubjectComboForClass(Connection conn,String sessiondid , String classid ,int page, int rows) throws ReadableException {
+        JSONObject job = null;
+        ResultSet rs = null;
+        int count = 0;
+        String countQuery=null;
+        String dataQuery =null;
+            countQuery="";
+            dataQuery ="";
+        
+        try {
+            rs = DaoUtil.executeQuery(conn,countQuery);
+            if (rs.next()) {
+                count = rs.getInt("count");
+                rs = DaoUtil.executeQuery(conn,dataQuery);
+            }
+            
+            job = new ExtJsonUtil().getJsonObject(rs, count, page,rows, false);
+        } catch (SQLException ex) {
+            Logger.getLogger(ComboDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return job;
+
+    }
+
+    public Object getColumnComboForCondition(Connection conn, String moduleid, int page, int rows) throws ReadableException {
+        JSONObject job = null;
+        ResultSet rs = null;
+        int count = 0;
+        String countQuery=null;
+        String dataQuery =null;
+            countQuery="SELECT count(1) as count FROM  report_modulecolumnmap  WHERE moduleid=? AND conditionalcolumn=1";
+            dataQuery ="SELECT CONCAT(CONCAT(id,' - '),propertyid) AS id, columnname  AS value FROM  report_modulecolumnmap  WHERE moduleid=? AND conditionalcolumn=1";
+        
+        try {
+            rs = DaoUtil.executeQuery(conn,countQuery,new Object[]{moduleid});
+            if (rs.next()) {
+                count = rs.getInt("count");
+                rs = DaoUtil.executeQuery(conn,dataQuery,new Object[]{moduleid});
+            }
+            
+            job = new ExtJsonUtil().getJsonObject(rs, count, page,rows, false);
+        } catch (SQLException ex) {
+            Logger.getLogger(ComboDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return job;
+    }
+    
 }

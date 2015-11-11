@@ -1,9 +1,9 @@
-Ext.define('MyApp.store.ClassSubjectTeacher', {
+Ext.define('MyApp.store.ReportColumnForCondtion', {
     extend: 'Ext.data.Store',
-    model:'MyApp.model.ClassSubjectTeacher',
+    model:'MyApp.model.Combo',
     proxy: {
          type: 'ajax',
-         url: 'classes/getstl.do',
+         url: 'misreport/getColumnForCondition.do',
          reader: {
              type: 'json',
              root: 'rows'
