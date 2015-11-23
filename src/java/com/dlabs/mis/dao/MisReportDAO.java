@@ -4,6 +4,7 @@
  */
 package com.dlabs.mis.dao;
 
+import com.dlab.spring.web.dao.AbstractNamedDao;
 import com.dlab.spring.web.dao.AbstractSimpleDao;
 import com.kjava.base.ReadableException;
 import com.kjava.base.db.DaoUtil;
@@ -14,10 +15,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.json.simple.JSONObject;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -25,13 +28,13 @@ import org.springframework.stereotype.Repository;
  * @author cd
  */
 @Repository("misreportDAO")
-public class MisReportDAO extends AbstractSimpleDao{
+public class MisReportDAO extends AbstractNamedDao{
    
     JSONUtil jsonUtil = new ExtJsonUtil();
 
     public Object getAllReportListAsJson(Connection conn,String reporttypeid,int page, int rows) throws ReadableException {
         JSONObject job = null;
-        String selectquery= "SELECT id,name,description, CASE STATUS WHEN 0 THEN 'Inactive' WHEN 1 THEN 'Active' END AS status, " +
+        String selectquery= "SELECT id,name,description,iscustomreport ,CASE STATUS WHEN 0 THEN 'Inactive' WHEN 1 THEN 'Active' END AS status, " +
                             " image ,totviews, totdownload, createdby, createdon, modifiedby, modifiedon " +
                             " FROM misreport where reporttype=? LIMIT ? OFFSET ? ";
         int count =0;        
@@ -684,16 +687,93 @@ public class MisReportDAO extends AbstractSimpleDao{
         return model;
         
     }
+
+    public SqlRowSet getCustomReportQueryData(Connection conn,int reportid,String sessiondid,String batchid) throws ReadableException {
+        String query = getCustomReportQuery(conn,reportid,sessiondid,batchid);
+        
+        Map<String, Object> model=new HashMap();
+        model.put("sessionid", sessiondid);
+        return this.jdbcTemplate.queryForRowSet(query, model);
+    }
+
+    private String getCustomReportQuery(Connection conn,int reportid,String sessiondid,String batchid) throws ReadableException {
+        String selectfield="Select " , frompart="",whereclause="";
+        String query="",basequerycondition="";
+        int counter=0;
+        /*
+        Get Select Field
+        */      
+        query=this.sqlQueries.getProperty("GET_SELECT_FIELD");  
+        ResultSet rs = DaoUtil.executeQuery(conn,query,new Object[]{reportid});
+        try {
+            while(rs!=null && rs.next()){
+            if(rs.getObject("selectfield")!=null)
+            selectfield+=rs.getString("selectfield");    
+            }
+            selectfield= selectfield.substring(0,selectfield.length()-1);/* Remove Lasr comma from select part*/
+        } catch (SQLException ex) {
+            Logger.getLogger(MisReportDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        /*
+        Get From Part
+        */      
+        query=this.sqlQueries.getProperty("GET_FROM_PART");  
+        rs = DaoUtil.executeQuery(conn,query,new Object[]{reportid});
+        try {
+            if(rs!=null && rs.next()){
+                if(rs.getObject("basequery")!=null)
+                    frompart=rs.getString("basequery");
+                if(rs.getObject("basequerycondition")!=null)
+                    basequerycondition=rs.getString("basequerycondition");
+
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(MisReportDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        /*
+        Get Where Clause
+        */      
+        query=this.sqlQueries.getProperty("GET_WHERE_CLAUSE");  
+        rs = DaoUtil.executeQuery(conn,query,new Object[]{reportid});
+        try {
+            while(rs!=null && rs.next()){
+                counter++;
+                if(counter==1){
+                whereclause=" where (";
+                }
+                if(counter > 1){
+                whereclause+=" or ";
+                }
+                if(rs.getObject("vcondition")!=null)
+                    whereclause+=rs.getString("vcondition");
+            }
+            whereclause=whereclause+" ) ";
+            if(basequerycondition!=null)
+            whereclause=whereclause+" and " + basequerycondition;
+        } catch (SQLException ex) {
+            Logger.getLogger(MisReportDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return selectfield+" "+frompart+whereclause;
+    }
+
+    public String getCustomReportName(Connection conn,int reportid) throws ReadableException {
+    String reportname="" ;
+    
+    String query="SELECT name FROM misreport WHERE id=?";  
+    ResultSet  rs = DaoUtil.executeQuery(conn,query,new Object[]{reportid});
+        try {
+            if(rs!=null && rs.next()){
+                if(rs.getObject("name")!=null)
+                    reportname=rs.getString("name");
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(MisReportDAO.class.getName()).log(Level.SEVERE, null, ex);
+     }
+    return reportname;
+    }
 }
 
-   
-/**
- * 
- * SELECT mrc.conditionid , mcm.columnname ,  m.value AS vcondition  ,  m1.value AS vvalue
-  FROM report_modulereportcondition mrc 
-  JOIN report_modulecolumnmap mcm ON mcm.id=mrc.columnid 
-  JOIN MASTER m ON m.id=mrc.operation
-  JOIN MASTER m1 ON m1.id=mrc.value
- * 
- */
 

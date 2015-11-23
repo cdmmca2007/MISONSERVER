@@ -176,7 +176,7 @@ public class StudentAdmissionDAO extends AbstractSimpleDao{
                                                             obj.getCaretakername(),obj.getParentemailid(),obj.getParentmobile(),
                                                             obj.getAlternateemailid(),obj.getAlternatemobile(),
                                                             obj.getClassid(),obj.getCreatedby(),obj.getModifiedby(),obj.getReligion(),obj.getCityid(),
-                                                            obj.getStateid(),"",obj.getParentemailid(),obj.getAdmissiondate(),
+                                                            obj.getStateid(),"",obj.getParentemailid(),obj.getAdmissiondate1(),
                                                             obj.getGender(),obj.getBlood_group(),obj.getNationality(),obj.getMother_tounge(),
                                                             obj.getImage_path(),obj.getPassport_no(),obj.getVisadetail(),obj.getSsn(),obj.getUid(),
                                                             obj.getAadhar_id(),obj.getAdmissiontype() , obj.getCategory()

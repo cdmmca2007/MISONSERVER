@@ -19,7 +19,7 @@
     </property>
     <property>
         <name>db_host</name>
-        <value>localhost</value>
+        <value>192.69.210.154</value>
     </property>
     <property>
         <name>db_port</name>
@@ -27,18 +27,15 @@
     </property>
     <property>
         <name>db_name</name>
-       <value>mis</value>
-        <!-- <value>dlab2009_poisehr</value>-->
+       <value>school_mis1</value>
     </property>
     <property>
         <name>db_user</name>
-        <!--<value>dlab2009_dlab</value>-->
-        <value>root</value>
+        <value>school_root1</value>
     </property>
     <property>
         <name>db_passwd</name>
-        <value>root</value>
-         <!--<value>dl@b2009</value>-->
+        <value>root123</value>
     </property>
     <property>
         <name>maxActive</name>
@@ -46,39 +43,39 @@
     </property>
      <property>
         <name>smtppath</name>
-        <value>localhost</value>
+        <value>mail.schoolomanager.com</value>
     </property>
      <property>
         <name>smtpport</name>
-        <value>25</value>
+        <value>465</value>
     </property>
     <property>
         <name>context_url</name>
-        <value>http://localhost:8084/MIS/</value>
+        <value>http://schoolomanager.in/MIS/</value>
     </property>
         <property>
         <name>contact_admin_mailid</name>
-        <value>cdmse2012@gmail.com</value>
+        <value>admin@schoolomanager.com</value>
     </property>
 
     <property>
         <name>prof_pic_store</name>
-        <value>d:\\store\\profile</value>
+        <value>/home/school/profile</value>
     </property>
         <property>
         <name>homework_store</name>
-        <value>d:\\store\\homework</value>
+        <value>/home/school/homework</value>
     </property>
     <property>
         <name>tutotial_store</name>
-        <value>d:\\store\\tutotial</value>
+        <value>/home/school/tutotial</value>
     </property>
     <property>
         <name>library_store</name>
-        <value>d:\\store\\library</value>
+        <value>/home/school/library</value>
     </property>
     <property>
         <name>extra_store</name>
-        <value>d:\\store\\extra</value>
+        <value>/home/school/extra</value>
     </property>
 </root>

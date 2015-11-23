@@ -3,8 +3,8 @@
  * and open the template in the editor.
  */
 
-//BASE_URL ="http://localhost:8084/MIS/";
-BASE_URL ="http://schoolomanager.in/MIS/";
+BASE_URL ="http://localhost:8084/MIS/";
+//BASE_URL ="http://schoolomanager.in/MIS/";
 PORTAL_ICON =BASE_URL+"resources/images/portal-icon/";
 SETTING = {};
 discountamount=0;

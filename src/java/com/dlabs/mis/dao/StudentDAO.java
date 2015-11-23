@@ -5,9 +5,11 @@
 package com.dlabs.mis.dao;
 
 import com.dlabs.mis.model.*;
+import com.dlabs.util.FileHandler;
 import com.dlabs.util.Paging;
 import com.kjava.base.ReadableException;
 import com.kjava.base.db.DaoUtil;
+import com.kjava.base.util.ConfigReader;
 import com.kjava.base.util.ExtJsonUtil;
 import com.kjava.base.util.JSONUtil;
 import java.sql.Connection;
@@ -16,9 +18,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -37,10 +42,10 @@ public class StudentDAO {
                             "	caretakername,parentemailid,parentmobile,alternateemailid,alternatemobile, " +
                             "	classid,createdby,createdon,modifiedby,modifiedon,religion,cityid, " +
                             "	stateid,countryid,userid,admissiondate,gender,blood_group, " +
-                            "	nationality,mother_tounge,image_path,passportno,visadetails,ssn,uid,adharno,admissiontype, old_admission_no , category "  +
+                            "	nationality,mother_tounge,image_path,passportno,visadetails,ssn,uid,adharno,admissiontype, old_admission_no , category  , previledged_student , occupation, fatherhighedu, motherhishedu, annualincome "  +
                             "	)" +
                             "	VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,CURRENT_DATE,?,CURRENT_DATE,?,? " +
-                            "	      ,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                            "	      ,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         String classstudentquery="INSERT INTO student_class_map " +
                             "	(student_id,batch_id)" +
                             "	VALUES(?,?)";
@@ -56,10 +61,10 @@ public class StudentDAO {
                                                             obj.getCaretakername(),obj.getParentemailid(),obj.getParentmobile(),
                                                             obj.getAlternateemailid(),obj.getAlternatemobile(),
                                                             obj.getClassid(),obj.getCreatedby(),obj.getModifiedby(),obj.getReligion(),obj.getCityid(),
-                                                            obj.getStateid(),"",obj.getParentemailid(),obj.getAdmissiondate(),
+                                                            obj.getStateid(),"",obj.getParentemailid(),obj.getAdmissiondate1(),
                                                             obj.getGender(),obj.getBlood_group(),obj.getNationality(),obj.getMother_tounge(),
                                                             obj.getImage_path(),obj.getPassport_no(),obj.getVisadetail(),obj.getSsn(),obj.getUid(),
-                                                            obj.getAadhar_id(),obj.getAdmissiontype(),obj.getAdmissionno() , obj.getCategory()
+                                                            obj.getAadhar_id(),obj.getAdmissiontype(),obj.getAdmissionno() , obj.getCategory() , obj.getPreviledged_student(), obj.getOccupation() , obj.getFatherhighestedu() , obj.getMotherhishedu() , obj.getAnnualincome()
                                                           })==1){  
                 if(DaoUtil.executeUpdate(conn,classstudentquery,new Object[]{studentid,batchid})==1){
                             User userobj=new User();
@@ -97,7 +102,7 @@ public class StudentDAO {
                                 "	modifiedby = ? , modifiedon = current_date , religion = ? , cityid = ? , stateid = ? , " +
                                 "	countryid = ? , admissiondate = ? , gender = ? , blood_group = ? , " +
                                 "	nationality = ? , mother_tounge = ? , passportno = ? , visadetails = ? , " +
-                                "	ssn = ?, uid = ? , adharno = ? , category= ? " +
+                                "	ssn = ?, uid = ? , adharno = ? , category= ? , previledged_student = ?  , occupation = ? ,fatherhighestedu = ? , motherhishedu = ? , annualincome = ? " +
                                 " WHERE	addmission_no = ? AND studentid= ?";
            
              if(DaoUtil.executeUpdate(conn,updatequery,new Object[]{
@@ -106,9 +111,9 @@ public class StudentDAO {
                                         obj.getMothername(),obj.getCaretakername(),obj.getParentemailid(),obj.getParentmobile(),
                                         obj.getAlternateemailid(),obj.getAlternatemobile(),obj.getClassid(),
                                         obj.getModifiedby(),obj.getReligion(),obj.getCityid(),obj.getStateid(),
-                                        "",obj.getAdmissiondate(),obj.getGender(),obj.getBlood_group(),
+                                        "",obj.getAdmissiondate1(),obj.getGender(),obj.getBlood_group(),
                                         obj.getNationality(),obj.getMother_tounge(),obj.getPassport_no(),
-                                        obj.getVisadetail(),obj.getSsn(),obj.getUid(),obj.getAadhar_id(),obj.getCategory(),
+                                        obj.getVisadetail(),obj.getSsn(),obj.getUid(),obj.getAadhar_id(),obj.getCategory(),obj.getPreviledged_student(),obj.getOccupation() , obj.getFatherhighestedu() , obj.getMotherhishedu() , obj.getAnnualincome(),
                                         obj.getAdmissionno(),obj.getStudentid()
                                 })==1){
                  conn.commit();
@@ -136,7 +141,7 @@ public class StudentDAO {
                 count = rs.getInt("count");
 
             }
-            String query=" SELECT scm.roll_no AS rollno,studentid,CONCAT(CONCAT(CONCAT(CONCAT(fname,' '),CASE WHEN mname IS NULL THEN '' ELSE mname END),' '),lname) AS NAME,		 fname,	 lname,	 mname,	 FROM_UNIXTIME(dob/1000,'%d-%m-%Y') AS dob,	 address,	 fathername,	 mothername,        caretakername, parentemailid, parentmobile, alternateemailid,         alternatemobile, classid, schoolid, createdby,  FROM_UNIXTIME(admissiondate/1000,'%d-%m-%Y') AS admissiondate,		 modifiedby,              religion,m.value AS religiontxt,cityid,stateid,		 countryid, userid ,addmission_no AS admissionno, gender, blood_group, nationality, m1.value AS  nationalitytxt,		 mother_tounge, image_path,passportno AS passport_no, visadetails,ssn,	 uid, adharno AS aadhar_id, admissiontype , m4.value AS admissiontypetext, category ,		 m2.value AS categorytext , 		 m3.value AS previledged_student    FROM student_class_map scm     JOIN student s ON scm.student_id=s.studentid    LEFT JOIN master m  ON m.id=s.religion             AND m.propertyid=4    LEFT JOIN master m1 ON m1.id=s.religion            AND m1.propertyid=16    LEFT JOIN master m2 ON m2.id=s.category            AND m2.propertyid=47  LEFT JOIN master m3 ON m3.id=s.previledged_student AND m3.propertyid=52    LEFT JOIN master m4 ON m4.id=s.admissiontype       AND m4.propertyid=17  WHERE batch_id= ? LIMIT ? OFFSET ? ";
+            String query=" SELECT scm.roll_no AS rollno,studentid,CONCAT(CONCAT(CONCAT(CONCAT(fname,' '),CASE WHEN mname IS NULL THEN '' ELSE mname END),' '),lname) AS name,		 fname,	 lname,	 mname,	 FROM_UNIXTIME(dob/1000,'%d-%m-%Y') AS dob,	 address,	 fathername,	 mothername,        caretakername, parentemailid, parentmobile, alternateemailid,         alternatemobile, classid, schoolid, createdby,  FROM_UNIXTIME(admissiondate/1000,'%d-%m-%Y') AS admissiondate1,		 modifiedby,              religion,m.value AS religiontxt,cityid,stateid,		 countryid, userid ,addmission_no AS admissionno, gender, blood_group, nationality, m1.value AS  nationalitytxt,		 mother_tounge, image_path,passportno AS passport_no, visadetails as visadetail,ssn,	 uid, adharno AS aadhar_id, admissiontype , m4.value AS admissiontypetext, category ,		 m2.value AS categorytext , 		 m3.value AS previledged_student  , occupation as occupation, fatherhighestedu , motherhishedu, annualincome  FROM student_class_map scm     JOIN student s ON scm.student_id=s.studentid    LEFT JOIN master m  ON m.id=s.religion             AND m.propertyid=4    LEFT JOIN master m1 ON m1.id=s.religion            AND m1.propertyid=16    LEFT JOIN master m2 ON m2.id=s.category            AND m2.propertyid=47  LEFT JOIN master m3 ON m3.id=s.previledged_student AND m3.propertyid=52    LEFT JOIN master m4 ON m4.id=s.admissiontype       AND m4.propertyid=17  WHERE batch_id= ? LIMIT ? OFFSET ? ";
             rs = DaoUtil.executeQuery(conn,query,new Object[]{batch_id,page.getLimit(),page.getStart()});
             job = jsonUtil.getJsonObject(rs, count,page.getLimit(), page.getStart(), false);
         }
@@ -659,7 +664,25 @@ public class StudentDAO {
         return job;
     }
 
-
+public HashMap changeStudentProfilePic(Connection conn,HttpServletRequest request, HttpServletResponse response) throws ReadableException {
+        String path=new ConfigReader().get("prof_pic_store");
+        String studentid="", filename="";
+        String updatequery="update student set image_path=? where studentid=?";
+        HashMap arrParam = new HashMap();
+        arrParam = (HashMap) FileHandler.uploadFile(path, request);        
+        
+        if(arrParam.containsKey("id"))studentid=(String)arrParam.get("id");
+        if(arrParam.containsKey("modifiedfilename"))filename=(String)arrParam.get("modifiedfilename");
+        
+        if(DaoUtil.executeUpdate(conn,updatequery,new Object[]{filename,studentid})==1){
+            try {
+                conn.commit();
+            } catch (SQLException ex) {
+                java.util.logging.Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return arrParam;
+    }
   
 }
     

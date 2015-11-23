@@ -41,6 +41,12 @@
         <form id='downloadrec' method='POST' action='download/downloadadmpayrec.do'>
              <input name="downloadrecdata" id="downloadrecdata"/>
     </form></div>
+    <div style="display: none;" id="downloadcustomreport">
+        <form id='downloadcustomreportform' method='POST' action='download/downloadcustomreport.do'>
+             <input name="reportid" id="reportid"/>
+             <input name="sessionid" id="sessionid"/>
+             <input name="classid" id="classid"/>
+    </form></div>
 </body>
 </html>
 

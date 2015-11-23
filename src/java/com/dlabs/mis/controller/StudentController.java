@@ -12,19 +12,23 @@ import com.dlabs.constants.MISConstant;
 import com.dlabs.constants.URLMap;
 import com.dlabs.mis.dao.MasterDAO;
 import com.dlabs.mis.dao.StudentDAO;
+import com.dlabs.mis.dao.UserDAO;
 import com.dlabs.mis.model.*;
 import com.dlabs.mis.services.AuditTrailService;
 import com.dlabs.mis.services.MailService;
 import com.dlabs.session.AuthHandler;
 import com.dlabs.util.Paging;
+import com.kjava.base.ReadableException;
 import com.kjava.base.db.DbPool;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -284,8 +288,42 @@ public class StudentController {
             DbPool.close(conn);
         }
         return ""; 
-     }    
+     }  
+    @RequestMapping(value=URLMap.UPLOAD_STUDENT_RPOF_PIC, method=RequestMethod.POST)
+    @ResponseBody
+    public String changeStudentProfilePic(HttpServletRequest request,HttpServletResponse response) throws ReadableException {
+        String res = "{failure:true}";
+        Connection conn = null;
+        try {
+            conn = DbPool.getConnection();
+            HashMap arrmap=studentDAO.changeStudentProfilePic(conn,request, response);
+            if(arrmap!=null && arrmap.size()>0){
+            res = "{success:true}";
+            auditTrailService.insertLog(conn, 107, (String)arrmap.get("id")); 
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return res;
+    }
     
+    @RequestMapping(value=URLMap.GET_STUD_PROFILE_PIC, method=RequestMethod.GET)
+    @ResponseBody
+    public String getStudentProfilePic(HttpServletRequest request,HttpServletResponse response) throws ReadableException {
+        String res = "{failure:true}";
+        Connection conn = null;
+        try {
+            conn = DbPool.getConnection();
+            /*HashMap arrmap=studentDAO.changeStudentProfilePic(conn,request, response);
+            if(arrmap!=null && arrmap.size()>0){
+            res = "{success:true}";
+            auditTrailService.insertLog(conn, 107, (String)arrmap.get("id")); 
+            }*/
+        } catch (SQLException ex) {
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return res;
+    }
 }   
 
 

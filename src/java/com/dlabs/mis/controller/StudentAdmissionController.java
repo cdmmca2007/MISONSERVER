@@ -359,36 +359,6 @@ public class StudentAdmissionController {
                    HttpServletRequest request,HttpServletResponse response
     ) throws DocumentException{
         
-     /*   response.setContentType("application/pdf");
-        try {
-        OutputStream os = response.getOutputStream();
-        Document document = new Document(PageSize.LETTER);
-        PdfWriter pdfWriter = PdfWriter.getInstance(document,os);
-        document.open();
-        document.addAuthor("Real Gagnon");
-        document.addCreator("Real's HowTo");
-        document.addSubject("Thanks for your support");
-        document.addCreationDate();
-        document.addTitle("Please read this");
-
-        XMLWorkerHelper worker = XMLWorkerHelper.getInstance();
-        String data=new String();
-        if(request.getParameter("downloadrecdata")!=null){
-            data=request.getParameter("downloadrecdata");
-        }else
-        {
-            data="No Data";
-        }
-        String content="";
-        String str = "<html><head></head><body>"+data+"</body></html>";
-        worker.parseXHtml(pdfWriter, document, new StringReader(str));
-        document.close();
-        os.close();
-        }
-        catch (Exception ex) {
-            ex.printStackTrace();
-        }*/
-        
    try 
     {
         String htmlstring=new String();
@@ -402,22 +372,14 @@ public class StudentAdmissionController {
         InputStream is = new ByteArrayInputStream(htmlstring.getBytes());             
         ByteArrayOutputStream baos = new ByteArrayOutputStream(); 
 
-        // step 1
         Document document = new Document();
-
-        // step 2
         PdfWriter writer = PdfWriter.getInstance(document, baos);
-
         writer.setInitialLeading(12.5f);
-
-        // step 3
         document.open();
 
         HtmlPipelineContext htmlContext = new HtmlPipelineContext(null);
-
         htmlContext.setTagFactory(Tags.getHtmlTagProcessorFactory());
 
-        // CSS
         CSSResolver cssResolver = new StyleAttrCSSResolver();
         InputStream csspathtest = Thread.currentThread().getContextClassLoader().getResourceAsStream("app.css");            
         CssFile cssfiletest = XMLWorkerHelper.getCSS(csspathtest);
@@ -427,9 +389,8 @@ public class StudentAdmissionController {
 
         XMLWorker worker = new XMLWorker(pipeline, true);
         XMLParser p = new XMLParser(worker);
-        p.parse(is); //new FileInputStream("results/demo2/walden.html"));
+        p.parse(is); 
 
-        // step     
         document.close();
 
         response.setContentType("application/pdf");

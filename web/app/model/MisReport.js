@@ -11,7 +11,8 @@ Ext.define('MyApp.model.MisReport', {
         'createdon', 
         'modifiedby', 
         'modifiedon',
-        'image'
+        'image',
+        'iscustomreport'
    ]
 });
 

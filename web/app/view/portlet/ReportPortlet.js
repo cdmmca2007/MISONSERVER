@@ -1,6 +1,13 @@
 function showReport(rec){
     
-    if(rec.data.id==4 && rec.data.name=='Attendence Report'){ 
+   
+    if(rec.data.iscustomreport==1){
+       document.getElementById("reportid").value=rec.data.id;
+       document.getElementById("sessionid").value=SETTING.Users.properties.session_id;
+       document.getElementById("classid").value=null;
+       document.getElementById("downloadfile").src=document.getElementById("downloadcustomreportform").submit();
+    }
+    else if(rec.data.id==4 && rec.data.name=='Attendence Report'){ 
     var app1=app.getController('Dashboard')
     var Tab = Ext.create('MyApp.view.misreport.AttendenceReport');
     app1.getDashboard().add(Tab);
@@ -68,274 +75,8 @@ function addCustomReport(){
        app1.getCustomReportDetailsStoreStore().load(); 
        var Tab = Ext.create('MyApp.view.misreport.CustomReport');
        app1.getDashboard().add(Tab);
-       
        app1.getDashboard().setActiveTab(Tab); 
-/*
-var win;
-    if(!win){
-        win = Ext.create('Ext.window.Window', {
-            title:'MIS Custom Report',
-            id: 'miscustomreports',
-            width:620,
-            height:580,
-            closeAction:'destroy',
-            top:{
-                formTitle:'MIS Custom Report'
-            },
-            defaults:{
-                xtype:'textfield',
-                value:''
-            },
-            items :[{
-                    xtype: 'tabpanel',
-                    layout:'fit',     
-                    style:'background:white',    
-                    width:660,
-                    height:580,                            
-                    items:[{///Report Details
-                            title: 'Report Detail',
-                            defaults:{
-                                        xtype:'textfield',
-                                        value:'',
-                                        labelWidth:200,
-                                        height:18
-                            },
-                            items:[
-                                                                                                                    
-                                {
-                                    xtype:'combobox',
-                                    fieldLabel: 'Module Name',
-                                    id:'moduleid',
-                                    name : 'moduleid',
-                                    store:Ext.create('MyApp.store.Master').load({
-                                                                  params:{propertyId:102} //peorpetty religion id =4
-                                                         }),
-                                    typeAhead: true,
-                                    queryMode: 'local',
-                                    emptyText: 'Select Module.',
-                                    Autoload:true,
-                                    valueField :'id',
-                                    displayField :'value',
-                                    width:600  ,
-                                    listeners:{
-                                    select: function(component){
-                                    var moduleid=Ext.getCmp('moduleid').getValue();
-                                    Ext.getCmp('column_grid').getStore().load({
-                                                         params:{
-                                                                 moduleid:moduleid
-                                                         }
-                                     });
-                                    }
-                                } 
-                                },{
-                                        xtype: 'combobox',
-                                        emptyText: 'Select Report Type',
-                                        fieldLabel: 'Select Report Type',
-                                        id:'customreporttype',
-                                        store:Ext.create('MyApp.store.Master').load({
-                                                                       params:{propertyId:35}}),//For Session,
-                                        typeAhead: true,
-                                        queryMode: 'local',
-                                        width:600  ,
-                                        displayField: 'value',
-                                        valueField: 'id',
-                                        name:'customreporttype',
-                                         listeners:{
-                                             select: function(component){
-                                             }
-                                       }
-                                },{
-                                    xtype:'combobox',
-                                    fieldLabel :'Report For',
-                                    id:'reportfor',
-                                    emptyText: 'Select Report For',       
-                                    store:
-                                        Ext.create('Ext.data.Store', {
-                                            fields: ['id', 'name'],
-                                            data : [
-                                            {
-                                                "id":"1",
-                                                "name":"For Every Batch"
-                                            },{
-                                                "id":"0",
-                                                "name":"For All Batch"
-                                            }]
-                                        }),
-                                        Autoload:true,
-                                        queryMode: 'local',
-                                        displayField: 'name',
-                                        valueField: 'id',
-                                        name:'reportfor',
-                                    width:600
-                                },
-                                {
-                                    name : 'reportname',
-                                    fieldLabel: 'Report Name',
-                                    id:'reportname',
-                                    width:600
-                                },
-                                {
-                                    xtype:'textareafield',
-                                    name : 'reportdiscription',
-                                    fieldLabel: 'Report Description',
-                                    id:'reportdiscription',
-                                    width:600
-                                }
-                              ]
-                           },   
-                           { 
-                            title: 'Report Column Details',
-                            width:620,
-                            height:500,     
-                            readOnly:true,
-                            items:[
-                            {
-                            xtype:'grid',
-                            store:'ReportColumnDetails',
-                            id:'column_grid',
-                            height:500,     
-                            title:'Report Column Details',
-                            vieConfig:{
-                               forceFit:true
-                            },
-                            defaults:{
-                            },
-                            columns:[
-                                 Ext.create('Ext.grid.RowNumberer'),
-                                 {
-                                 header:'<font color=#17385B><b>Column Name</b></font>',
-                                 dataIndex:'columnname',
-                                 width    :'60%'
-                                 },{
-                                 header:'Include in Report',
-                                 dataIndex:'includeme',
-                                 xtype:'checkcolumn',
-                                 style :'color:#17385B;font-weight:bold;align:center',
-                                 width:'30%'
-                             }
-                             ],
-                               tbar :[{
-                                    iconCls: 'icon-add',
-                                    id     :'savecolumndetails',
-                                    text: 'Save Added Column',
-                                    scope:this,
-                                    listeners:{
-                                        render: function(component){
-                                            component.getEl().on('click', function(){                    
-                                               saveColumnForReport();
-                                            });
-                                        }
-                                    }
-                                 }
-                                ],
-                                selModel:Ext.create('Ext.selection.CheckboxModel',{
-                                singleSelect:true,
-                                listeners:{
-                                        selectionchange:function(){
-                                        }
-                                    }
-                            })
-                             }
-                            ]
-                           },  
-                           {
-                            title: 'Report Condition',
-                            width:620,
-                            height:580, 
-                            items:[ {
-                            xtype:'grid',
-                            store:'ReportColumnCondition',
-                            id:'reportcondition_grid',
-                            title:'Add Condition For Report',
-                            vieConfig:{
-                               forceFit:true
-                            },
-                            defaults:{
-                            },
-                            columns:[
-                                 Ext.create('Ext.grid.RowNumberer'),
-                                 {
-                                 header:'<font color=#17385B><b>Column Name</b></font>',
-                                 dataIndex:'columnname',
-                                 width    :'35%'
-                                 },
-                                 {
-                                 header:'<font color=#17385B><b>Condition</b></font>',
-                                 dataIndex:'condition',
-                                 width    :'30%'
-                                 },
-                                 {
-                                 header:'<font color=#17385B><b>Value</b></font>',
-                                 dataIndex:'value',
-                                 width    :'30%'
-                                 }
-                               ],
-                               tbar :[{
-                                    iconCls: 'icon-add',
-                                    id:'addcndition',        
-                                    text: 'Add Condition',
-                                    listeners:{
-                                        render: function(component){
-                                            component.getEl().on('click', function(){                    
-                                            });
 
-                                        }
-                                    }
-                                }
-                                ]
-                             }]
-                           }
-                    ]
-            }
-            
-            ],
-            buttons :[
-            {
-                text: 'Save Details',
-                action: 'save',
-                scope:this,
-                listeners:{
-                render: function(component){
-                component.getEl().on('click', function(){                                        
-                  
-                var data={  
-                           'createdby' :SETTING.Users.userId,
-                           'moduleid'  :Ext.getCmp("moduleid").getValue(),
-                           'customreporttype'  :Ext.getCmp("customreporttype").getValue(),
-                           'reportfor'  :Ext.getCmp("reportfor").getValue(),
-                           'reportdiscription'  :Ext.getCmp("reportdiscription").getValue(),
-                           'reportname'  :Ext.getCmp("reportname").getValue()
-                         };                             
-                  Ext.Ajax.request({
-                    url:'misreport/addcustomreport.do',
-                    type:'json',
-                    headers:{
-                        'Content-Type':'application/json'
-                    },
-                    params:Ext.JSON.encode(data),
-                    success: function(res){
-                        var rec = eval('('+res.responseText+')');
-                        if(rec.result===1){
-                        Ext.Msg.alert('Success','Data updated successfully');
-                        }
-                        else
-                        Ext.Msg.alert('Success','Error Occured , Please Contact Administrator');    
-                     //   var rec = eval('('+res.responseText+')');
-                     //   app.getController('Class').getClassStore().add(rec);
-                    }
-                });
-
-                 });
-                }
-              }
-            },           
-            {xtype:'btncancel'}
-            ]
-        });
-    }
-    win.show();
-    
-   */
 }
 function saveColumnForReport(){
       var records = Ext.StoreManager.lookup('ReportColumnDetails').getModifiedRecords();
@@ -401,7 +142,7 @@ Ext.define('Ext.app.view.portlet.ReportPortlet', {
                 return data;
             },
             listeners: {
-                itemdblclick: function(dv, record ){
+                itemclick: function(dv, record ){
                 //record_global=record;  
                 showReport(record);
                 }

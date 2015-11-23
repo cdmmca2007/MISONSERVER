@@ -1,5 +1,13 @@
-function addStudent(sessionid,classid,rec){
+function viewCompleteProfile(rec){
 
+    var app1=app.getController('Dashboard')
+    var Tab = Ext.create('MyApp.view.student.CompleteProfile',{currentRecord:rec});
+    app1.getDashboard().add(Tab);
+    app1.getDashboard().setActiveTab(Tab);  
+}
+
+function addStudent(sessionid,classid,rec){
+    
     var win;
     if(!win){
         win = Ext.create('Ext.window.Window', {
@@ -62,7 +70,8 @@ function addStudent(sessionid,classid,rec){
                                     Autoload:true,               
                                     valueField :'id',
                                     displayField :'value',
-                                    width:600
+                                    width:600,
+                                    value:rec?rec.data.admissiontype:null,                                    
                                 },
                                 {
                                     name : 'formno',
@@ -101,7 +110,6 @@ function addStudent(sessionid,classid,rec){
                                     width:600,
                                     value:rec?rec.data.lname:null
                                 },   
-                                
                                 {
                                     xtype:'combobox',
                                     fieldLabel :'Admitted to Class',
@@ -118,31 +126,34 @@ function addStudent(sessionid,classid,rec){
                                     Autoload:true,               
                                     valueField :'id',
                                     displayField :'value',
-                                    width:600
+                                    width:600,
+                                    value:rec?rec.data.classid:null,                                    
                                 },
                                 {
                                     xtype:'datefield',
                                     name : 'dob',
                                     fieldLabel: 'Date of Birth',
                                     id:'dob',
-                                    format: 'm d Y',
+                                    format: 'm-d-Y',
                                     altFormats: 'm-d-Y|m.d.Y',
                                     width:600,
                                     value:rec?rec.data.dob:null
                                     },
                                 {
                                     xtype:'datefield',
-                                    name : 'admissiondate',
+                                    name : 'admissiondate1',
                                     fieldLabel: 'Date of Admission',
-                                    id:'admissiondate',
-                                    format: 'm d Y',
-                                    altFormats: 'm,d,Y|m.d.Y',
-                                    width:600                                    
+                                    id:'admissiondate1',
+                                    format: 'm-d-Y',
+                                    altFormats: 'm-d-Y|m.d.Y',
+                                    width:600       ,
+                                    value:rec?rec.data.admissiondate1:null
                                 },
                                 {
                                     xtype:'combobox',
                                     fieldLabel :'Select Gender',
                                     id:'gender',
+                                    name:'gender',
                                     emptyText: 'Select Gender',       
                                     store:
                                         Ext.create('Ext.data.Store', {
@@ -161,7 +172,8 @@ function addStudent(sessionid,classid,rec){
                                         displayField: 'name',
                                         valueField: 'abbr',
                                         name:'type',
-                                    width:600
+                                    width:600,
+                                    value:rec?rec.data.gender:null                                    
 
                                 },                                                       
                                 {
@@ -178,7 +190,8 @@ function addStudent(sessionid,classid,rec){
                                     Autoload:true,
                                     valueField :'id',
                                     displayField :'value',
-                                    width:600                                    
+                                    width:600   ,
+                                    value:rec?rec.data.religion:null                                    
                                 },{
                                     xtype:'combobox',
                                     fieldLabel: 'Category',
@@ -197,6 +210,22 @@ function addStudent(sessionid,classid,rec){
                                     value:rec?rec.data.category:null
                                 },{
                                     xtype:'combobox',
+                                    fieldLabel: 'Previledge Student Category',
+                                    id:'previledged_student',
+                                    name : 'previledged_student',
+                                    store:Ext.create('MyApp.store.Master').load({
+                                                                  params:{propertyId:52} //peorpetty religion id =4
+                                                         }),
+                                    typeAhead: true,
+                                    queryMode: 'local',
+                                    emptyText: 'Select Previledge Student Category.',
+                                    Autoload:true,
+                                    valueField :'id',
+                                    displayField :'value',
+                                    width:600,
+                                    value:rec?rec.data.previledged_student:null
+                                },{
+                                    xtype:'combobox',
                                     fieldLabel: 'Nationality',
                                     id:'nationality',
                                     name : 'nationality',
@@ -209,7 +238,8 @@ function addStudent(sessionid,classid,rec){
                                     Autoload:true,
                                     valueField :'id',
                                     displayField :'value',
-                                    width:600
+                                    width:600,
+                                    value:rec?rec.data.nationality:null                                    
                                 },{
 
                                     fieldLabel: 'Mother Tounge',
@@ -237,7 +267,7 @@ function addStudent(sessionid,classid,rec){
                                     id:'visadetail',
                                     name : 'visadetail',
                                     width:600,
-                                    value:rec?rec.data.visadetails:null
+                                    value:rec?rec.data.visadetail:null
                                     
                                 },{
 
@@ -299,18 +329,27 @@ function addStudent(sessionid,classid,rec){
                                     name : 'occupation',
                                     fieldLabel: 'Fathers Occupation',
                                     id : 'occupation',
-                                    width:600
+                                    width:600,
+                                    value:rec?rec.data.occupation:null                                    
                                    
                                 },{
                                     name : 'fatherhighestedu',
                                     fieldLabel: 'Father Highest Education',
                                     id : 'fatherhighestedu',
-                                    width:600
+                                    width:600,
+                                    value:rec?rec.data.fatherhighestedu:null                                    
+                                },{
+                                    name : 'motherhishedu',
+                                    fieldLabel: 'Mother Highest Education',
+                                    id : 'motherhishedu',
+                                    width:600,
+                                    value:rec?rec.data.motherhishedu:null                                    
                                 },{
                                     name : 'annualincome',
                                     fieldLabel: 'Annual Income',
                                     id : 'annualincome',
-                                    width:600
+                                    width:600,
+                                    value:rec?rec.data.annualincome:null                                    
                                 }
                             ]
                            },   
@@ -360,6 +399,7 @@ function addStudent(sessionid,classid,rec){
                                     fieldLabel: 'Address',
                                     id:'address',
                                     width:600,
+                                    height:50,
                                     value:rec?rec.data.address:null
                                 },
                                 {
@@ -376,17 +416,17 @@ function addStudent(sessionid,classid,rec){
                                     valueField :'id',
                                     displayField :'value',
                                     width:600,
-                                    value:rec?rec.data.state:null
+                                    value:rec?rec.data.stateid:null
 
                                 },
                                 {
                                     name : 'cityid',
                                     fieldLabel: 'City',
                                     id:'cityid',
+                                    name:'cityid',
                                     width:600,
-                                    value:rec?rec.data.city:null
+                                    value:rec?rec.data.cityid:null
                                 }
-                                
                             ]
                            },   
                            { ///Intrance Exam Result
@@ -527,7 +567,7 @@ function addStudent(sessionid,classid,rec){
                             'lname'      	:Ext.getCmp('lname').getValue(),
                             'classid'    	:Ext.getCmp('classid').getValue(),
                             'dob'               :new Date(Ext.getCmp('dob').getValue()).getTime(),
-                            'admissiondate'     :new Date(Ext.getCmp('admissiondate').getValue()).getTime(),
+                            'admissiondate1'     :new Date(Ext.getCmp('admissiondate1').getValue()).getTime(),
                             'religion'          :Ext.getCmp('religion').getValue(),
                             'nationality'       :Ext.getCmp('nationality').getValue(),
                             'mother_tounge'     :Ext.getCmp('mother_tounge').getValue(),
@@ -559,6 +599,8 @@ function addStudent(sessionid,classid,rec){
                             'admissiontype'     :Ext.getCmp('admissiontype').getValue(),
                             'gender'            :Ext.getCmp('gender').getValue(),
                             'category'          :Ext.getCmp('category').getValue(),
+                            'previledged_student':Ext.getCmp('previledged_student').getValue(),
+                            'motherhishedu'     :Ext.getCmp('motherhishedu').getValue(),
                             'studentid'         :rec?rec.data.studentid:null
                          };                             
                   Ext.Ajax.request({
@@ -599,7 +641,71 @@ function addStudent(sessionid,classid,rec){
     win.show();
 }
 
+function onChangeStudentProfilePic(rec){
+       
+        var win = Ext.getCmp('changestudprofile_win');
+        if(!win){
+            win = Ext.create('Ext.app.view.component.AppWindow', {
+                title:'Change Student Profile Page For :<font color="red">'+rec.data.name+'</font>',
+                id:'changestudprofile_win',
+                width:600,
+                closeAction:'hide',
+                top:{
+                    image:'resources/images/portal-icon/changeprofile.png',
+                    formTitle:'<b>Change Student Profile Picture</b>'
+                },
+                defaults:{
+                    width:550,
+                    xtype:'textfield'
+                },
+                formItems :[
+                {
+                    name : 'id',
+                    id : 'id',
+                    hidden:true,
+                    value:rec.data.studentid
+                },
+                {
+                xtype: 'fileuploadfield',
+                fieldLabel :'Upload Your Profile Photo',
+                id:'filepic',
+                name:'filepic',
+                buttonText: 'Browse Your Local Drive',
+                buttonConfig: {
+                iconCls: 'upload-icon'
+                }
+                }
+                ],
+                buttons :[
+                {
+                    text: 'Upload',
+                    action: 'save',
+                    scope:this,
+                    handler:this.saveStudProfilePic
+                },
+                {xtype:'btncancel'}
+                ]
+            });
+        }
+        win.show();
+ } 
 
+function saveStudProfilePic(btn){
+     var form = btn.up('window').down('form').getForm();
+     if(form.isValid()){
+           form.submit({
+                    url: 'student/addprofpic.do',
+                    success: function(fp, o) {
+                    Ext.example.msg('Success','Profile Picture Updated Successfully');
+
+                    },
+                    failure: function(fp, o) {
+                        Ext.example.msg('Failure','Unexpected Error Occured,Please Contact Administrator');
+                    }
+          }); 
+      }
+}
+            
 function addStudentTransport(rec){
     
     var win;
@@ -904,19 +1010,6 @@ Ext.define('MyApp.view.student.Student' ,{
         emptyText:'<div class="no-results">No Results To display</div>'
     },
     store:'Student',
-    selModel:Ext.create('Ext.selection.CheckboxModel',{
-        singleSelect:true,
-        listeners:{                
-                selectionchange:function(){
-                  
-                   var  button = Ext.getCmp('StudentEdit');
-                   button.setDisabled(false);
-                   var  delbutton = Ext.getCmp('Studentdelete');
-                   delbutton.setDisabled(false);                   
-                }
-            }
-    }),
-    
     initComponent: function() {
     var classid;
     var sessionid;
@@ -925,17 +1018,19 @@ Ext.define('MyApp.view.student.Student' ,{
     {
         header: 'Admission No',
         dataIndex:'admissionno',
-        style :'color:#17385B;font-weight:bold'
+        style :'color:#17385B;font-weight:bold',
+        width:'10%'
     },{
         header: 'Roll No',
         dataIndex:'rollno',
         style :'color:#17385B;font-weight:bold',
-        width:60
+        width:'10%'
     },
     {
         header: 'Name',
         dataIndex:'name',
-        style :'color:#17385B;font-weight:bold'
+        style :'color:#17385B;font-weight:bold',
+        width:'15%'
     },
     {
         header:'Class',
@@ -946,84 +1041,119 @@ Ext.define('MyApp.view.student.Student' ,{
     {
         header:'Date Of Birth',
         dataIndex:'dob',
-        style :'color:#17385B;font-weight:bold'
+        style :'color:#17385B;font-weight:bold',
+        width:'10%'
     },
 
     {
         header:'Father Name',
         dataIndex:'fathername',
-        style :'color:#17385B;font-weight:bold'
+        style :'color:#17385B;font-weight:bold',
+        width:'10%'
     },
 
     {
         header:'Mother Name',
         dataIndex:'mothername',
-        style :'color:#17385B;font-weight:bold'
+        style :'color:#17385B;font-weight:bold',
+        width:'10%'
     },
 
     {
         header:'CareTaker Name',
         dataIndex:'caretakername',
-        style :'color:#17385B;font-weight:bold'
+        style :'color:#17385B;font-weight:bold',
+        hidden:true
     },
 
     {
         header:'Parent email',
         dataIndex:'parentemailid',
-        style :'color:#17385B;font-weight:bold'
+        style :'color:#17385B;font-weight:bold',
+        width:'10%'
     },
 
     {
         header:'Parent Mobile',
         dataIndex:'parentmobile',
-        style :'color:#17385B;font-weight:bold'
+        style :'color:#17385B;font-weight:bold',
+        width:'10%'
     },
 
     {
         header:'Alertname Email',
         dataIndex:'alternateemailid',
-        style :'color:#17385B;font-weight:bold'
+        style :'color:#17385B;font-weight:bold',
+        hidden:true
     },
 
     {
         header:'Addmission Date',
-        dataIndex:'admissiondate',
-        style :'color:#17385B;font-weight:bold'
+        dataIndex:'admissiondate1',
+        style :'color:#17385B;font-weight:bold',
+        hidden:true
     },
     {
         header:'Religion',
         dataIndex:'religion',
-        style :'color:#17385B;font-weight:bold'
+        style :'color:#17385B;font-weight:bold',
+        hidden:true
     },
     {
         header:'Address',
         dataIndex:'address',
-        style :'color:#17385B;font-weight:bold'
+        style :'color:#17385B;font-weight:bold',
+        width:'10%'
     },
     {
         header:'City',
         dataIndex:'cityid',
-        style :'color:#17385B;font-weight:bold'
+        style :'color:#17385B;font-weight:bold',
+        hidden:true
     },{
         header:'State',
         dataIndex:'stateid',
-        style :'color:#17385B;font-weight:bold'
+        style :'color:#17385B;font-weight:bold',
+        hidden:true
     },{
         header:'Country',
         dataIndex:'countryid',
-        style :'color:#17385B;font-weight:bold'
+        style :'color:#17385B;font-weight:bold',
+        hidden:true
+    },{
+        header:'Occupation',
+        dataIndex:'occupation',
+        style :'color:#17385B;font-weight:bold',
+        hidden:true
+    },{
+        header:'Father Hisghest Qualification',
+        dataIndex:'fatherhighestedu',
+        style :'color:#17385B;font-weight:bold',
+        hidden:true
+    },{
+        header:'Mother Hisghest Qualification',
+        dataIndex:'motherhishedu',
+        style :'color:#17385B;font-weight:bold',
+        hidden:true
+    },{
+        header:'Annual Income',
+        dataIndex:'annualincome',
+        style :'color:#17385B;font-weight:bold',
+        hidden:true
+    },{
+        header:'Image Path',
+        dataIndex:'image_path',
+        style :'color:#17385B;font-weight:bold',
     }
 
   ];
      this.selModel = Ext.create('Ext.selection.CheckboxModel',{
             singleSelect:true,
             listeners:{
-            selectionchange:function(){
+            selectionchange:function(sm){
 
-               var  button = Ext.getCmp('StudentEdit');
-               button.setDisabled(false);
-               var  delbutton = Ext.getCmp('StudentDelete');
-               delbutton.setDisabled(false);
+                   Ext.getCmp('StudentEdit').setDisabled((sm.getCount()==0));
+                   Ext.getCmp('Studentdelete').setDisabled((sm.getCount()==0));
             }
           }
 
@@ -1107,19 +1237,14 @@ Ext.define('MyApp.view.student.Student' ,{
         iconCls: 'icon-add',
         text: 'Add Student',
         scope:this,
-       // listeners:{
           handler: function(component){
-               // component.getEl().on('click', function(){
                      var sessionid=Ext.getCmp('studsession').getValue(); 
                      var classid=Ext.getCmp('studclasscombo').getValue(); 
                      if(sessionid!=null)
                      addStudent(sessionid,classid,null);
                      else
                      Ext.Msg.alert('Warning','Please Select Sessions');    
-               // })
-
             }
-       // }
     },{
         iconCls: 'icon-edit',
         text: 'Edit',
@@ -1130,9 +1255,10 @@ Ext.define('MyApp.view.student.Student' ,{
                      var rec=Ext.getCmp('studentgrid').getSelectionModel().getSelection()[0];
                      var sessionid=Ext.getCmp('studsession').getValue(); 
                      var classid=Ext.getCmp('studclasscombo').getValue();                     
+                     if(rec!=null)
                      addStudent(sessionid,classid,rec);
         }
-    }, {
+    },{
         iconCls: 'icon-delete',
         text: 'Delete',
         disabled: true,
@@ -1147,6 +1273,20 @@ Ext.define('MyApp.view.student.Student' ,{
             }
         });
         }      
+    },{
+        xtype:'button',
+        text:'Complete Profile',
+        iconCls: 'icon-add',
+        listeners:{
+            render: function(component){
+                component.getEl().on('click', function(){
+                    var rec=Ext.getCmp('studentgrid').getSelectionModel().getSelection()[0];
+                    if(rec!=null)
+                       viewCompleteProfile(rec);
+                    });
+
+            }
+        }
     },{
         xtype:'splitbutton',
         text:'Set Role-No',
@@ -1210,6 +1350,7 @@ Ext.define('MyApp.view.student.Student' ,{
             render: function(component){
                 component.getEl().on('click', function(){     
                     var rec=Ext.getCmp('studentgrid').getSelectionModel().getSelection()[0];
+                    if(rec!=null)
                     addStudentTransport(rec);
                     });
 
@@ -1223,14 +1364,14 @@ Ext.define('MyApp.view.student.Student' ,{
             render: function(component){
                 component.getEl().on('click', function(){
                     var rec=Ext.getCmp('studentgrid').getSelectionModel().getSelection()[0];
+                    if(rec!=null)
                     addStudentHostel(rec);
                     });
             }
         }
     },{
         xtype:'button',
-        text:'Mark Previledged Student',
-        toolTip :'Mark current student as previledge student(i.e : SC/ST/OBC/Handicaped/Company Specific)',
+        text:'Add Previous School',
         iconCls: 'icon-add',
         listeners:{
             render: function(component){
@@ -1242,17 +1383,19 @@ Ext.define('MyApp.view.student.Student' ,{
         }
     },{
         xtype:'button',
-        text:'Previous School',
+        text:'Add Profile Picture',
         iconCls: 'icon-add',
         listeners:{
             render: function(component){
-                component.getEl().on('click', function(){                  
-                    //addFeeTemplate();
+                component.getEl().on('click', function(){
+                    var rec=Ext.getCmp('studentgrid').getSelectionModel().getSelection()[0];
+                    if(rec!=null)
+                       onChangeStudentProfilePic(rec);
                     });
 
             }
         }
-    }
+    },
     ];
     this.bbar =[Ext.create('Ext.PagingToolbar', {
         /*store: this.store.load({

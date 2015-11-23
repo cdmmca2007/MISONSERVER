@@ -751,7 +751,6 @@ Ext.define('MyApp.controller.Dashboard', {
         
         
         var obj=Ext.getCmp("studentgrid"); 
-        this.getStudentStore().loadPage(1);
         if(obj==null){
         var obj = Ext.create('MyApp.view.student.Student');
         this.getDashboard().add(obj);

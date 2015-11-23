@@ -4,7 +4,7 @@ Ext.define('MyApp.model.Student', {
             'studentid',
             'admissionno',
             'admissiontype',
-            'admissiondate',
+            'admissiondate1',
             'name',
             'fname',
             'mname',
@@ -37,8 +37,8 @@ Ext.define('MyApp.model.Student', {
             'visadetail',
             'uid',
             'aadhar_id',
-            'blood_group',
-            'category',
+            'blood_group','image_path',
+            'category','previledged_student','occupation', 'fatherhighestedu', 'motherhishedu', 'annualincome',
             {name:'rollno', type:'int'}
         ]
     });

@@ -278,6 +278,8 @@ public interface URLMap {
  
     
     String ADD_REPORT_CONDITION="misreport/addcustomreportcondition.do";
-    
+    String DOWNLOAD_CUSTOM_REPORT="download/downloadcustomreport.do";
+    String UPLOAD_STUDENT_RPOF_PIC="student/addprofpic.do";
+    String GET_STUD_PROFILE_PIC="/student/getprofilepic.do";
 }
 

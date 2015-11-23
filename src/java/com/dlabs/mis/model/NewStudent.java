@@ -25,7 +25,7 @@ public class NewStudent {
     private String lname;
     private String classid;
     private long   dob;
-    private long   admissiondate;
+    private long   admissiondate1;
     private String religion;
     private String nationality;
     private String mother_tounge;
@@ -61,7 +61,28 @@ public class NewStudent {
     private String admissiontype;
     private int    online;
     private String interviewid,entranceexamid , category ;
+    private String previledged_student;
+    private String motherhishedu;
 
+    public String getMotherhishedu() {
+        return motherhishedu;
+    }
+
+    public void setMotherhishedu(String motherhishedu) {
+        this.motherhishedu = motherhishedu;
+    }
+    
+
+    public String getPreviledged_student() {
+        return previledged_student;
+    }
+
+    public void setPreviledged_student(String previledged_student) {
+        this.previledged_student = previledged_student;
+    }
+
+    
+    
     public String getCategory() {
         return category;
     }
@@ -235,12 +256,12 @@ public class NewStudent {
         this.dob = dob;
     }
 
-    public long getAdmissiondate() {
-        return admissiondate;
+    public long getAdmissiondate1() {
+        return admissiondate1;
     }
 
-    public void setAdmissiondate(long admissiondate) {
-        this.admissiondate = admissiondate;
+    public void setAdmissiondate1(long admissiondate1) {
+        this.admissiondate1 = admissiondate1;
     }
 
     public String getReligion() {
