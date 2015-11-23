@@ -687,7 +687,7 @@ public class MisReportDAO extends AbstractNamedDao{
         return model;
         
     }
-
+    
     public SqlRowSet getCustomReportQueryData(Connection conn,int reportid,String sessiondid,String batchid) throws ReadableException {
         String query = getCustomReportQuery(conn,reportid,sessiondid,batchid);
         
